@@ -1,0 +1,37 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {section}{\numberline {1}Python}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Python's whys \& hows}{3}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}What is Python}{3}{subsubsection.1.1.1}%
+\contentsline {paragraph}{Python is a general-purpose high-level programming language}{3}{section*.2}%
+\contentsline {paragraph}{Python support multiple programming paradigms}{3}{section*.3}%
+\contentsline {paragraph}{Python is}{3}{section*.4}%
+\contentsline {subsubsection}{\numberline {1.1.2}How to use Python}{3}{subsubsection.1.1.2}%
+\contentsline {paragraph}{We are condidering Python 3+}{3}{section*.5}%
+\contentsline {paragraph}{A python program can be:}{3}{section*.6}%
+\contentsline {subsection}{\numberline {1.2}Overview of the Basic Concepts}{3}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Our first Python program}{3}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Declaring function}{4}{subsubsection.1.2.2}%
+\contentsline {paragraph}{Python has function}{4}{section*.7}%
+\contentsline {paragraph}{Python has function}{4}{section*.8}%
+\contentsline {subsubsection}{\numberline {1.2.3}Calling Functions}{4}{subsubsection.1.2.3}%
+\contentsline {paragraph}{Value can be passed by name as in}{5}{section*.10}%
+\contentsline {paragraph}{Parameters' order is not relevant}{5}{section*.11}%
+\contentsline {subsubsection}{\numberline {1.2.4}Writing readable code}{5}{subsubsection.1.2.4}%
+\contentsline {paragraph}{Documentation Strings}{5}{section*.12}%
+\contentsline {paragraph}{Triple quotes delimit a single multi-string}{5}{section*.13}%
+\contentsline {paragraph}{Case-Sensitive}{5}{section*.14}%
+\contentsline {subsubsection}{\numberline {1.2.5}Everything is an object}{5}{subsubsection.1.2.5}%
+\contentsline {paragraph}{Everything in Python is an object, functions included}{5}{section*.15}%
+\contentsline {subsubsection}{\numberline {1.2.6}Everything is an object (Cont'd)}{6}{subsubsection.1.2.6}%
+\contentsline {paragraph}{In python is an object, better, is a \textbf {first-calss object}}{6}{section*.16}%
+\contentsline {subsubsection}{\numberline {1.2.7}Indenting code}{6}{subsubsection.1.2.7}%
+\contentsline {paragraph}{No explicit block delimiters}{6}{section*.17}%
+\contentsline {subsubsection}{\numberline {1.2.8}Exceptions}{6}{subsubsection.1.2.8}%
+\contentsline {paragraph}{Exceptions are Anomaly Situations}{6}{section*.18}%
+\contentsline {paragraph}{Raising Exceptions}{6}{section*.19}%
+\contentsline {paragraph}{No need to list the exceptions in the function declaration handling Exceptions}{7}{section*.20}%
+\contentsline {subsubsection}{\numberline {1.2.9}Running scripts}{7}{subsubsection.1.2.9}%
+\contentsline {paragraph}{Look again, at the bottom of the \textit {humanize.py} program}{7}{section*.21}%
+\contentsline {paragraph}{Modules are Objects}{7}{section*.22}%
+\contentsline {paragraph}{The value of \textbf {\_\_name\_\_} depends on how you call it}{7}{section*.23}%
