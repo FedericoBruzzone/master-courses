@@ -1,0 +1,6 @@
+*.out
+*.aux
+*.idx
+*.log
+*.toc
+*.gz
