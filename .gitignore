@@ -1,2 +1,6 @@
-*.out
-*.aux
+advanced-programming/*.out
+advanced-programming/*.aux
+advanced-programming/*.idx
+advanced-programming/*.log
+advanced-programming/*.toc
+advanced-programming/*.gz
