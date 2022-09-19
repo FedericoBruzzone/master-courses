@@ -1,0 +1,50 @@
+\section{Primitive Datatypes \& recursion in Python}
+
+\subsection{Python's Native Datatypes}
+
+\subsubsection{Introduction}
+In python \textbf{every value has a datatype}, but you do not need to declare it.
+
+\textbf{How does that work?}
+
+Based on each variable's assignment, python figures out what type it is and keeps tracks of that internally.
+
+\subsubsection{Boolean}
+Python provides two constants
+
+- \textbf{True} and \textbf{False}
+
+\textbf{Operations on Booleans}
+
+Logic operations: \textit{and} \textit{or} \textit{not}
+
+Relational operators: \textit{==} \textit{!=} \textit{<} \textit{>} \textit{<=} \textit{>=}
+
+Note that python allows chains of comparisons
+\begin{lstlisting}[language=Python]
+>>> x = 3
+>>> 1<x<=5
+True
+\end{lstlisting}
+
+\subsubsection{Number}
+\textbf{Two kinds of number: integer and floats}
+\begin{itemize}
+	\item no class declaration to distinguish them
+	\item they can be distiguished by the presence/absence of the decimal point
+\begin{lstlisting}[language=Python]
+>>> type(1)
+<class 'int'>
+>>> isinstance(1, int)
+True
+>>> 1+1
+2
+>>> 1+1.0
+2.0
+>>>type(2.0)
+<class 'float'>
+\end{lstlisting}
+	\item \textbf{type()} function provides the type of any value or variable;
+	\item \textbf{isinstance()} check if a value or variable is of a given type;
+	\item adding an int to an yields another int but adding it to a float yields a float.
+\end{itemize}
