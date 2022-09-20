@@ -1,6 +1,8 @@
 \section{Primitive Datatypes \& recursion in Python}
 
-\subsection{Python's Native Datatypes}
+Python's Native Datatypes
+
+\subsection{Primitive types}
 
 \subsubsection{Introduction}
 In python \textbf{every value has a datatype}, but you do not need to declare it.
@@ -47,4 +49,312 @@ True
 	\item \textbf{type()} function provides the type of any value or variable;
 	\item \textbf{isinstance()} check if a value or variable is of a given type;
 	\item adding an int to an yields another int but adding it to a float yields a float.
+\end{itemize}
+
+\subsubsection{Operations on numbers}
+\textbf{Coercion \& size}
+\begin{itemize}
+	\item \textbf{int()} function truncates a gloat to an integer;
+	\item \textbf{float()} function promotes an integer to a float;
+	\item integers can be arbitrarly large;
+	\item float are accurate to 15 decimal places.
+\end{itemize}
+\textbf{Operators} (just a few)
+
+\textit{+} \textit{-}
+
+\textit{*} \textit{**}
+
+\textit{/} \textit{//} \textit{\%}
+
+\subsection{Collection}
+
+\subsubsection{Lists}
+\textbf{A python list looks very closely to an array}
+\begin{itemize}
+	\item direct access to the members through [];
+\begin{lstlisting}[language=Python]
+>>> a_list = ['1', 1, 'a', 'example']
+>>> type(a_list)
+<class 'list'>
+\end{lstlisting}
+\end{itemize}
+\textbf{But}
+\begin{itemize}
+	\item negative numbers give access ti the members backwards, e.g., \textbf{a\_list[-2] == a\_list[4-2] == a\_list[2]};
+	\item the list is not fixed in size;
+	\item the members are not homogeneous.
+\end{itemize}
+
+\subsubsection{Lists: Slicing a List}
+A slice og a list can be yielded by the [:] operator and specifying the position of the first item you want in the slice and of the first you want to exclude
+
+\begin{lstlisting}[language=Python]
+>>> a_list = [1, 2, 3, 4, 5]
+>>> a_list[1:3]
+[2, 3]
+>>> a_list[:-2]
+[1, 2, 3]
+>>> a_list[2:]
+[3, 4, 5]
+\end{lstlisting}
+
+Note that omitting one of the two indexes you get respectively the first and the last item in tbe list.
+
+\subsubsection{Lists: Adding items into the list}
+\textbf{Four ways}
+\begin{itemize}
+	\item \textbf{+} operator concatenates two lists;
+	\item \textbf{append()} method append an item to the end of the list;
+	\item \textbf{extend()} method appends a list to the end of the list
+	\item \textbf{insert()} method appends an item at given position.
+\end{itemize}
+
+\subsubsection{Lists: Introspecting on the list}
+\textbf{You can check if an element is in thelist}
+\begin{lstlisting}[language=Python]
+>>> a_list = [3,14, 1, 'c', 3.14]
+>>> 3.14 in a_list
+True
+\end{lstlisting}
+\textbf{Count the number of occurrences}
+\begin{lstlisting}[language=Python]
+>>> a_list.count(3.14)
+2
+\end{lstlisting}
+\textbf{Look for an item position}
+\begin{lstlisting}[language=Python]
+>>> a_list.index(3.14)
+1
+\end{lstlisting}
+\textbf{Elements can be removed by}
+\begin{itemize}
+	\item position
+\begin{lstlisting}[language=Python]
+>>> del a_list[2]
+>>> a_list
+[3,14, 1, 3.14]
+\end{lstlisting}
+	\item value
+\begin{lstlisting}[language=Python]
+>>> a_list.remove(3.14)
+>>> a_list
+[3,14, 1]
+\end{lstlisting}
+\end{itemize}
+In both cases the list is compacted to fill the gap.
+
+\subsubsection{Tuples}
+\textbf{Tuples are immutable lists.}
+\begin{lstlisting}[language=Python]
+>>> a_tuple = (3,14, 1, 'c', 3.14)
+>>> a_tuple
+(3,14, 1, 'c', 3.14)
+>>> type(a_tuple)
+<class 'tuple'>
+\end{lstlisting}
+\textbf{As a list}
+\begin{itemize}
+	\item parenthesis instead of square brackets;
+	\item ordered set with direct access to the elements through the position;
+	\item negative indexes count backward.
+\end{itemize}
+\textbf{On the contrary}
+\begin{itemize}
+	\item no \textbf{append()}, \textbf{extend()}, \textbf{insert()}, \textbf{remove()} and so on.
+\end{itemize}
+
+\subsubsection{Tuples (Cont'd)}
+\textbf{Multiple assignments}
+Tuple can be used for multiple assignments and to return multiple values.
+\begin{lstlisting}[language=Python]
+>>> a_tuple = (1, 2)
+>>> (a,b) = a_tuple
+>>> a
+1
+>>> b
+2
+\end{lstlisting}
+\textbf{Benefits}
+\begin{itemize}
+	\item tuples are faster than lists;
+	\item tuples are safer than lists;
+	\item tuples can be used as keys for dictionaries.
+\end{itemize}
+
+\subsubsection{Sets}
+\textbf{Sets are unordered "bags" of unique values.}
+\begin{lstlisting}[language=Python]
+>>> a_set = {1, 2}
+>>> a_set
+{1, 2}
+>>> len(a_set)
+2
+>>> b_set = set()
+>>> b_set
+set() ''' empty set '''
+\end{lstlisting}
+\textbf{A set can be created out of a list}
+\begin{lstlisting}[language=Python]
+>>> a_list = [1, 'a', 3.14, "a string"]
+>>> a_set = set(a_list)
+>>> a_set
+{'a', 1, 'a string', 3.14}
+\end{lstlisting}
+
+\subsubsection{Sets: Modifying a set}
+\textbf{Adding elements to a set}
+\begin{lstlisting}[language=Python]
+>>> a_set = set()
+>>> a_set.add(7)
+>>> a_set.add(3)
+>>> a_set
+{3, 7}
+>>> a_set.add(7)
+>>> a_set
+{3, 7}
+\end{lstlisting}
+Sets do not admit duplicates so to add a value twice has no effects.
+\textbf{Union of sets}
+\begin{lstlisting}[language=Python]
+>>> b_set = {3, 5, 3.14, 1, 7}
+>>> a_set.update(b_set)
+>>> a_set
+{1, 3, 5, 7, 3.14}
+\end{lstlisting}
+
+\subsubsection{Dictionaries}
+\textbf{A dictionary is an unordered set of key-value pairs}
+\begin{itemize}
+	\item when you add a key to the dictionary you must also add a value for that key;
+	\item a value for a key can be chenged at any time.
+\end{itemize}
+\textbf{The syntax is similar to stes, but}
+\begin{itemize}
+	\item you list comma separate couples of key/value;
+	\item {} is the empty dictionary.
+\end{itemize}
+Note that you cannot have more than one entry with the same key.
+
+\subsection{String}
+\subsubsection{String}
+\textbf{Python's string are a sequence of unicode characters}
+\textbf{String behave as lists: you can:}
+\begin{itemize}
+	\item get the string length with the \textbf{len} function;
+	\item concatenate string with the \textbf{+} operator;
+	\item slicing works as well.
+\end{itemize}
+Note that ", ' and ''' (three-in-a-row qoutes) can be used to define a string constant.
+
+\subsubsection{Formatting string}
+\textbf{Python 3 support formatting values into strings.}
+
+that is, to insert a value into a string with a placeholder.
+
+\textbf{Looking back at the \textit{humanize.py} example}
+\begin{lstlisting}[language=Python]
+for suffix in SUFFIX[multiple]:
+		size /= multiple
+		if size < multiple:
+			return '{0:.1f} {1}'.format(size, suffix)
+		raise ValueError('number too large')
+\end{lstlisting}
+\begin{itemize}
+	\item  \textbf{\{0\}}, \textbf{\{1\}}, ... are placeholders that are replaced by the arguments of \textbf{format()}
+	\item  \textbf{:.lf} is a format specifier, itcan be used to add space-padding, align strings, control decimal precision and convert number to hexadecimal as in C.
+\end{itemize}
+
+\subsubsection{Bytes}
+\textbf{An immutable sequence of numbers (0-255) is a bytes object.}
+
+\textbf{The byte literal syntax (b'') is used to define a bytes object}
+
+Each byte within the byte literal can be an ascii character or an encoded hexadecimal number from x00 to xff 
+
+\subsection{Recursion}
+\subsubsection{Definition: Recursive function}
+A function is called recursive when it is defined through itself.
+
+Example: Factorial.
+\begin{itemize}
+	\item 5! = 5*4*3*2*1
+	\item Note that: 5! = 5*4!, 4! = 4*3! and so on.
+\end{itemize}
+Potentially a recursive computation
+
+From the mathematical definition:
+\begin{lstlisting}
+n! = 
+1        if n=0
+n*(n-1)! otherwise
+\end{lstlisting}
+
+When n=0 is the base of the recursive computation (axiom) whreas the second step is the inductive step.
+
+\subsubsection{What in python?}
+Still, a function is recursive when its execution implies another invocation to itself.
+\begin{itemize}
+	\item directly, e.g., in the function body there is an explicit call to itself;
+	\item indirectly, e.g., in the function calls another function that calls the function itself.
+\end{itemize}
+
+\begin{lstlisting}
+def fact(n):
+	return 1 if n<=1 else n*fact(n-1)
+	
+if __name__ == __main__:
+	for i in [5, 7, 15, 25, 30, 42, 100]:
+		print('fact({0:3d}) :- {1}'.format(i, fact(i)))
+\end{lstlisting}
+
+\subsubsection{Execution: What's happen?}
+Still, a function is recursive when its execution implies another invocation to itself.
+\begin{itemize}
+	\item directly, e.g., in the function body there is an explicit call to itself;
+	\item indirectly, e.g., in the function calls another function that calls the function itself.
+\end{itemize}
+
+\begin{lstlisting}
+def fact(n):
+	return
+		1
+		if <=1
+		else n*fact(n-1)
+\end{lstlisting}
+
+\textbf{It runs fact(4):}
+\begin{itemize}
+	\item a new frame with n=4 is pushed on the stack;
+	\item n is greater than 1;
+	\item it calculates 4*fact(3).
+\end{itemize}
+\textbf{It runs fact(3):}
+\begin{itemize}
+	\item a new frame with n=3 is pushed on the stack;
+	\item n is greater than 1;
+	\item it calculates 3*fact(2).
+\end{itemize}
+\textbf{It runs fact(2):}
+\begin{itemize}
+	\item a new frame with n=2 is pushed on the stack;
+	\item n is greater than 1;
+	\item it calculates 2*fact(1).
+\end{itemize}
+\textbf{It runs fact(1):}
+\begin{itemize}
+	\item a new frame with n=2 is pushed on the stack;
+	\item n is equal to 1;
+	\item it returns 1.
+\end{itemize}
+
+\subsubsection{Iteration is more efficient}
+The iterative implementation is more efficient...
+
+The overhead is mainly due to the creation of the frame but this also affects the occupied memory.
+
+As an example, the call fibo(1000)
+\begin{itemize}
+	\item gives an answer if calculated by the iterative implementation;
+	\item raises a RuntimeError Exception in the recursive solution.
 \end{itemize}
