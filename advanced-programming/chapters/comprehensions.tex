@@ -1,0 +1,142 @@
+\section{Comprehensions}
+
+\subsection{Playing around with...}
+
+\subsubsection{Implementing the LS command}
+
+\begin{lstlisting}[language=Python]
+import os, sys, time, humanize
+from start imoprt *
+
+modes = { 
+	'r': (S_IXUSR,S_IXGRP,S_IXOTH), 
+	'w': (S_IXUSR,S_IXGRP,S_IXOTH), 
+	'x': (S_IXUSR,S_IXGRP,S_IXOTH)
+}
+
+def format_mode(mode):
+	s = 'd' if S_ISDIR(mode) else "-"
+	for i in range(3):
+		for j in ['r', 'w', 'x']:
+			s += j if S_ISDIR(mode) & modes[i][j] else '-'
+	return s
+	
+def formate_date(date):
+	d = time.localtime(date)
+	return "{0:4}-{1:02d}-{2:02d} {3:02d}:{4:02d}:{5:02d}".format(
+          d.tm_year, d.tm_mon, d.tm_mday, d.tm_hour, d.tm_min, d.tm_sec)
+
+def ls(dir):
+	print("List of {0}:".format(dir))
+	for file in os.listdir(dir):
+		metadata = os.stat(file)
+		print("{2} {1:6} {3} {0} ".format(
+		      file, approximate_size(metadata.st_size, False), \
+		      format_mode(metadata.st_mode), format_date(metadata.st_ntime)))
+
+if __name__ == "__main__": ls(sys.argv[1])
+\end{lstlisting}
+
+\subsection{Introduction}
+\textbf{Comprehensions are a compact way to transfor a set of data into another}
+\begin{itemize}
+	\item it applies to mostly all python's structure sype, e.g., lists, sets, dictionaries;
+	\item it is in contrast to list all the elements.
+\end{itemize}
+
+\textbf{Some basic comprehensions applied to lists, stes and dictionaries respectively}
+\begin{itemize}
+	\item a list composed of the first ten integers
+\begin{lstlisting}[language=Python]
+>>> [elem for elem in range (1, 11)]
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+\end{lstlisting}
+	\item a set composed of the first ten even integers
+\begin{lstlisting}[language=Python]
+>>> {elem*2 for elem in range (1, 11)}
+{2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
+\end{lstlisting}
+	\item a dictionary composed of the first ten couples (n, n\^2)
+\begin{lstlisting}[language=Python]
+>>> {elem:elem*2 for elem in range (1, 11)}
+{1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81, 10: 100}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{To filter out elemets of a dataset}
+\textbf{Comprehensions can reduce the elements in the dataset after a constrint.}
+
+\textbf{E.g., to select perfect squares out of the first 100 integers}
+\begin{lstlisting}[language=Python]
+>>> [elem for elem in range(1, 101) if(int(elem**.5))**2 == elem]
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+\end{lstlisting}
+\begin{itemize}
+	\item \textbf{range(1,101)} generates a list of the first 100 integers (first extreme included, second excluded);
+	\item the comprehension skims through the list selecting those elemetns whose square of the integral part of its square roots are equal.
+\end{itemize}
+\textbf{E.g., to select the odd numbers out of a tuple}
+\begin{lstlisting}[language=Python]
+>>> {x for c in (1, 22, 31, 23, 10, 11, 11, -1, 34, 76, 778, 10101, 5, 44) 
+     if x%2 != 0}
+{1, 31, 23, 11, -1, 10101, 5}
+\end{lstlisting}
+\begin{itemize}
+	\item note that the second 11 is removed from the set;
+	\item the set does note respect the tuple order (it is not ordered at all).
+\end{itemize}
+
+\subsection{To select multiple values}
+\textbf{Comprehensions can select multiple values out of the dataset.}
+
+\textbf{E.g., to swap key and value in the dictionary}
+\begin{lstlisting}[language=Python]
+>>> a_dict = {'a': 1, 'b': 2, 'c': 3}
+>>> {value:key for key, value in a_dict.items()}
+{1: 'a', 2: 'b', 3: 'c'}
+\end{lstlisting}
+\textbf{Comprehensions can select values out of multiple datasets.}
+
+\textbf{E.g., to merge two sets in a set of couples}
+\begin{lstlisting}[language=Python]
+>>> english = ['a', 'b', 'c'}
+>>> greek = [$\alpha$, $\beta$, $\gamma$]
+>>> [(english[i], greek[i]) for i in range(0, len(english))]
+[('a', $\alpha$), ('b', $\beta$), ('c', $\gamma$)]
+\end{lstlisting}
+
+
+\textbf{E.g., to calculate the cartesian product}
+\begin{lstlisting}[language=Python]
+>>> {(x,y) for x in range(3) for y in range (5)}
+{(0,1),(1,2),(0,0),(2,2),(1,1),(1,4),(0,2),(2,0),
+(1,3),(2,3),(2,1),(0,4),(2,4),(0,3),(1,0)}
+\end{lstlisting}
+
+\subsection{Comprehensions @ work: prime numbers calculation}
+\item Classic approach to the prime numbers calculation
+\begin{lstlisting}[language=Python]
+def is_prime(x):
+	div = 2
+	while div <= math.sqrt(x):
+		if x%div == 1: return False		
+		else: div += 1
+	return True
+
+if __name == "__main__":
+	primes = []
+	for i in range(1, 50):
+		if is_prime(i): primes.append(i)
+	print(primes)
+\end{lstlisting}
+\item The alsorithm again but using comprehensions
+\begin{lstlisting}[language=Python]
+def is_prime(x):	
+	div = [elem for elem in range(0, math.sqrt(x)) if x%elem==0]
+	return len(div) == 0
+
+if __name == "__main__":
+	print([elem for elem in range(1,50) if is_prime(elem)])
+\end{lstlisting}
+
+
