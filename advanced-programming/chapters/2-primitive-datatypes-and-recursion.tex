@@ -26,7 +26,7 @@ Note that python allows chains of comparisons
 \begin{lstlisting}[language=Python]
 >>> x = 3
 >>> 1<x<=5
-True
+> True
 \end{lstlisting}
 
 \subsubsection{Number}
@@ -36,15 +36,15 @@ True
 	\item they can be distiguished by the presence/absence of the decimal point
 \begin{lstlisting}[language=Python]
 >>> type(1)
-<class 'int'>
+> <class 'int'>
 >>> isinstance(1, int)
-True
+> True
 >>> 1+1
-2
+> 2
 >>> 1+1.0
-2.0
+> 2.0
 >>>type(2.0)
-<class 'float'>
+> <class 'float'>
 \end{lstlisting}
 	\item \textbf{type()} function provides the type of any value or variable;
 	\item \textbf{isinstance()} check if a value or variable is of a given type;
@@ -76,7 +76,7 @@ True
 \begin{lstlisting}[language=Python]
 >>> a_list = ['1', 1, 'a', 'example']
 >>> type(a_list)
-<class 'list'>
+> <class 'list'>
 \end{lstlisting}
 \end{itemize}
 \textbf{But}
@@ -92,11 +92,11 @@ A slice og a list can be yielded by the [:] operator and specifying the position
 \begin{lstlisting}[language=Python]
 >>> a_list = [1, 2, 3, 4, 5]
 >>> a_list[1:3]
-[2, 3]
+> [2, 3]
 >>> a_list[:-2]
-[1, 2, 3]
+> [1, 2, 3]
 >>> a_list[2:]
-[3, 4, 5]
+> [3, 4, 5]
 \end{lstlisting}
 
 Note that omitting one of the two indexes you get respectively the first and the last item in tbe list.
@@ -115,17 +115,17 @@ Note that omitting one of the two indexes you get respectively the first and the
 \begin{lstlisting}[language=Python]
 >>> a_list = [3,14, 1, 'c', 3.14]
 >>> 3.14 in a_list
-True
+> True
 \end{lstlisting}
 \textbf{Count the number of occurrences}
 \begin{lstlisting}[language=Python]
 >>> a_list.count(3.14)
-2
+> 2
 \end{lstlisting}
 \textbf{Look for an item position}
 \begin{lstlisting}[language=Python]
 >>> a_list.index(3.14)
-1
+> 1
 \end{lstlisting}
 \textbf{Elements can be removed by}
 \begin{itemize}
@@ -133,13 +133,13 @@ True
 \begin{lstlisting}[language=Python]
 >>> del a_list[2]
 >>> a_list
-[3,14, 1, 3.14]
+> [3,14, 1, 3.14]
 \end{lstlisting}
 	\item value
 \begin{lstlisting}[language=Python]
 >>> a_list.remove(3.14)
 >>> a_list
-[3,14, 1]
+> [3,14, 1]
 \end{lstlisting}
 \end{itemize}
 In both cases the list is compacted to fill the gap.
@@ -149,9 +149,9 @@ In both cases the list is compacted to fill the gap.
 \begin{lstlisting}[language=Python]
 >>> a_tuple = (3,14, 1, 'c', 3.14)
 >>> a_tuple
-(3,14, 1, 'c', 3.14)
+> (3,14, 1, 'c', 3.14)
 >>> type(a_tuple)
-<class 'tuple'>
+> <class 'tuple'>
 \end{lstlisting}
 \textbf{As a list}
 \begin{itemize}
@@ -171,9 +171,9 @@ Tuple can be used for multiple assignments and to return multiple values.
 >>> a_tuple = (1, 2)
 >>> (a,b) = a_tuple
 >>> a
-1
+> 1
 >>> b
-2
+> 2
 \end{lstlisting}
 \textbf{Benefits}
 \begin{itemize}
@@ -187,19 +187,19 @@ Tuple can be used for multiple assignments and to return multiple values.
 \begin{lstlisting}[language=Python]
 >>> a_set = {1, 2}
 >>> a_set
-{1, 2}
+> {1, 2}
 >>> len(a_set)
-2
+> 2
 >>> b_set = set()
 >>> b_set
-set() ''' empty set '''
+> set() ''' empty set '''
 \end{lstlisting}
 \textbf{A set can be created out of a list}
 \begin{lstlisting}[language=Python]
 >>> a_list = [1, 'a', 3.14, "a string"]
 >>> a_set = set(a_list)
 >>> a_set
-{'a', 1, 'a string', 3.14}
+> {'a', 1, 'a string', 3.14}
 \end{lstlisting}
 
 \subsubsection{Sets: Modifying a set}
@@ -209,10 +209,10 @@ set() ''' empty set '''
 >>> a_set.add(7)
 >>> a_set.add(3)
 >>> a_set
-{3, 7}
+> {3, 7}
 >>> a_set.add(7)
 >>> a_set
-{3, 7}
+> {3, 7}
 \end{lstlisting}
 Sets do not admit duplicates so to add a value twice has no effects.
 \textbf{Union of sets}
@@ -220,7 +220,7 @@ Sets do not admit duplicates so to add a value twice has no effects.
 >>> b_set = {3, 5, 3.14, 1, 7}
 >>> a_set.update(b_set)
 >>> a_set
-{1, 3, 5, 7, 3.14}
+> {1, 3, 5, 7, 3.14}
 \end{lstlisting}
 
 \subsubsection{Dictionaries}
