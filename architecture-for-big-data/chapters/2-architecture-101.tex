@@ -231,3 +231,81 @@ Each subsystem may performs:
 \end{itemize}
 
 \textbf{Identifying} and \textbf{classifying} the system functions that are common to many applications is a significant first step to the development of a software architecture.
+
+\subsection{BOC-App}
+
+\subsubsection{Bully Operation Center}
+A WebApp supports a \textbf{group of Analysts} to spot \textbf{aggressive users}. 
+
+Natural Language Processing is used to \textbf{classify} each tweets.
+
+When the \textbf{number of aggressive tweets} done by a given user go beyond a given threshold, this user is surfaced to an Analyst \textbf{who can decide to ban} it.
+
+When a user is classified by the Analyst as bully, \textbf{the number of bullied users} iscomputed as the number of users after a bully user comment stop to use tweeter.
+
+\subsubsection{Problem Abstraction}
+\begin{center}
+\includegraphics[scale=0.7]{7-boc-app-problem-abstraction}
+\end{center}
+
+\begin{enumerate}
+	\item Different \textbf{Twitter Listeners} ensure:
+	\begin{enumerate}
+		\item \textbf{Scalability}: we can follow as many as hashtag we need
+		\item \textbf{Reliability}: we can re-distribute hashtegs to other node if a given Listener fail
+	\end{enumerate}
+	\item A \textbf{Message Queue} allow serveral concurrent consumers on each hashtag
+	\begin{enumerate}
+		\item \textbf{Real Time Consumer}
+		\item \textbf{Caching Consumer}
+	\end{enumerate}
+	\item Data \textbf{-as-is-} is saved using the \textbf{Object Storage} model for further analysis
+	\item Some models \textbf{cannot be done in real time} for several reason (e.g., training a classifier)
+	\item What is \textbf{I discover a given user is a bully}? I will be interested in counting a-posteriori number of users buillied by him
+\end{enumerate}
+
+\subsubsection{SubSystem Perspective}
+\begin{center}
+\includegraphics[scale=0.7]{8-boc-app-subsystem-perspective}
+\end{center}
+
+\subsubsection{Network Perspective}
+\begin{center}
+\includegraphics[scale=0.7]{9-boc-app-network-perspective}
+\end{center}
+
+\subsubsection{SQL through firewall needs care}
+\begin{center}
+\includegraphics[scale=0.7]{10-sql-through-firewall-needs-care}
+\end{center}
+
+\begin{enumerate}
+	\item Databricks writes directly on the \textbf{Data Lake}
+	\item Infrastructure team create a gateway Virtual Machine in the \textbf{same network} of the SQL machine
+	\item A \textbf{443 allow rule} for the Gateway is created and a Data Lake reader agent starts to read all fresh data
+	\item On the same Gateway, a second agent write down data inside the SQL VM
+\end{enumerate}
+
+\subsubsection{Data Scientist Perspective}
+\begin{center}
+\includegraphics[scale=0.7]{11-data-scientist-perspective}
+\end{center}
+
+\begin{enumerate}
+	\item Data Scientist knows using \textbf{BOCArc.readData()} will receive \textbf{e fresh tweets}
+	\item Then he/she can \textbf{focus} on the code needed to clean data, extract \textbf{features} and \textbf{predict}
+	\item At the end, he/she will call the \textbf{BOCArc.writeResult()} method which automagically writes result \textbf{somewhere}
+	\item He/she won’t know all tweets are
+written on the \textbf{Data Lake}
+	\item He/she won’t know readData() hides:
+	\begin{enumerate}
+		\item A \textbf{virtualization layer} to decouple physical data with needed one
+		\item a \textbf{CDC strategy implemented} to get only fresh tweets
+		\item Tecnhical features such as \textbf{deserialization} and \textbf{log tracing}
+	\end{enumerate}
+\end{enumerate}
+
+\subsubsection{CFO Perspective}
+\begin{center}
+\includegraphics[scale=0.7]{12-boc-app-cfo-perspective}
+\end{center}
