@@ -1,0 +1,235 @@
+\section{Computational Reflection}
+
+\subsection{Computational Reflection}
+
+\subsubsection{A first definition}
+
+Computational reflection can be intuitively defined as:
+
+\textit{"The activity done by a SW system to represent and manipulate its own structure and behavior"}
+
+The reflective activity is done analogously to the usual system activity
+
+\subsection{Reflection}
+
+\subsubsection{Historical Overview}
+
+\textbf{In the sisties}
+\begin{itemize}
+	\item Research field: artificial intelligence;
+	\item First approaches to relection: intelligent behavior;
+\end{itemize}
+
+\textbf{In the eighties}
+\begin{itemize}
+	\item Research filed: programming languages;
+	\item Brian C. Smith, he introduces the reflection in Lisp (1982 and 1984), the reflective tower has been defined;
+	\item Several reflective list-oriented languages have been defined (they exploit the quoting machanism);
+\end{itemize}
+
+\textbf{In the meanwhile}
+\begin{itemize}
+	\item Research field: logic programming;
+	\item the meta-programming takes place in PROLOG;
+\end{itemize}
+
+\textbf{Between the eighties and the nineties}
+\begin{itemize}
+	\item Research fild: object-oriented programming languages;
+	\item Pattie maes defines the computational reflection in OOPL (1987);
+	\item Several people move from Lisp to OO:
+		\begin{itemize}
+			\item P. Coite, ObjVLips (1987)
+			\item A. Yonezawa, ABCL-R (1988)
+			\item J. des Rivières e G. Kiczales MOP for CLOS (1991)
+		\end{itemize}
+	\item SmallTalk is elected as the best reflective programming language
+\end{itemize}
+
+\textbf{In te nineties}
+\begin{itemize}
+	\item Research field: typed and/or compiled object-oriented programming languages;
+	\item Shigeru Chiba realizes OpenC++ (1993-1995), OpenJava (1999);
+\end{itemize}
+
+\textbf{In the 1997}
+\begin{itemize}
+	\item Gregor Kiczales et al. defined the aspect-oriented programming and the story ends;
+\end{itemize}
+
+\subsection{Computational Reflection}
+
+\subsubsection{Reflection à la Pattie Maes}
+
+\textbf{Pattie Maes has pioneered the filed}
+\begin{itemize}
+	\item a \textbf{computational system} is a system that can reason about and act on its applicative somain;
+	\item a computational system is \textbf{causally connected} to its domain if and only if a change to its domain is reflected on it and vice versa;
+	\item a \textbf{meta-system} is a computational system whose applicative domain in another computational system;
+	\item \textbf{reflection} is the property of reasoning about and acting on itself;
+\end{itemize}
+
+\textbf{therefore}
+\begin{itemize}
+	\item a \textbf{reflective system} is a meta system causally connected to itself;
+\end{itemize}
+
+\subsubsection{Reflective system}
+
+\textbf{From the definition, we can evince that a reflective system is:}
+\begin{itemize}
+	\item a software system logically layered into two or more levels respectively called base-level and meta-levels;
+	\item the system running in a meta-level observes and manipulates the system running in the underlying level (reflective tower);
+\end{itemize}
+
+\textbf{Characteristics}
+\begin{itemize}
+	\item the system running in the base-level is unaware of the existence and of the work of the systems running in the overlying levels;
+	\item a meta-level system acts on a representation (called the system running in the underlying levels; and
+	\item a system and its reification are causally connected and therefore, they are kept mutually consistent
+\end{itemize}
+
+\subsubsection{Reflective system: Base- and Meta-levels}
+
+\textbf{A meta-level system refies what it is implicit (e.g. mechanisms and structure) of the underlying base- or meta-level}
+
+\subsubsection{How to Characterize a Reflective System}
+
+\textbf{The reflective systems can be classified based on:}
+\begin{itemize}
+	\item what and when
+\end{itemize}
+
+\textbf{What kind of reflective actions the system can carry out:}
+\begin{itemize}
+	\item structural and behavioral reflection;
+	\item introspection (just to observe) and intercession (to alter)
+\end{itemize}
+
+\textbf{When the meta-level entities exist:}
+\begin{itemize}
+	\item compile-time
+	\item load-time; and
+	\item run-time
+\end{itemize}
+
+\subsubsection{Behavioral and structural reflection}
+
+\textbf{The behavioral reflection allows the program of monitoring and manipulating its own computation, e.g.:}
+\begin{itemize}
+	\item to trap a method call and activating a different method instead;
+	\item to monitor the object state;
+	\item to create new objects, and so on
+\end{itemize}
+
+\textbf{These activities can take place at run-time without a specific support}
+
+\textbf{The structural reflection allows the program of inspecting and altering its own structure, e.g.:}
+\begin{itemize}
+	\item the code of a method can be modified or removed from the class;
+	\item new methods and field can be added to a class, and so on;
+\end{itemize}
+
+\textbf{These activities need a specific support by the execution environment (from the VM, RTE, ...) to be carried out at run-time}
+
+\subsubsection{Reification}
+\textbf{The base-level entities (referents) are reified into the metalevel, i.e., they have a representative into the meta-level}
+
+\textbf{Such a representative, called reification, has to:}
+\begin{itemize}
+	\item support all the operations and have the same characteristics of the corresponding referent;
+	\item be kept consistent to its referent ( causal connection);
+	\item be subjected to the manipulations of the meta-level entities to protect the base-level entities from potential inconsistency
+\end{itemize}
+
+\textbf{Any change carried out on the reification has to be reflected on the corresponding referent.}
+
+\subsection{To Develop a Reflective System}
+\textbf{Jacques Ferber [2] has raised some issues that the developers must take in consideration:}
+\begin{itemize}
+	\item which kind of entities should be reified?
+	\item what and how it is implemented the causal connection?
+	\item when does the execution shift to the meta-level?
+\end{itemize}
+
+\subsection{Which Kind of Entities Should Be Reified?}
+\textbf{It depends on the programming language:}
+\begin{itemize}
+	\item functional: lambda expression/closures, environment, continuations, and so on ...;
+	\item object-oriented: objects, methods, classes, messages and so on ...;
+	\item concurrent and object-oriented: threads, processes, schedulers, monitors, and so on ...;
+	\item distribution: namespaces, proxies, mailers, and so on ...
+\end{itemize}
+
+\subsection{What and How It Is Implemented the Causal Connection?}
+\textbf{It depends on when the reflective activities take place:}
+\begin{itemize}
+	\item atrun-time: the causal connection is explicit and must be maintained by an entities super-parties, e.g., by the virtual machine or by the run-time environment;
+	\item at compile-time: the causal connection is implicit, base-level and meta-levels are merged together during a preprocessing phase;
+	\item at load-time: in this case the causal connection behaves as in the case, reflection takes place at compile-time;
+\end{itemize}
+
+\textbf{Most of the times, the supported reflective activity is related to observe (introspection) the base-level system so the causal connection become unilateral and can be managed by the metaentities.}
+
+\subsection{When Does the Execution Shift to the Meta-Level?}
+\textbf{Switching among levels depends on:}
+\begin{itemize}
+	\item which entities are reified;
+	\item when such entities are reified; and
+	\item how the causal connection is managed
+\end{itemize}
+
+\textbf{The shift-up and-down actions}
+\begin{itemize}
+	\item the shift-up and-down actions.
+\end{itemize}
+
+\textbf{When}
+\begin{itemize}
+	\item an observed element changes; or
+	\item an action is going to be done;
+\end{itemize}
+
+\textbf{the computational flow passes into the meta-level (shift-up)}
+
+\textbf{Instead}
+\begin{itemize}
+	\item the computational flow goes back (shift-down) on the meta-level program decision
+\end{itemize}
+
+\textbf{Usually, the shift-up action is managed by call-backs}
+
+\section{Reflection in OO Programming Languages}
+
+\subsection{Structural and behavioral reflection}
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
