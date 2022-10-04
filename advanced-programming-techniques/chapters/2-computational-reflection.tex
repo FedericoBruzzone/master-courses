@@ -201,34 +201,150 @@ The reflective activity is done analogously to the usual system activity
 
 \section{Reflection in OO Programming Languages}
 
-\subsection{Structural and behavioral reflection}
+\subsection{Structural and Behavioral Reflection}
 
- 
+\textbf{Structural Reflection}
+\begin{itemize}
+	\item Object creation and init
+		\begin{itemize}
+			\item constructor
+			\item prototype
+			\item meta-classes
+		\end{itemize}
+	\item Class manipulation
+		\begin{itemize}
+			\item to add or remove fields
+			\item to add or remove methods
+			\item to change the super class
+		\end{itemize}
+\end{itemize}
 
+\textbf{Behavioral Reflection}
+\begin{itemize}
+	\item message sending
+		\begin{itemize}
+			\item classes and inheritance
+			\item prototypes and delegation
+			\item errors
+			\item encapsulations
+			\item proxies
+			\item meta-objects
+		\end{itemize}
+\end{itemize}
 
+\subsection{Structural Reflection}
+The objects running in the meta-level, called \textbf{meta-objects} are associated to all (or just to some of) the objects running in the base-level, called \textbf{referents}.
 
+The connection among referents and meta-objects is called \textbf{causal connection} when it is a two-way link or \textbf{meta-connection} when it is a one-way link.
 
+The meta-objects exist at run-time and extend or modify the semantics of some mechanisms:
 
+-  method invocation, field access, object creation, and so on
 
+The \textbf{MOP} is the set of messages that a meta-object can understand
 
+\subsubsection{Es.To Enrich the Behavior of a Method Call}
 
+\begin{center}
+\includegraphics[scale=0.7]{1-To-Enrich-the-Behavior-of-a-Method-Call}
+\end{center}
 
+\subsubsection{Different views}
 
+\begin{center}
+\includegraphics[scale=0.7]{2-different-views}
+\end{center}
 
+\subsubsection{Classes as meta objects}
 
+\begin{center}
+\includegraphics[scale=0.7]{3-classes-as-meta-objects}
+\end{center}
 
+\subsubsection{Classes AS Meta-Objects (Cont'd)}
+\textbf{The meta-class based approach}
+\begin{itemize}
+	\item the classes carry out there flective activity
+	\item the reflective tower is realized by the inheritance link
+\end{itemize}
 
+\textbf{Drawbacks}
+\begin{itemize}
+	\item all the instances of a classs hare the same meta-class therefore the same reflective behavior (the granularity of reflection is at the class level)
+	\item the classes have to be available a trun-time
+\end{itemize}
 
+\textbf{Programming Languages}
+\begin{itemize}
+	\item SmallTalk (Adele Goldberg,1972)
+	\item ObjVLisp (PierreCointe,1987)
+	\item IBMSystemObjectModel (IBM,1992)
+\end{itemize}
 
+\subsubsection{Classes AND meta objects}
 
+\begin{center}
+\includegraphics[scale=0.7]{4-classes-and-meta-objects}
+\end{center}
 
+\subsubsection{Classes AND Meta-Objects (Cont'd)}
+\textbf{The meta-class based approach}
+\begin{itemize}
+	\item some special objects instantiated by a special class are associated to the base-level objects, they deal with the reflective computation
+	\item the reflective tower is realized by clientship
+\end{itemize}
 
+\textbf{Drawback and Benefits}
+\begin{itemize}
+	\item the granularity of reflection is at the object level
+	\item it cannot manage object communications, the approach lacks of a global view of the communication
+\end{itemize}
 
+\textbf{Programming Languages}
+\begin{itemize}
+	\item CCEL(Carolyn Duby, 1992), Iguana (Brendan Gowing and Vinny Cahill, 1996);
+	\item ABCL-R (Akinori Yonezawa and Satoshi Matsuoka, Actors meet Reflection, 1988);
+	\item OpenC++ (Shigeru Chiba < 2.0, 1993)
+\end{itemize}
 
+\subsubsection{Reification of the communication}
 
+\begin{center}
+\includegraphics[scale=0.7]{5-reification-of-communication}
+\end{center}
 
+\subsubsection{Classes AND Meta-Objects (Cont'd)}
+\textbf{Approach to the reification of the communication}
+\begin{itemize}
+	\item some special objects reify the messages exchanged among the baselevel objects, these special objects deal with the reflective computation.
+\end{itemize}
 
+\textbf{Drawback and Benefits}
+\begin{itemize}
+	\item the granularity of reflection is at the level of method call (very flexible)
+	\item it is possible to reflect on the whole message exchange (global view)
+	\item there is a meta-entities proliferation; and
+	\item the lifecycle of the meta-entities is strictly tied to the lifecycle of the message exchange (lost the history of the reflective computation)
+\end{itemize}
 
+\textbf{Programming Languages}
+\begin{itemize}
+	\item Mering (Jacques Ferber, 1987)
+	\item  CodA (Jeff McAffer, 1994), mChaRM (Walter Cazzola, 2001)
+\end{itemize}
+
+\subsubsection{Conclusion}
+\textbf{Computational Reflection}
+\begin{itemize}
+	\item It permits to open up a system to postpone some decisions
+	- the same philosophy adopted by the late-binding mechanism.
+	\item it depends on the awareness that a system have of itself
+	- strictly related to the “self” of the object-oriented programming languages
+	\item it specializes some of the object-oriented basic mechanisms (constructors, invocations, and so on)
+	- it exploits the classic mechanisms: inheritance, delegation
+\end{itemize}
+
+\textbf{Its use produces a better comprehension of the object-oriented mechanism and of their implementation}
 
 
 
