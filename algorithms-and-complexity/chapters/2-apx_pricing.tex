@@ -1,0 +1,1011 @@
+\subsection{Tecniche di pricing}
+L'idea è quella di attribuire ad ogni elemento da inserire in 
+una soluzione un costo. I costi permettono di scegliere gli elementi 
+più vantaggiosi e di analizzare il tasso di approssimazione di questi algoritmi.
+
+\subsubsection{Minimum Set Cover}
+\label{msetcover}
+Nel problema di Set Cover l'obiettivo è quello di coprire l'universo $U$, 
+utilizzando seubset di esso che hanno un costo. Si vuole ottenere il costo
+minimo, dato come somma dei costi dei set che si sono scelti.
+
+Formalmente: \\
+\emph{Input}: $s_1, \dots, s_m$, $\bigcup_{i=1}^m s_i = U$, $|U| = n$\\
+\emph{Output}: $C = \{s_1, \dots, s_n\}$, tali che, $\bigcup_{s_i \in C} s_i = U$\\
+\emph{Costo}: $w = \sum_{s_i \in C} w_i$\\
+\emph{Tipo}: min\\
+
+\paragraph{Funzione armonica}
+La funzione armonica è definita come: 
+\begin{equation}
+    \begin{aligned}
+        H: \mathbb{N}^{>0} \rightarrow \mathbb{R}\\
+        H(n) = \sum_{i = 1}^{n} \frac{1}{i}  
+    \end{aligned}
+\end{equation}
+Vale la seguente proprietà: 
+% \begin{equation}
+%     \begin{aligned}
+%         H(n) \leq 1 + \int_{1}^{n} \frac{1}{x} \,dx \leq 1 +
+%         \big[ \ln n\big]_1^n = 1 + \ln n\\
+%         \ln (n+1) \leq H(n) \leq 1 +\ln n
+%     \end{aligned}
+% \end{equation}
+$$\ln (n+1) \leq H(n) \leq 1 +\ln n$$
+
+\paragraph{Price Set Cover}
+L'algoritmo effettua ad ogni iterazione una scelta greedy, 
+si sceglie l'insieme che minimizza il rapporto tra prezzo e copertura 
+dell'universo.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$s_1, \dots, s_m$, $w_0, \dots, w_n$}
+    \KwResult{Scelta di sottoinsiemi che copre l'universo}
+     $R \gets U$\\
+     $C \gets \emptyset$\\
+     \While{$R \neq \emptyset$}{
+         $S_i \gets \min([s_1, \dots, s_m], \frac{w_i}{|S_i\cap R|})$\\
+         $C.add(S_i)$\\
+         $R \gets R \setminus S_i$
+     }
+     \Return{$C$}
+     \caption{PriceSetCover}
+\end{algorithm}
+
+\begin{remark}
+    \label{oss1set}
+    Il costo della soluzione equivale a $$w = \sum_{s\in U}c_s$$ ovvero la somma dei costi 
+    degli insiemi scelti.
+\end{remark}
+\begin{remark}
+    \label{oss2set}
+    Per ogni $k$, il costo degli elementi in $s_k$, ottengo 
+    $$\sum_{s \in S_k}C_s \leq H(|S_k|) \cdot  W_k$$
+\end{remark}
+\begin{proof}
+    Sia $S_k = \{s_1, \dots, s_d\}$ un insieme tra quelli da scegliere, e siano 
+    i suoi elementi elencati in ordine di copertura\footnote{Per chiarezza, l'insieme $S_k$ non verrà scelto, 
+    ma i suoi elementi saranno coperti da altri insiemi che intersecano con esso.}.
+
+    Consideriamo ora l'istante in cui si copre $s_j$ tramite un qualche insieme $S_h$.
+    Si può notare che, visto che gli elementi sono in ordine di copertura: 
+    $$R \supseteq \{s_j, s_{j+1} \dots, s_d \}$$
+    Inoltre, visto che gli elementi di $S_k$ sono in ordine di copertura: 
+    $$|S_k \cap R| \geq d-j+1$$
+    Riguardo al costo dell'elemento $j$, e in generale per tutti i $j$, vale:
+    \begin{equation}
+        \begin{aligned}
+            C_{s_j} &= \frac{W_h}{|S_h \cap R|} \leq \frac{W_k}{|S_k \cap R|} && \text{\emph{h} minimizza quel rapporto}\\
+            &\leq \frac{W_k}{d-j+1} && \text{equazione precedente}\\
+        \end{aligned}
+    \end{equation}
+    Considerando ora tutti gli elementi di $S_k$: 
+    \begin{equation}
+        \begin{aligned}
+            \sum_{s\in S_k} C_s \leq \sum_{j=1}^{d}\frac{W_k}{d-j+1} = \frac{W_k}{d} + \frac{W_k}{d-1} \dots && \text{La relazione vale per tutti i j}\\
+            = W_k(1 + \frac{1}{2}, \dots, \frac{1}{d}) = H(d)W_k = H(|S_k|)W_k && \text{Sviluppo e raccolgo, ottengo l'oss.}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    Price Set Cover fornisce una $H(M)$-approssimazione per Set Cover, dove $M=\max_i|S_i|$
+\end{theorem}
+\begin{proof}
+    Sia il peso della soluzione ottima $$w^* = \sum_{S_i \in C^*} w_i$$
+    Per l'osservazione \ref{oss2set} vale che: 
+    $$w_i \geq \frac{\sum_{s \in S_i}C_s}{H(|S_i|)} \geq \frac{\sum_{s \in S_i}C_s}{H(M)}$$
+    Visto che gli $s_i \in C^*$ sono una copertura, per l'osservazione \ref{oss1set}:
+    $$\sum_{S_i \in C^*}\sum_{s \in S_i}C_s \geq \sum_{s \in U} C_s = w$$
+    Inoltre, vale che, sfruttando le due disequazioni appena scritte: 
+    \begin{equation}
+        \begin{aligned}
+            w^* = \sum_{S_i \in C^*} w_i \geq \sum_{S_i \in C^*}\frac{\sum_{s \in S_i}C_s}{H(M)} \geq \frac{w}{H(M)}\\
+            \implies \frac{w}{w^*} = H(M)
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{corollary}
+    Price Set Cover fornisce una $O(\log n)$-approssimazione, non quindi costante 
+    come gli algoritmi precedenti.
+\end{corollary}
+\begin{remark}
+    L'analisi è tight, non esiste un algoritmo migliore, quindi
+    Price Set Cover $\notin$ APX, bensì, $\in \log(n)$-APX, una classe in cui 
+    si accetta un'approssimazione che peggiora logaritmicamente nell'input.
+    Esistono varie $f$-APX.
+\end{remark}
+\begin{proof}
+    Per dimostrare la tightness, ecco un esempio in cui Price Set Cover va male.
+
+    Consideriamo l'insieme $S$ di set tra cui scegliere così formato:
+    \begin{enumerate}
+        \item Due insiemi grandi $\frac{n}{2}$ che uniti coprono tutti gli elementi, 
+        di costo $1+\epsilon$
+        \item Un insieme che copre $\frac{n}{4}$ elementi degli insiemi 1 e 2 al punto 1, di costo 1
+        \item Un insieme che copre $\frac{n}{8}$ elementi degli insiemi 1 e 2 al punto 1, di costo 1
+        \item Un insieme che copre $\frac{n}{16}$ elementi degli insiemi 1 e 2 al punto 1, di costo 1\\
+        \dots
+    \end{enumerate}
+    Al primo passo, si sceglie l'insieme del punto 2, visto che
+    il suo costo equivale a $\frac{1}{\frac{n}{2}} = \frac{2}{n}$, mentre il costo 
+    di entrambi gli insimemi al punto 1, $\frac{1+\epsilon}{\frac{n}{2}} = \frac{2+2\epsilon}{n}$
+
+    Al secondo passo, si preferisce ai primi due l'insieme al punto 3, il calcolo è simile al punto precedente.\\
+    \dots
+
+    Il costo che si ottiene è $w = \log n$
+    La soluzione ottima sarebbe quella di prendere al passo 1 i primi due insiemi, in modo da coprire l'intero 
+    universo, ovvero $w^* = 2 + 2\epsilon$.
+\end{proof}
+
+\subsubsection{Vertex Cover}
+Il problema di Vertex Cover consiste nel trovare una copertura di 
+vertici in un grafo tale per cui per ogni vertice, una delle due estremità è contenuta nella copertura.
+
+Formalmente: \\
+\emph{Input}: $G=(V,E), w_i \in \mathbb{Q}^{>0}, \forall i \in V$\\
+\emph{Output}: $X \subseteq V, \forall xy \in E, x \in X \vee y \in X$\\
+\emph{Costo}: $w = \sum_{i \in X} w_i$\\
+\emph{Tipo}: min\\
+
+Consideriamo la versione di decisione del problema, ovvero $\hat{\mathit{VertexCover}}$, cioè, 
+posso trovare una copertura che ha peso minore di $\theta$?\\
+
+Vale che $\hat{\mathit{VertexCover}} \leq_{p} \hat{\mathit{SetCover}}$
+Per effettuare il passaggio, bisogna passare dall'input del primo al secondo
+$$G=(V,E), w_i \in \mathbb{Q}^{>0}, \theta \longrightarrow f \longrightarrow S_1, \dots, S_m, \bar{W_1}, \dots, \bar{W_m},\bar{\theta}$$
+La funzione $f$ funziona così: 
+\begin{equation}
+    \begin{aligned}
+        S_i = \{ e \in E, i \in e \} && \text{Per ogni vertice considero i suoi vicini}\\
+        U = E, \bar{W_i} = W_i, \bar{\theta} = \theta
+    \end{aligned}
+\end{equation}
+\begin{remark}
+    La funzione $f$ può essere utilizzata per mappare anche VertexCover in SetCover di ottimizzazione, 
+    visto che non stravolge il problema.\\
+    La trasformazione appena discussa quindi può essere utilizzata per fornire una $\log n$-approssimazione
+    per VertexCover di ottimizzazione.
+\end{remark}
+\paragraph{Price Vertex Cover}
+Prima di definire l'algoritmo vero e proprio, sono necessari alcuni passaggi preliminari.
+L'idea si basa sul fatto che gli archi sono intenzionati a comprare uno dei due estremi,
+ad un certo prezzo.
+Un nodo si vende, se la somma delle offerte degli archi incidenti arriva al suo $W_i$.
+\begin{definition}
+    Un insieme di offerte si dice equo per un vertice sse:
+    $$\sum_{e\in E, i \in e}P_e \leq W_i$$
+    Ovvero se le offerte $P_e$ degli archi che incidono sul vertice $i$ 
+    non superano il suo costo, ovviamente devono raggiungerlo per comprare 
+    il vertice.    
+\end{definition}
+\begin{lemma}
+    \label{pscl1}
+    Se $P_e$ è equo, allora
+    $$\sum_{e \in E} P_e \leq w^*$$
+\end{lemma}
+\begin{proof}
+    La definizione di equità implica che
+    $$\forall i \in V \sum_{e\in E, i \in e}P_e \leq W_i$$
+    Consideriamo ora la somma delle disequazioni per la soluzione ottima
+\begin{equation}
+    \begin{aligned}
+        \sum_{i \in S^*} \sum_{e\in E, i \in e}P_e &\leq \sum_{i \in S^*}W_i\\
+        \sum_{e \in E} P_e &\leq \sum_{i \in S^*} \sum_{e\in E, i \in e}P_e \leq W^*
+    \end{aligned}
+\end{equation}
+Questo vale perchè la seconda parte della disequazione considera potenzialmente più volte alcuni lati.
+\end{proof}
+\begin{definition}
+    $P_e$ è stretto sul vertice $i$ sse
+    $$\sum_{e \in E, i \in e} P_e = W_i$$
+\end{definition}
+Ecco ora l'algoritmo.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$G=(V,E), W_i \forall i \in V$}
+    \KwResult{Cover per il grafo}
+     $P_e \gets 0, \forall e \in E$\\
+     \While{$\exists ij \in E, P_e$ non stretto su i o su j}{
+        $\bar{e} \gets \bar{i}\bar{j}$\\
+        $\Delta \gets \min(W_{\bar{i}}-\sum_{e \in E, \bar{i} \in e}P_e, W_{\bar{j}}-\sum_{e \in E, \bar{j} \in e}P_e,)$\\
+        $P_e \gets P_e + \Delta$
+     }
+     \Return{$\{ i| P_e$ stretto su $i\}$}
+     \caption{PriceVertexCover}
+\end{algorithm}
+L'idea su cui si basa l'algoritmo è quella che, se un arco non sta offrendo abbastanza per i vertici, allora 
+aumenta la sua offerta, del minimo per soddisfare uno dei due nodi.
+\begin{lemma}
+    \label{pscl2}
+    Price Set Cover crea un peso $$W \leq 2\sum_{e \in E}P_e$$
+\end{lemma}
+\begin{proof}
+    Il costo finale di PSC è $W = \sum_{i \in S}W_i$, ovvero il costo 
+    dei vertici in output. Vale che, per la definizione di strettezza:
+    $$W = \sum_{i \in S}W_i = \sum_{i \in S} \sum_{e\in E, i \in e}P_e$$
+    Nella seconda sommatoria un lato compare una o due volte, se rispettivamente 
+    una o due estremità appartengono ad $S$.
+\end{proof}
+\begin{theorem}
+    Price Set Cover è $2$-approssimante per Set Cover.
+\end{theorem}
+\begin{proof}
+    \begin{equation}
+        \begin{aligned}
+            \frac{w}{w^*} &\leq \frac{2\sum_{e \in E}P_e}{w^*} && \text{Per il lemma \ref{pscl2}}\\
+            \frac{w}{w^*} &\leq \frac{2\sum_{e \in E}P_e}{\sum_{e \in E} P_e } \leq 2 && \text{Per il lemma \ref{pscl1}}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{remark}
+    Non esistono ad oggi algoritmi migliori per Price Set Cover.
+\end{remark}
+
+\subsubsection{Disjoint Paths}
+Dato un grafo orientato, esistono $K$ sorgenti e target, l'obiettivo è trovare $K$ cammini per le 
+coppie di sorgenti e destinazioni. Ogni arco può essere usato al più $C$ volte.
+
+Formalmente: \\
+\emph{Input}: $G=(V,E)$ orientato, $s_1, \dots, s_k$ sorgenti, $t_1, \dots, t_k$ destinazioni $\in V$
+$C \in \mathbb{N}^{>0}$\\
+\emph{Output}: $I = \{1, \dots, K\}, \forall i \in I,$ cammino $\Pi_i$, tale che nessun arco è utilizzato più di $C$ volte\\
+\emph{Funzione obiettivo}: $|I|$\\
+\emph{Tipo}: max\\
+
+L'idea su cui si basa l'algoritmo è quella di allungare un arco tanto quanto è utilizzato, 
+in modo da scoraggiare il suo utilizzo.\\
+È quindi definita una funzione di lunghezza: 
+$$l : E \longrightarrow \mathbb{R}^{>0}$$
+Dato un cammino come sequenza di nodi, la lunghezza del cammino sarà data dalla lunghezza su ogni coppia di consecutivi.
+
+\paragraph{Greedy Paths with capacity}
+L'algoritmo considera come input, oltre a quello per Disjoint Paths, un parametro
+$\beta > 0$, che indica il fattore di allungamento degli archi.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$G=(V,E),s_1, \dots, s_k, t_1, \dots, t_k, \beta > 0$}
+    \KwResult{Cammini da sorgenti a destinazioni}
+     $I \gets \emptyset$\\
+     $P \gets 0$\\
+     $l(xy) \gets 1, \forall xy \in E$\\
+     \While{$\Pi \gets$ shortest path from $s_i$ to $t_i$, $i \notin I$}{
+         $I \gets I \cup i$\\
+         $P \gets P \cup \Pi$\\
+         \For{$e\in \Pi$}{
+            $l(e) \gets l(e)*\beta$
+            \If{$e$ used by C paths}{
+                $\mathit{remove}(e)$
+            }
+         }
+     }
+     \Return{$I,P$}
+     \caption{GreedyDisjointPaths}
+\end{algorithm}
+
+Consideriamo ora l'evolversi dei cammini nell'algoritmo, in particolare un cammino
+può essere:
+\begin{itemize}
+    \item Inutile, se unisce una sorgente e destinazione già collegate
+    \item Utile ma ostruito, ovvero collega una sorgente e destinazione sconnesse, 
+    ma passa per un arco utlizzato da più di $C$ cammini
+\end{itemize}
+
+\begin{definition}
+    Un cammino $\Pi$ è corto rispetto a una certa lunghezza $l$ sse
+    $l(\Pi) < \beta^c$, lungo altrimenti.
+\end{definition}
+\begin{remark}
+    \label{ossdisjoint}
+    Se sono presenti cammini utili non ostruiti e corti, l'algoritmo sceglie un cammino
+    di questa natura, inoltre, nelle prime fasi dell'algoritmo, ovvero quando sono presenti cammini
+    di questo tipo, si può evitare di eliminare archi.
+\end{remark}
+\begin{proof}
+    Se esite un cammino corto, la sua lunghezza è per forza minore di $\beta^c$ quindi nessun arco 
+    è stato utilizzato $C$ volte.
+\end{proof}
+
+Tenendo presente quanto detto nell'osservazione \ref{ossdisjoint}, teniamo ora in considerazione 
+la funzione di lunghezza $\bar{l}$ nell'esatto istante in cui finiscono i cammini corti.
+Inoltre, $\bar{I}, \bar{P}$ saranno le sorgenti, destinazioni collegate e i rispettivi cammini 
+in quell'istante.
+
+\begin{lemma}
+    \label{ldis1}
+    Se $i \in I^* \setminus I$, allora $\bar{l}(\Pi_i^*) \geq \beta^c$, ovvero,
+    se una certa coppia $i$ appartiene alla differenza tra la nostra e la soluzione ottima, 
+    la lunghezza del cammino nella soluzione ottima è maggiore uguale di $\beta ^c$.
+\end{lemma}
+\begin{proof}
+    Se valesse $\bar{l}(\Pi_i^*) < \beta^c$, il cammino $\Pi_i^*$ sarebbe corto e
+    utile, in quanto collega una coppia ancora non collegata, dato che non appartiene a $I$.
+    Quindi, non esisterebbe motivo per non selezionarlo.
+\end{proof}
+
+\begin{lemma}
+    \label{ldis2}
+    Vale che $\sum_{e \in E}\bar{l}(e) \leq \beta^{c+1}|\bar{I}| + m$.
+\end{lemma}
+\begin{proof}
+    All'inizio dell'algoritmo, $\sum_{e \in E} l(e) = m$.
+    Consideriamo ora le la funzione di lunghezza ottenuta dopo aver selezionato 
+    un cammino:
+    $$l_1 \longrightarrow \Pi \longrightarrow l_2$$
+    \[ 
+        l_2(e) = 
+        \begin{cases}
+        \beta l_1(e) & \mathit{se}\;e \in \Pi\\
+        l_1(e) & \mathit{se}\;e \notin \Pi
+     \end{cases}
+    \]
+    Consideriamo ora la differenza delle lunghezze
+    \begin{equation}
+        \begin{aligned}
+            \sum_{e \in E} l_1(e) - \sum_{e \in E} l_2(e)&= \sum_{e \in E} (l_1(e) - l_2(e))\\
+            &= \sum_{e \in \Pi} (l_1(e) - l_2(e)) = \sum_{e \in \Pi} (\beta l_1(e) - l_2(e))\\
+            &= \sum_{e \in \Pi} (\beta -1)l_1(e) = (\beta -1) \sum_{e \in \Pi} l_1(e)\\
+            &= (\beta -1)l(\Pi) \leq (\beta -1)\beta^c \leq \beta^{c+1}
+        \end{aligned}
+    \end{equation}
+    Ovvero, le uniche lunghezze che cambiano sono quelle relative al cammino $\Pi$ poi, 
+    il cammino selezionato è corto, quindi la sommatoria delle lunghezze sul cammino è minore di 
+    $\beta^{c}$.
+    Considerando l'inizio della dimostrazione, visto che ad ogni passo la lunghezza aumenta di al 
+    massimo $\beta^{c+1}$, il lemma vale.
+\end{proof}
+\begin{remark}
+    \label{oss3dis}
+    Valgono:
+    \begin{equation}
+        \begin{aligned}
+            \sum_{i \in I^* \setminus I} \bar{l}(\Pi_i^*) \geq \beta^c|I^* \setminus I| && \text{dal lemma \ref{ldis1}}\\
+            \sum_{i \in I^* \setminus I} \bar{l}(\Pi_i^*) \leq c\sum_{e \in E} \bar{l}(e) \leq c(\beta ^{c+1}|\bar{I}| + m)
+            && \text{per il lemma \ref{ldis2}}
+        \end{aligned}
+    \end{equation}
+\end{remark}
+
+Mettendo tutto insieme: 
+\begin{equation}
+    \begin{aligned}
+        \beta^c|I^*| &= \beta^c|I^* \setminus I| + \beta^c|I^* \cap I|\\
+        &\leq \sum_{i \in I^* \setminus I} \bar{\Pi_i^*} + \beta^c && \text{per il punto 1 di oss. \ref{oss3dis}, e maggioro}\\
+        &\leq c(\beta^{c+1}|\bar{I}| + m) + \beta^c |I|&& \text{per il punto 2 di oss. \ref{oss3dis}}\\
+        &\leq c(\beta^{c+1}|I| + m) + \beta^c |I|&& \text{I è sovrainsieme per I barra}\\
+        |I^*| &\leq c\beta|I| + c\beta^{-c}m + |I|&& \text{divido per beta elevato alla c}\\
+        |I^*| &\leq c\beta|I| + c\beta^{-c }m|I| + |I|&& \text{moltiplico per la cardinalità quello in mezzo}\\
+        \frac{|I^*|}{|I|} &\leq c\beta + c\beta^{-c}m + 1&& \text{divido per cardinalità di I}
+    \end{aligned}
+\end{equation}
+Poniamo ora $\beta = m^{\frac{1}{c+1}}$ si ottiene:
+\begin{equation}
+    \begin{aligned}
+        \frac{|I^*|}{|I|} &\leq c(m^{\frac{1}{c+1}} + m^{\frac{-c+c+1}{c+1}}) + 1\\
+        &\leq 2cm^{\frac{1}{c+1}} +1
+    \end{aligned}
+\end{equation}
+
+Al variare di $C$ varia il grado di approssimazione dell'algoritmo.
+\begin{center}
+    \begin{tabular}{ c c  }
+     C & Bound approssimazione \\
+     \hline 
+     1 & $2\sqrt[2]{m} + 1$ \\  
+     2 & $4\sqrt[3]{m} + 1$ \\  
+     3 & $6\sqrt[4]{m} + 1$ \\  
+    \dots & \dots
+    \end{tabular}
+\end{center}
+\begin{theorem}
+    Greedy Disjoint Paths con  $\beta = m^{\frac{1}{c+1}}$ fornisce una $(2cm^{\frac{1}{c+1}} +1)$-approssimazione.
+\end{theorem}
+\begin{remark}
+    L'algoritmo non è buono, il fattore di approssimazione è pessimo, infatti, funziona decentemente solo 
+    se il numero di coppie da collegare $K >> 2\sqrt[2]{m}$.\\
+    Si fa notare infine che l'algoritmo funziona anche se una coppia è da collegare più volte.
+\end{remark}
+
+\subsection{Tecniche di arrotondamento}
+In questa sezione si presenta il problema di programmazione lineare e si 
+ricorre alla tecnica dell'arrotondamento di una soluzione reale per 
+individurarne una intera.
+
+Essa si rivela possibile soluzione per il problema di copertura dei vertici.
+
+\subsubsection{Linear programming}
+Un problema di programmazione lineare è formato da una funzione obiettivo e dei vincoli.
+\paragraph{Esempio}
+Funzione obiettivo: $$\mathit{min}\;\;3x_1 + |7x_2 - 4x_3|$$
+Vincoli:
+\[ 
+    \begin{cases}
+        x_1 + x_2 \leq 3\\
+        3x_3 - x1 \geq 7\\
+        x1 \geq 0\\
+        x2 \geq 0\\
+        x3 \geq 0\\
+    \end{cases}
+\]
+
+Più formalmente:\\
+\emph{Input}: $A \in \mathbb{Q}^{m\times n}, b \in \mathbb{Q}^m, c \in \mathbb{Q}^n$\\
+\emph{Output}: $x \in \mathbb{R}^n, Ax \geq b$\\
+\emph{Funzione obiettivo}: $C^T \cdot x$, valore della funzione obiettivo\\
+\emph{Tipo}: max, min\\
+
+\begin{remark}
+    Il problema di  LP $\in $ PO, spesso però si utilizzano
+    algoritmi worst case esponenziali.
+\end{remark}
+
+\paragraph{Integer linear programming}
+Cambiando il vincolo della soluzione ai soli interi, il problema diventa NPO completo.
+
+Ovvero:\\
+\emph{Input}: $A \in \mathbb{Q}^{m\times n}, b \in \mathbb{Q}^m, c \in \mathbb{Q}^n$\\
+\emph{Output}: $x \in \mathbb{Z}^n, Ax \geq b$\\
+\emph{Funzione obiettivo}: $C^T \cdot x$, valore della funzione obiettivo\\
+\emph{Tipo}: max, min\\
+
+\begin{theorem}
+    $\hat{\mathit{VertexCover}} \leq_p \hat{\mathit{ILP}}$ 
+\end{theorem}
+\begin{proof}
+    Consideriamo un input per il problema di $\hat{\mathit{VertexCover}}$, ovvero $$(G=(E,V), w_i \forall i \in V, \theta)$$
+    Ci si chiede se: $$\exists X \subseteq V | \forall xy \in E, x \in X \mathit{or} y \in X, \sum_{i\in X} w_i \leq \theta$$
+    Costruisco ora il problema di programmazione linerare in questo modo:
+    $$x_i \forall i \in V$$
+    Vincoli:
+    \[
+        2(n+m)\;\mathit{volte}
+        \begin{cases}
+            0 \leq x_i \leq 1  \;\forall i \in V\\
+            x_i + x_j \geq 1 \;\forall ij \in E\\
+        \end{cases}
+    \]
+    Obiettivo,:
+    $$\min \sum_{i\in V} w_ix_i$$
+
+    Assumiamo ora $\bar{x_i}$ soluzione ammissibile per ILP. Sia $X = \{ i | \bar{x_i} = 1\}$.
+    Visto che c'è il vincolo sugli archi, $X$ è soluzione per $\hat{\mathit{VertexCover}}$.
+
+    Quindi, risolvendo in tempo polinomiale ILP si risolverebbe VertexCover, ma 
+    visto che $\hat{\mathit{VertexCover}}$ è NP completo, anche ILP è NP completo.
+\end{proof}
+
+\subsubsection{Vertex Cover con arrotondamento}
+Consideriamo ora la trasformazione mostrata al teorema precedente, ma invece
+che un problema di programmazione lineare intera consideriamone uno reale, $\Pi^\prime$.
+
+Esiste il problema di fare il passo inverso. Con il problema intero infatti 
+bastava considerare le variabili con valore 1, ora sono reali, bisogna quindi trovare un 
+modo di capire se una variabile (nodo), fa o no parte del cover.
+
+Si sta di fatto rilassando il problema, chiamiamo $\Pi^\prime_{\mathit{INT}}$ il problema 
+intero, rispetto a quello reale si avrà che:\footnote{Si sta considerando un problema di minimo}
+\begin{equation}
+    \begin{aligned}
+        x_i^*, w^*, \tilde{x_i^*}, \tilde{w^*} && \text{Soluzioni rispettivamente reale e intera}\\
+        \tilde{w^*} \geq w^* && \text{Poichè il dominio di ricerca reale è maggiore}\\
+    \end{aligned}
+\end{equation}
+
+Si definisce ora la seguente trasformazione:
+\[
+    r_i = 
+    \begin{cases}
+        1\;\mathit{se}\;x_i^* \geq \frac{1}{2}\\
+        0\;\mathit{se}\;x_i^* < \frac{1}{2}
+    \end{cases}
+\]
+\begin{remark}
+    La trasformazione fornisce una soluzione ammissibile per $\Pi^\prime_{\mathit{INT}}$.
+\end{remark}
+\begin{proof}
+    Bisogna dimostrare che:
+    $$\forall ij \in E, r_i + r_j \geq 1$$
+    Sapendo che:
+    $$\forall ij \in E, x_i^* + x_j^* \geq 1$$
+    Supponiamo per assurdo che valgano entrambi 0, ma allora: 
+    $$x_i^* < \frac{1}{2}, x_j^* < \frac{1}{2}$$
+    che contraddice la seconda assunzione.
+\end{proof}
+\begin{theorem}
+    Arrotondando la soluzione reale con la trasformazione mostrata, 
+    si fornisce una 2-approssimazione per $\hat{\mathit{VertexCover}}$.
+\end{theorem}
+\begin{proof}
+    Valgono:
+    \begin{equation}
+        \begin{aligned}
+            r_i \leq 2x_i^* && \text{Per definizione della trasformazione}\\
+            \sum_{i\in V} w_ir_i \leq 2 \sum_{i\in V} w_ix_i^* = 2w^* \leq 2\tilde{w} &&\text{La soluzione arrotondata è al più il doppio}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{remark}
+    La soluzione non migliora Price Vertex Cover, anch'esso 2-approssimante, è però interessante l'approccio utilizzato.
+\end{remark}
+
+\subsection{Altri esempi}
+In questa sezione si considera un problema che non ricade nelle techine viste in precedenza.
+
+\subsubsection{Traveling Salesman Problem}
+Prima di introdurre il problema, si introducono alcuni concetti preliminari 
+tramite un secondo problema, quello dei ponti di Konisberg.
+\paragraph{Problema dei ponti di Konisberg}
+Il problema considera una città, costruita a cavallo di un fiume, 
+e risponde alla domanda, è possibile effettuare un cammino che passi 
+una e una sola volta su tutti i ponti della città?
+
+La specifica istanza del problema si modella su un multigrafo \footnote{Grafo in cui possono esistere piu archi per la stessa coppia
+sorgente destinazione} e la risposta è no.
+
+Il problema generale consiste nell'individuare un \emph{circuito Euleriano} nel grafo.
+
+\begin{theorem}
+    \label{teulerian}
+    Un multigrafo ammette un circuito Euleriano sse tutti i vertici 
+    hanno grado\footnote{Numero di archi incidenti} pari.
+\end{theorem}
+\begin{proof}
+    Si sta dimostrando l'implicazione da sinistra a destra, 
+    ovvero se i nodi hanno tutti grado pari esiste un circuito Euleriano.
+
+    Concettualmente in un cammino, non posso rimanere bloccato, 
+    visto che tutti i nodi hanno grado pari. Nello specifico, in un cammino può succedere:
+    \begin{enumerate}
+        \item Creo un ciclo con la partenza, in questo caso riparto
+        \item Incido su un nodo del cammino, posso continuare, visto che ha grado pari
+    \end{enumerate}
+    È facile intuire che è possibile continuare cosi finchè non si visitano tutti gli archi del multigrafo.
+\end{proof}
+\begin{lemma}
+    \label{lstrette}
+    In ogni grafo non orientato il numero di nodi con grado dispari è pari.
+\end{lemma}
+\begin{proof}
+    Consideriamo la somma dei gradi:
+    $$\sum_{x\in V} d(x) = 2m$$
+    Entrambi i membri sono pari.
+    Nella somma dei gradi, se considero un grado pari, la parità della somma non cambia, 
+    mentre, se aggiungo un grado dispari, la somma diventa dispari.
+
+    È facile intuire che serve necessariamente un numero pari di gradi dispari per ottenere un 
+    numero pari nel primo membro dell'equazione.
+\end{proof}
+
+Terminata la digressione sul problema dei ponti, si introduce ora formalmente 
+il problema del commesso viaggiatore.
+
+\emph{Input}: $G = (V,E)$ non orientato, $\delta_e \in \mathbb{Q}^{>0} \forall e\in E$\\
+\emph{Output}: ciclo che passa per tutti i vertici, ovvero un ciclo Hamiltoniano\\
+\emph{Funzione obiettivo}: $\delta(\Pi) = \sum_{e\in E}\delta_e$\\
+\emph{Tipo}: min
+
+\subsubsection{Traveling Salesman Problem su cricche}
+Il problema del commesso viaggiatore spesso si considera su 
+una cricca\footnote{Grafo con tutti gli archi possibili $K_V = (N, \binom{n}{2} )$}.
+
+È possibile trasformare un grafo normale in una cricca aggiungendo 
+tutti gli archi che mancano con peso equivalente alla somma di tutti i vertici più uno.
+La soluzione ottima non varia.
+
+\subsubsection{Traveling Salesman Problem metrico}
+Il problema in questa versione considera come input una cricca, 
+inoltre vale la distanza triangolare, ovvero: 
+$$\forall i, j, k \in V, \delta_{ij} \leq \delta_{ik}+\delta_{kj}$$
+
+\begin{theorem}
+    TSP metrico è NPO completo.
+\end{theorem}
+
+\paragraph{Algoritmo di Christofides}
+L'algoritmo procede trovando un albero di copertura minimo e successivamente lavorando attorno 
+a quello per individuare una soluzione.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$G=(V,\binom{V}{2}), \delta_e \in \mathbb{Q}^{>0} \forall e\in E$ che soddisfa la triangolare}
+    \KwResult{Soluzione per TSP metrico}
+     $T \gets \mathit{MinimumSpanningTree(G)}$\\
+     $D \gets \{v \in T, d(v)\; \mathit{dispari}\}$\\
+     $M \gets \mathit{MinimumPerfectMatching(D)}$\\ 
+     $H \gets T \cup M$\\
+     $\Pi \gets \mathit{EulerianCircuit(H)}$\\
+     $\Pi \gets \mathit{Hamiltonian(\Pi)}$\\
+     \Return{$\Pi$}
+     \caption{Christofides}
+\end{algorithm}
+\begin{remark}
+    Vale che:
+    \begin{enumerate}
+        \item D ha cardinalità pari per il lemma \ref{lstrette}
+        \item H è un multigrafo con tutti gradi pari, quindi esiste un circuito euleriano
+        \item Il circuito euleriano si costruisce come nella dimostrazione del teorema \ref{teulerian}
+        \item Per trovare un ciclo hamiltoniano da $\Pi$ basta procedere nel cammino saltando i nodi già visitati,
+        tanto è una cricca e ci sono tutti gli archi
+    \end{enumerate}
+\end{remark}
+\begin{lemma}
+    \label{tspl1}
+    Il peso dello spanning tree è al più uguale al peso della soluzione ottima. $$\delta(T) \leq \delta^*$$
+\end{lemma}
+\begin{proof}
+    Sia $\Pi^*$ la soluzione ottima.
+    Rimuovendo un qualunque lato, si ottiene un albero.
+    Vale che, visto che $T$ è il minimo albero di copertura:
+    $$\delta(T) \leq \delta(\Pi^* - e) \leq \delta(\Pi^*) = \delta^*$$
+\end{proof}
+\begin{lemma}
+    \label{tspl2}
+    Il costo del perfect matching è al massimo la metà della soluzione ottima:
+    $$\delta(M) \leq \frac{1}{2}\delta^*$$
+\end{lemma}
+\begin{proof}
+    Sia $\Pi^*$ la soluzione ottima.
+    Siano $D$ i vertici con grado dispari considerati nell'algoritmo, che ovviamente appartengono alla soluzione
+    ottima.
+
+    Si considera ora il ciclo costruito unendo i nodi di $D$ e siano $M_1$ e $M_2$ due gruppi di lati, 
+    che contengono in maniera alternata i lati del ciclo.
+    Sia $M_1$ che $M_2$ sono matching.\\
+    Vale che:
+    \begin{equation}
+        \begin{aligned}
+            \delta(M) &\leq \delta(M_1)\\
+            \delta(M) &\leq \delta(M_2)\\
+            2\delta(M) &\leq \delta(M_1) + \delta(M_2) \leq \delta^*
+        \end{aligned}
+    \end{equation}
+    L'ultima disequazione segue dal fatto che, collegando i nodi che sono in $D$ si sta cortocircuitando il cammino, 
+    ovvero, due nodi $n_1$ e $n_2 \in D$ sono collegati direttamente nel matching ma potrebbero non esserlo 
+    nella soluzione ottima, segue quindi che per la triangolare, la distanza tra i due è al piu uguale a quella nel cammino 
+    ottimo.\\
+    Proseguendo con la disequazione si ottiene che
+    $$\delta(M) \leq \frac{1}{2}\delta^*$$
+\end{proof}
+\begin{theorem}
+    L'algoritmo di Christofides è $\frac{3}{2}$-approssimante per TSP metrico.
+\end{theorem}
+\begin{proof}
+    Sia $\tilde{\Pi}$ il cammino ottimo.
+    Vale che:
+    \begin{equation}
+        \begin{aligned}
+            \delta(\tilde{\Pi}) \leq \delta(\Pi) &= \sum_{e \in M}\delta_e + \sum_{e \in T}\delta_e\\
+            \delta(\tilde{\Pi}) &\leq \frac{1}{2}\delta^* + \delta^* \leq \frac{3}{2}\delta^* && \text{Per i lemmi \ref{tspl1} e \ref{tspl2}}\\
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    L'analisi di Christofides è stretta.
+\end{theorem}
+\begin{proof}
+    Si considera un grafo con $n$ nodi disposti in linea.
+    I nodi sono collegati in sequenza con archi lunghi 1.
+    Poi, si collegano i nodi a distanza 2, partendo dal primo, 
+    andando verso destra con archi $1 + \epsilon$, stesso discorso partendo dall'ultimo tornando 
+    indietro.
+
+    Si aggiungono poi tutti gli archi per creare una cricca, tali archi hanno lunghezza
+    equivalente a quella del cammino minimo che unisce sorgente e destinazione. 
+
+    Il minimum spanning tree pesca solo gli archi lunghi 1.\\
+    Il perfect matching utilizza l' arco dal nodo più a sinistra a quello più a destra, 
+    lungo $$(1+\epsilon)(\frac{n}{2} -1 ) + 1 = \frac{n}{2} + \epsilon \frac{n}{2} - \epsilon$$
+
+    Il cammino individuato da Christofides è quindi:
+    $$(n-1) + \frac{n}{2} + \epsilon \frac{n}{2} - \epsilon = \frac{3}{2}n +\epsilon \frac{n}{2} - (\epsilon +1)$$
+
+    Esiste però la soluzione ottima che consiste nel muoversi da sinistra a destra seguendo gli archi che portano 
+    a distanza 2, seguire l'arco dal penultimo all'ultimo nodo lungo 1, e ripetere il procedimento 
+    tornando indietro.\\
+    Tale approccio ha costo: 
+    $$\delta(\Pi^*) = 2((1+\epsilon)(\frac{n}{2}-1) +1) = n + \epsilon n -2\epsilon$$
+    Calcoliamo il rapporto di approssimazione:
+    $$\frac{\delta(\Pi)}{\delta(\Pi^*)} = \frac{\frac{3}{2}n +\epsilon \frac{n}{2} - (\epsilon +1)}{n + \epsilon n -2\epsilon}$$
+    $$\lim_{n \rightarrow \infty, \epsilon \rightarrow 0}\frac{\delta(\Pi)}{\delta(\Pi^*)} = \frac{3}{2}$$
+\end{proof}
+\begin{theorem}
+    Non esiste un $\alpha > 1$ tale che TSP sia $\alpha$-approssiamante in tempo polinomiale.
+\end{theorem}
+\begin{proof}
+    Dato un grafo supponiamo di dover decidere se ammette un ciclo Hamiltoniano (NP completo).
+
+    Sia il grafo $G^\prime = (V, \binom{V}{2})$ costruico come segue:
+    \[
+        d(x,y) =     
+        \begin{cases}
+            1\;\mathit{se}\;xy \in E\\ 
+            \lceil {\alpha n} \rceil + 1\;\mathit{se}\;xy \notin E        
+
+        \end{cases}
+    \]
+    
+    Applichiamo l'algoritmo ottimo su $G^\prime$, la soluzione equivale a:
+    \[
+        \delta^*(\Pi) =    
+        \begin{cases}
+            n\;\mathit{se\;esiste\;un\;ciclo\;hamiltoniano}\\ 
+            \lceil \alpha n \rceil+ 1 \;\mathit{altrimenti}
+        \end{cases}
+    \]
+
+    Usando l'algoritmo $\alpha$-approssimante che si assume esistere, 
+    si otterrebbe una soluzione:
+    \begin{equation}
+        \begin{aligned}
+            n \leq \delta(\Pi) \leq \alpha n && \text{con ciclo hamiltoniano}\\
+            \lceil\alpha n \rceil+ 1 \leq \delta(\Pi) \leq \alpha\lceil \alpha n \rceil+ 1 && \text{altrimenti}
+        \end{aligned}
+    \end{equation}
+    Significa che si può decidere se il grafo ammette un ciclo hamiltoniano in tempo polinomiale.\\
+    Deve perciò valere che:
+    $$\alpha n \geq \lceil \alpha n \rceil+ 1$$
+    \begin{equation}
+        \begin{aligned}
+            \alpha n \geq \lceil \alpha n \rceil+ 1\\
+            \alpha \geq \alpha + \frac{1}{n}
+        \end{aligned}
+    \end{equation}
+    Non esiste un $\alpha$ maggiore di uno che soddisfa l'equazione.
+\end{proof}
+
+\subsection{Problemi PTAS e FPTAS}
+I due problemi a seguire ammettono algoritmi che appartengono alla classe PTAS, sono 
+quidni approssimabili in maniera arbitraria.
+
+\subsubsection{Minimum partition}
+Il problema del minium partition equivale a suddividere un insieme in due sottoinsiemi 
+tali che il massimo delle somme degli elementi dei due insiemi è minimizzato.
+Si può vedere come \emph{2-load balancing}, visto a sezione \ref{lb}.
+
+Formalmente:\\
+\emph{Input}: $w_1, \dots, w_n \in \mathbb{Q}^{>0}$\\
+\emph{Output}: $y_1 \subseteq \{1,\dots , n \},  y_2 = \{1,\dots , n \} \setminus y_1$\\
+\emph{Funzione obiettivo}: $max(\sum_{i\in y_1}w_i, \sum_{j\in y_2}w_j)$\\
+\emph{Tipo}: min
+
+\paragraph{PTAS 2-loadbalance}
+L'algoritmo è simile a Sorted Balance, assegna in modo ottimale 
+alcuni task.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$w_1, \dots, w_n \in \mathbb{Q}^{>0}$, $\epsilon > 0$}
+    \KwResult{Soluzione per load balance}
+    \If{$\epsilon \geq 1$}{$\mathit{Assegno}\;\mathit{tutto}\;\mathit{alla}\;\mathit{prima}\;\mathit{macchina}$}
+     $T \gets \mathit{reverse(sorted}(w_1, \dots, w_n))$\\
+     $k \gets \lceil \frac{1}{\epsilon} - 1 \rceil$\\
+    $\mathit{Assegna\;}\mathit{i\;}\mathit{primi\;}\mathit{k\;}\mathit{task\;}\mathit{in\;}\mathit{modo\;}\mathit{ottimale\;}$\\
+    $\mathit{GreedyBalance}(w_{k+1}, \dots, w_n)$\\
+     \Return{$\max(W(y_1), W(y_2))$}
+     \caption{PTAS 2-loadbalance}
+\end{algorithm}
+
+\begin{theorem}
+    L'algoritmo proposto fornisce una $(1+\epsilon)$-approssimazone per 
+    2-loadbalance.
+\end{theorem}
+\begin{proof}    
+    Per ogni $X \subseteq \{1, \dots, n\}$, $w(X) = \sum_{i\in X}w_i$.
+
+    Sia $L = \frac{w(\{1, \dots, n\})}{2}$ il peso complessivo dei task, diviso 2.
+
+    Vale che: 
+    $$w^* \geq L $$
+    Se così non fosse, significa che sia la prima che la seconda macchina hanno
+    task per un peso inferiore alla metà del peso complessivo delle task.
+    Ma ciò è assurdo, visto che la somma dei carichi delle macchine è $2L$.
+
+    Procediamo ora per casi rispetto ad $\epsilon$:
+
+    Caso 1: $\epsilon \geq 1$\\
+    In questo caso:
+    $$w(y_1) = 2L \leq 2w^* \leq (1+\epsilon)w^*$$
+    Ovvero il peso della prima macchina rispetta l'approssimazione di $1+\epsilon$.
+
+    Caso 2: $\epsilon < 1$\\
+    Supponiamo che la prima macchina abbia peso maggiore: 
+    $$w(y_1) \geq w(y_2)$$
+    Sia $h$ l'indice dell'ultimo task assegnato alla prima macchina:
+    Caso 2A: $h \leq k$ \\
+    Ho trovato la soluzione ottima, visto che il peso della 
+    prima macchina è maggiore di quello della seconda.
+    
+    Caso 2B $h > k$\\
+    Sia il peso subito prima dell'ultimo task, vale che: 
+    \begin{equation}
+        \begin{aligned}
+            w(y_1) - w_h &\leq w(y_2)^\prime \leq w(y_2) && \text{peso della macchina 2 in quel momento}\\
+            w(y_1) + w(y_1)- w_h &\leq w(y_2) + w(y_1)&& \text{sommiamo il peso della macchina 1}\\
+            2w(y_1) - w_h &\leq 2L\\
+            w(y_1) &\leq \frac{w_h}{2} + L\\
+        \end{aligned}
+    \end{equation}
+    Inoltre:
+    \begin{equation}
+        \begin{aligned}
+            2L = \sum_{i = 1}^{n} w_i = w_1 + \dots + w_h + \dots + w_n\\
+            \geq w_1 + \dots + w_h \geq w_h(k+1)\\
+            \implies L \geq \frac{w_h}{2}(k+1)
+        \end{aligned}
+    \end{equation}
+    Calcoliamo ora il rapporto di approssimazione:
+    \begin{equation}
+        \begin{aligned}
+            \frac{w(y_1)}{w^*} &\leq \frac{w(y_1)}{L}&& \text{per la proprietà vista all'inizio}\\
+            &\leq \frac{\frac{w_h}{2} + L}{L} = 1 + \frac{w_h}{2L}&& \text{per la seconda proprietà}\\
+            &\leq 1 + \frac{w_h}{2\frac{w_h}{2}(k+1)} = 1 + \frac{1}{k+1}&& \text{per la terza proprietà}\\
+            &= \frac{1}{\lceil \frac{1}{\epsilon} -1 \rceil +1} \leq 
+            \frac{1}{\frac{1}{\epsilon} -1 +1} = 1+\epsilon&& \text{per la definizione di k}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    L'algoritmo impiega un tempo pari a 
+    $$O(2^{\frac{1}{\epsilon}} + n\log n)$$
+    Ovvero è polinoimiale in $n$, ma esponenziale in $\epsilon$
+\end{theorem}
+\begin{corollary}
+    Minimum Partition $\in$ PTAS
+\end{corollary}
+\subsubsection{Knapsack FPTAS}
+Il problmea dello zaino consiste nel selezionare un insieme 
+di elementi che massimizzino il valore, il cui ingombro non superi
+la capacità dello zaino.
+
+Formalmente:\\
+\emph{Input}: $(w_1, v_1), \dots, (w_n, v_n)\;w_i, v_i, W \in \mathbb{N}$ dove $W$ è la capacità dello zaino\\
+\emph{Output}: $X \subseteq \{1, \dots, n\}, \sum_{i \in X} w_i \leq W$\\
+\emph{Funzione obiettivo}: $\sum_{i \in X} v_i$\\
+\emph{Tipo}: max
+
+La versione di decisione del problema è NP completa.
+
+\paragraph{Knapsack in programmazione dinamica}
+È possibile risolvere il problema dello zaino in programmazione dinamica, 
+si puo considerare la seguenze equazione di ricorrenza.
+
+\[
+    DP[i,w] = 
+    \begin{cases}
+        0\; \mathit{se}\; i = 0\;\mathit{or}\;w = 0\\
+        DP[i-1,w]\;\mathit{se}\;w_i > w\\
+        \max(DP[i-1,w], DP[i-1,w-w_i] + v_i)\;\mathit{altrimenti}
+
+    \end{cases}\]
+
+L'algoritmo di facile implementazione segue l'equazione appena introdotta, 
+riempendo una matrice iterativamente o ricorsivamente.
+\begin{remark}
+    Iterativamente si possono mantenere solo le ultime due righe, 
+    lo spazio si abbatte.
+\end{remark}
+
+\begin{theorem}
+    Knapsack in programmazione dinamica ha complessità in tempo e spazio (a meno di ottimizzazioni) equivalente a 
+    $O(nW)$, dove $n$ è il numero di oggetti e $W$ la capacità dello zaino.
+\end{theorem}
+\begin{proof}
+    Per mantenere il parametro $W$ in memoria sono necessari $O(\log W)$ bit, quindi
+    $W = 2 ^{|W|}$. 
+
+    L'algoritmo si dice essere pseudopolinomiale.
+\end{proof}
+
+\paragraph{Knapsack programmazione dinamica rivisitato}
+Questa volta cambia il contenuto della matrice.
+In particolare, in $DP[i][v]$ è contenuto il minimo peso, che 
+consente di portare a casa $\geq v$ usando i primi i oggetti.
+
+I casi base sono:
+\begin{enumerate}
+    \item $v = 0$, in quel caso il valore della cella è nullo
+    \item $i = 0$, in quel caso si considera $+\infty$
+\end{enumerate}
+
+L'equazione di ricorrenza diventa: 
+\[
+    DP[i,v] = 
+    \begin{cases}
+        0\; \mathit{se}\; v = 0\\
+        +\infty\; \mathit{se}\; i = 0\\
+        \min(DP[i-1,v], DP[i-1,v-v_i] + w_i)\;\mathit{altrimenti}
+    \end{cases}\]
+
+\begin{theorem}
+    Il problema riformulato ha complessità in tempo e spazio (a meno di ottimizzazioni) equivalente a 
+    $O(n\sum_i v_i) = O(n^2v_{max})$. L'algoritmo rimane pseudopolinomiale, per il secondo termine.
+\end{theorem}
+
+\begin{remark}
+    La matrice si può restringere in larghezza, arrotondando i valori, in modo da introdurre approssimazione
+    nel valore della soluzione ma non nella validità di essa.
+\end{remark}
+
+\paragraph{Knapsack rescaling}
+Preso un input per Knapsack, si considera il valore:
+$$\theta = \frac{\epsilon v_max}{2n}, 0 < \epsilon \leq 1$$
+L'input del problema originale diventa:
+$$\bar{\Pi} = ((w_i, \bar{v_i}), W), \bar{v_i} = \lceil\frac{v_i}{\theta}\rceil\theta$$
+Si considera poi una terza versione:
+$$\hat{\Pi} = ((w_i, \hat{v_i}), W), \hat{v_i} = \lceil\frac{v_i}{\theta}\rceil$$
+
+La formulazione $\bar{\Pi}$ è utile nello studio del problema, quella versione non 
+si può risolvere in programmazione dinamica, visto che i valori non sono interi.
+
+\begin{remark}
+    Le soluzioni ammissibili dei problemi sono equivalenti.
+\end{remark}
+
+\begin{lemma}
+    Le soluzioni ottime $\hat{S^*}, \bar{S^*}$ di $\hat{\Pi^*}, \bar{\Pi^*}$ sono equivalenti, 
+    sono semplicemente scalati per il parametro $\theta$.
+\end{lemma}
+
+\begin{lemma}
+    \label{knl2}
+    Sia S una soluione ammissibile di $\Pi$, allora:
+    $$\sum_{i \in S} v_i \leq (1 + \epsilon) \sum_{i \in \hat{S^*}} v_i$$
+\end{lemma}
+\begin{proof}
+    \begin{equation}
+        \begin{aligned}
+            \sum_{i \in S} v_i &\leq \sum_{i \in S} \bar{v_i} && \text{Per l'operazione di ceil}\\
+            &\leq \sum_{i \in \bar{S^*}} \bar{v_i} && \text{S ammissibile, S barra ottima}\\
+            &= \sum_{i \in \hat{S^*}} \bar{v_i} && \text{per la prima osservazione}\\
+            &\leq \sum_{i \in \hat{S^*}} (v_i + \theta) = \sum_{i \in \hat{S^*}} v_i + |\hat{S^*}|\theta\\
+            &\leq \sum_{i \in \hat{S^*}} v_i + n \theta = \sum_{i \in \hat{S^*}} v_i + n\frac{\epsilon v_{max}}{2n}\\
+            &= \sum_{i \in \hat{S^*}} v_i + \frac{\epsilon v_{max}}{2} 
+        \end{aligned}
+    \end{equation}
+    Siccome questo vale per ogni soluzione ammissibile, è vera anche per $S = \{i_{max}\}$, ovvero l'indice
+    che dà valore massimo. Continuando con l'equazione precedente:
+    \begin{equation}
+        \begin{aligned}
+            v_{max} \leq \sum_{i \in \hat{S^*}} v_i + \frac{\epsilon v_{max}}{2} \leq \sum_{i \in \hat{S^*}} v_i + \frac{ v_{max}}{2} &&\text{epsilon minore uguale a 1}\\
+            \sum_{i \in \hat{S^*}} v_i \geq \frac{\epsilon v_{max}}{2}
+        \end{aligned}
+    \end{equation}
+
+    Applicando ora l'equazione appena ottenuta alla prima equazione della dimostrazione:
+    \begin{equation}
+        \begin{aligned}
+            \sum_{i \in S} v_i \leq \sum_{i \in \hat{S^*}} v_i + \frac{\epsilon v_{max}}{2}\\
+            \sum_{i \in S} v_i \leq \sum_{i \in \hat{S^*}} v_i + \epsilon \sum_{i \in \hat{S^*}} v_i = (\sum_{i \in \hat{S^*}} v_i)(1+\epsilon)
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{remark}
+    Vale che:
+    $$\hat{v_{max}} = \lceil\frac{v_{max}}{\frac{\epsilon v_{max}}{2n}}\rceil = \lceil\frac{2n}{\epsilon}\rceil
+    \leq \frac{2n}{\epsilon} + 1$$
+\end{remark}
+\begin{corollary}
+    L'algoritmo in programmazione dinamica rivisitato, applicato a $\hat{\Pi}$, fornisce una
+    $(1=\epsilon)$-approssimazione di Knapsack in tempo e spazio $O(\frac{n^3}{\epsilon})$.
+\end{corollary}
+\begin{proof}
+    L'algoritmo individua $\hat{S^*}$, vale che:
+    \begin{equation}
+        \begin{aligned}
+            (1-\epsilon)\sum_{i\in \hat{S^*}}v_i \geq \sum_{i \in S} v_i \geq v^* &&\text{Per il lemma \ref{knl2}}\\
+            1 \leq \frac{v^*}{\sum_{i\in \hat{S^*}}v_i} \leq (1+\epsilon)
+        \end{aligned}
+    \end{equation}
+    L'algoritmo ha complessità 
+    $$O(n^2 \hat{v_{max}}) = O(n^2(\frac{2n}{\epsilon} + 1)) = O(\frac{n^3}{\epsilon})$$
+\end{proof}
+\begin{remark}
+    Al variare di $\epsilon$ si aumenta o abbassa il tempo necessario al completamento dell'algoritmo, 
+    in particolare.
+\end{remark}
+\begin{corollary}
+    Knapsack risolto in questo modo appartiene alla classe FPTAS.
+\end{corollary}
