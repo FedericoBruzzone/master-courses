@@ -96,9 +96,17 @@ def toRe(x): return x*4/5
 def fromRo(x): return (x-7.5)*40/21
 def toRo(x): return x*21/40+7.5
 
-toT = {’F’: toF, ’K’: toK, ’R’: toR, ’De’: toDe, ’N’: toN, ’Ré’: toRé, ’Rø’: toRø, ’C’: toC}
-fromT = {’F’: fromF, ’K’: fromK, ’R’: fromR, ’De’: fromDe, ’N’: fromN, ’Re’: fromRe, ’Ro’: fromRo, ’C’: fromC}
+toT = {'F': toF, 'K': toK, 'R': toR, 'De': toDe, 'N': toN, 'Re': toRe, 'Ro': toRo, 'C': toC}
+fromT = {'F': fromF, 'K': fromK, 'R': fromR, 'De': fromDe, 'N': fromN, 'Re': fromRe, 'Ro': fromRo, 'C': fromC}
  
 def fromTtoAll(n, T):
 	celsius = fromT[T](n)
 	return {scale: convert(celsius) for scale, convert in toT.item()}
+	
+# 2
+def table(n):
+	res = [[convert \
+	for scale, convert in sorted(fromTtoAll(n, t).items(), key=lambda x: x[0])] \
+	for t in sorted(toT.keys())]
+	
+	
