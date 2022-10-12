@@ -83,14 +83,14 @@ def fromC(x): return x
 def toC(x): return x
 def fromDe(x): return 100-x*2/3
 def toDe(x): return (100-x)*3/2
-def fromF(x):return (x-32)*5/9
-def toF(x):return x*9/5+32
-def fromK(x):return x-273.15
-def toK(x):return x+273.15
-def fromN(x):return x*100/33
-def toN(x):return x*33/100
-def fromR(x):return (x-491.67)*5/9
-def toR(x):return x*9/5+491.67
+def fromF(x): return (x-32)*5/9
+def toF(x): return x*9/5+32
+def fromK(x): return x-273.15
+def toK(x): return x+273.15
+def fromN(x): return x*100/33
+def toN(x): return x*33/100
+def fromR(x): return (x-491.67)*5/9
+def toR(x): return x*9/5+491.67
 def fromRe(x): return x*5/4
 def toRe(x): return x*4/5
 def fromRo(x): return (x-7.5)*40/21
@@ -99,22 +99,6 @@ def toRo(x): return x*21/40+7.5
 toT = {’F’: toF, ’K’: toK, ’R’: toR, ’De’: toDe, ’N’: toN, ’Ré’: toRé, ’Rø’: toRø, ’C’: toC}
 fromT = {’F’: fromF, ’K’: fromK, ’R’: fromR, ’De’: fromDe, ’N’: fromN, ’Re’: fromRe, ’Ro’: fromRo, ’C’: fromC}
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def fromTtoAll(n, T):
+	celsius = fromT[T](n)
+	return {scale: convert(celsius) for scale, convert in toT.item()}
