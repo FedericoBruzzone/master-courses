@@ -101,12 +101,20 @@ fromT = {'F': fromF, 'K': fromK, 'R': fromR, 'De': fromDe, 'N': fromN, 'Re': fro
  
 def fromTtoAll(n, T):
 	celsius = fromT[T](n)
-	return {scale: convert(celsius) for scale, convert in toT.item()}
+	return {scale: convert(celsius) for scale, convert in toT.items()}
 	
 # 2
 def table(n):
-	res = [[convert \
-	for scale, convert in sorted(fromTtoAll(n, t).items(), key=lambda x: x[0])] \
-	for t in sorted(toT.keys())]
+	all_values = [[convert \
+		       for scale, convert in sorted(fromTtoAll(n, t).items(), key=lambda x: x[0])] \
+		       for t in sorted(toT.keys())]
+	res = "    "+(8*"{: ^6} ")+"\n"+(8*("{:<3}"+(8*"{: 6.1f} ")+"\n"))
+	output = temp = sorted(toT.keys())
+	for i in range(8): output += [temp[i]] + all_values[i]
+	
+	return res.format(*output)	
+	
+print(table(25))
+	
 	
 	
