@@ -1,0 +1,29 @@
+Add images on `Architecture`
+
+Signed-off-by: FedericoBruzzone <federico.bruzzone.i@gmail.com>
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   first-semester/theory/architecture-for-big-data/architectures-for-big-data.pdf
+#	modified:   first-semester/theory/architecture-for-big-data/architectures-for-big-data.tex
+#	modified:   first-semester/theory/architecture-for-big-data/chapters/3-architecture-102.tex
+#	modified:   first-semester/theory/architecture-for-big-data/chapters/4-architecture-103.tex
+#	new file:   first-semester/theory/architecture-for-big-data/images/24-data-source-log-data-1.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/25-data-source-log-data-2.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/26-data-source-log-data-3.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/27-data-source-registry-data-1.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/28-data-source-registry-data-2.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/29-data-source-registry-data-3.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/30-traditional-change-data-capture-patterns-1.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/31-traditional-change-data-capture-patterns-2.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/32-invasive-database-side-version-numbers-on-rows.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/33-invasive-database-side-status-indicator.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/34-invasive-database-side-triggers-on-table.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/35-cdc-on-log-tables.png
+#	new file:   first-semester/theory/architecture-for-big-data/images/36-cdc-on-registry-tables.png
+#
