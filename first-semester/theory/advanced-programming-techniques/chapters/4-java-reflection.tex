@@ -1,0 +1,49 @@
+\section{Java Reflection}
+
+\subsection{Reflection in Java}
+
+\subsubsection{Introduction}
+
+The \textbf{Java Core Reflection API} provides a small, type-safe, and secure API that supports introspection about the classes and objects in the current Java Virtual Machine.
+
+\textbf{If permitted by security policy, the API can be used to}:
+\begin{itemize}
+	\item construct new class instances and new array
+	\item access and modify fields of object and classes
+	\item invoke methods on object and classes, and
+	\item access and modify elements of array
+\end{itemize}
+
+Intercession on classes and objects is forbidden
+
+\subsubsection{Introduction (Cont'd)}
+
+\textbf{The Java application that benefint from introspection are}:
+
+\begin{itemize}
+	\item automatic documentation (javac, javadoc, ...)
+	\item tools for IDEs: browsers, inspectors, debuggers, ...
+	\item serialization / deserialization
+	- construction of a binary representation for backup or transmission;
+	- re-creating an object based on its serialized form;
+	\item RMI
+	- serialization of arguments and return values;
+	- identification of remote methods.
+\end{itemize}
+
+\subsubsection{Classes and Interfaces for Reflection}
+
+\textbf{Since Java <= 12}
+
+- java.lang.Object
+	- java.lang.Class
+	- java.lang.reflect.Member
+		
+		- java.lang.reflect.Field (Member)
+		- java.lang.reflect.Method (Member)
+		- java.lang.reflect.Constructor (Member)
+
+- boolean.class, char.class, int.class, double.class, ...
+
+
+
