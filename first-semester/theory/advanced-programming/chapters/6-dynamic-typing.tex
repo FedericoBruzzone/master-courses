@@ -124,3 +124,105 @@ Automatic garbage collection implies less bookkeeping code
 (True, True)
 \end{lstlisting}
 
+\textbf{But...}
+
+\begin{lstlisting}[language=Python]
+>>> X = 42
+>>> Y = 42
+>>> X == Y, X is Y
+(True, True)
+\end{lstlisting}
+
+
+\textbf{Small integers and dome other constant object are cached}
+
+\begin{lstlisting}[language=Python]
+>>> import sys
+>>> sys.getrefcount(42)
+10
+>>> sys.getrefcount([1, 2, 3])
+1
+\end{lstlisting}
+
+\subsubsection{References \& Passing Arguments}
+
+\textbf{Argument are passed \textit{value}}
+
+\begin{lstlisting}[language=Python]
+X = 42
+L = [1, 2, 3]
+
+def fake_mutable(i,l):
+	i = i * 2
+	l[1] = '?!?!'
+	l = {1, 3, 5,7 }
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> from args import fake_mutable, X, L
+>>> print("X :- {0} \t L :- {1}".format(X,L))
+X :- 42    L :- [1, 2, 3]
+>>> fake_mutable(X,L)
+>>> print("X :- {0} \t L :- {1}".format(X,L))
+X :- 42    L :- [1, '?!?!', 3]
+\end{lstlisting}
+
+\textbf{Collections but tubìples are passed \textit{by refernece}}
+
+\begin{lstlisting}[language=Python]
+>>> L = [1, 2, 3]
+>>> fake_mutable(X, L[:])
+>>> print("X :- {0} \t L :- {1}".format(X,L))
+X :- 42    L :- [1, 2, 3]
+\end{lstlisting}
+
+\textbf{Global values are immutalbe as wal, to vhange them use \textit{global}}
+
+\begin{lstlisting}[language=Python]
+def mutable():
+	global X, L
+	X = X*2
+	L[1] = '?!?!'
+	L = {1, 3, 5, 7}
+if __name__ == "__main__":
+mutable()
+print("X :- {0} \t L :- {1}".format(X,L))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+X :- 84 L :- {1, 3, 5, 7}
+\end{lstlisting}
+
+\subsection{Closures in Action}
+
+\subsubsection{Curring}
+
+\(f(x, y) = \frac{y}{x} \xRightarrow{f(2, 3)} g(y) = f(2, y) = \frac{y}{2} \xRightarrow{g(3)} g(3) = \frac{3}{2}\)
+
+\begin{lstlisting}[language=Python]
+def make_currying(f, a):
+	def fc(*args):
+		return f(a, *args)
+	return fc
+	
+def f2(x, y):
+	return x+y
+	
+def f3(x, y, z):
+	return x+y+z
+
+if __name__ == "__main__":
+	a = make_currying(f2, 3)
+	b = make_currying(f3, 4)
+	c = make_currying(b, 7)
+	print("(cf2 3)({0}) :- {1}, (cf3 4)({2},{3}) :- {4}".format(1,a(1),2,3,b(2,3)))
+	print("((cf3 4) 7)({0}) :- {1}".format(5,c(5)))
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Python]
+(cf2 3)(1) :- 4, (cf3 4)(2,3) :- 9
+((cf3 4) 7)(5) :- 16
+\end{lstlisting}
+
+Look at \textit{partial} in \textit{functools}
