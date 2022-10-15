@@ -70,7 +70,6 @@ print(merge_dict)
 
 
 
-
 print('''%%%%%%%%%%%%%%%%%%  3  %%%%%%%%%%%%%%%%%%%%''')
 
 # Exercise 3: Temperature Conversion System
@@ -133,7 +132,9 @@ print(toAll(25, 'F'))
 
 print('''%%%%%%%%%%%%%%%%%%  4  %%%%%%%%%%%%%%%%%%%%''')
 
-# Amatrixcanberepresentedasalistoflists(rowsandcolumns). 
+# Exercise 4: Matrix Calculi
+
+# A matrix can be represented as a list of lists (rows and columns). 
 # 1. Use the comprehensions to define a function (identity) that returns the identity matrix (the one with all 0s but the 1s on the diagonal) of given size.
 # 2. Use the comprehensions to define a function (square) that returns a square matrix filled with the first n*n integers with n given as an argument. 
 # 3. Write the function transpose to transpose a generic matrix independently of the size and content. 
@@ -141,16 +142,19 @@ print('''%%%%%%%%%%%%%%%%%%  4  %%%%%%%%%%%%%%%%%%%%''')
 
 rows = lambda l, n, m: [[l[col + row * m] for col in range(0, m)] for row in range(0,n)]
 
+# 1 
 indentity = lambda n: rows([1 if row==col else 0 for col in range(n) for row in range(n)], n, n)
 print(indentity(4))
 
+# 2
 square= lambda n: rows([row + col * n for row in range(1,n+1) for col in range(0,n)], n, n)
 print(square(4))
 
+# 3
 transpose = lambda matrix: rows([matrix[row][col] for row in range(len(matrix)) for col in range(len(matrix[0]))], len(matrix[0]), len(matrix))
 print(transpose(square(4)))
 
-
+# 4 
 element = lambda matrix1, matrix2, m1, m2: sum(matrix1[m1][i]+matrix2[i][m2] for i in range(len(matrix1[0])))
 multiply = lambda matrix1, matrix2: rows([element(matrix1, matrix2, m1, m2) \
 	for m1 in range(len(matrix1)) for m2 in range(len(matrix2[0]))], len(matrix1), len(matrix2[0]))
@@ -161,7 +165,48 @@ print(multiply(square(4), square(5)))
 
 
 
+print('''%%%%%%%%%%%%%%%%%%  5  %%%%%%%%%%%%%%%%%%%%''')
 
+# Exercise 4: Shell Commends Simulation
 
+# Similarly to the ls-l example please implement:
+# 1. The cat command, i.e., a command that given a list of files prints their content on the terminal (man cat to get more info).
+# 2. The chmod command, i.e., a command that permits to change the access mode of a given group of files (man chmod to get more info).
+# 3. The more command, i.e., a command that given a file prints its content 30 rows at a time and wait a keystroke every 30 rows before printing the next 30.
 
+import sys
+
+# 1
+def cat(fn):
+	print(open(fn).read()[:-1])
+
+cat(sys.argv[0])
+
+# 2
+#from stat import *
+import stat
+import os
+
+def chmod(fn, mode):
+	os.chmod(fn, mode) 
+
+chmod(sys.argv[0], stat.S_IRWXU)
+
+# 3
+def do_print(fn, start, end):
+	[print(i) for i in fn[start:end]]
+
+def inc(n_lines, start):
+	return 30 if n_lines - start > 30 else n_lines - start 
+
+def naive_more(fn):
+	content = open(fn).read().split('\n')[:-1]
+	n_lines = len(content)
+	start = 0
 	
+	while n_lines - start > 0:
+		do_print(content, start, start + inc(n_lines, start))
+		input('----------PRESS ENTER----------')
+		start += inc(n_lines, start)
+
+naive_more(sys.argv[0])
