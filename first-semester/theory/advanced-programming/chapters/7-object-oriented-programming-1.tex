@@ -1,6 +1,6 @@
 \section{Object Oriented Programming in Python}
 
-Classes, Inheritance & Polymorphism
+Classes, Inheritance \& Polymorphism
 
 \subsection{Object-Oriented Programming}
 
@@ -61,7 +61,7 @@ Wagner suggests 3 classes for programming languages:
 A data abstraction is an object whose state is accessible only through its operations
 
 \begin{itemize}
-	\iem this concept brings forth to the data hifing property
+	\item this concept brings forth to the data hifing property
 \end{itemize}
 
 \textbf{Delegation}
@@ -83,15 +83,14 @@ Delegation is a mechanism to delegate responsibility for performing an operation
 		def calculate_perimeter(self):
 			return 2*(self._height+self._width)
 		def __str__(self):
-			return "I’m a Rectangle! My sides are: {0}, {1}\nMy area is {2}".\
-			format(self._width,self._height, self.calculate_area())
+			return "I'm a Rectangle! My sides are: {0}, {1} \n My area is {2}".format(self._width,self._height, self.calculate_area())
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
 >>> from rectangle import rectangle
 >>> r = rectangle(7,42)
 >>> print(r)
-I’m a Rectangle! My sides are: 7, 42
+I'm a Rectangle! My sides are: 7, 42
 My area is 294
 \end{lstlisting}
 
@@ -117,12 +116,12 @@ class square(rectangle):
 		self._height=width
 	def __str__(self):
 		return \
-			"I’m a Square! My side is: {0}\n \
+			"I'm a Square! My side is: {0}\n \
 			   My area is {1}".format( \
 	             self._width, self.calculate_area())
 \end{lstlisting}
 
-\subsubsection{Inheritance & Polymorphism}
+\subsubsection{Inheritance \& Polymorphism}
 
 \begin{lstlisting}[language=Python]
 >>> from rectangle import rectangle
@@ -137,23 +136,23 @@ circle(.7), rectangle(7,2), square(2)]
 <square.square object at 0x80c6a4c>]
 >>> for i in shapes: print(i)
 ...
-I’m a Square! My side is: 7
+I'm a Square! My side is: 7
 My area is 49
-I’m a Circle! My ray is: 3.14
+I'm a Circle! My ray is: 3.14
 My area is 30.9748469273
-I’m a Rectangle! My sides are: 6, 7
+I'm a Rectangle! My sides are: 6, 7
 My area is 42
-I’m a Square! My side is: 5
+I'm a Square! My side is: 5
 My area is 25
-I’m a Circle! My ray is: 0.7
+I'm a Circle! My ray is: 0.7
 My area is 1.53938040026
-I’m a Rectangle! My sides are: 7, 2
+I'm a Rectangle! My sides are: 7, 2
 My area is 14
-I’m a Square! My side is: 2
+I'm a Square! My side is: 2
 My area is 4
 \end{lstlisting}
 
-\subsubsection{Inheritance & Polymorphism Duck Typing}
+\subsubsection{Inheritance \& Polymorphism Duck Typing}
 
 ... but is shape really necessary? NO
 
@@ -200,7 +199,7 @@ class square(rectangle):
 >>> shapes = [square(7), circle(3.14), rectangle(6,7), square(5),
 ... circle(.7), rectangle(7,2), square(2)]
 >>> for i in shapes: print(i)
-I’m a Square! My side is: 7
+I'm a Square! My side is: 7
 My area is 49
 ... 
 \end{lstlisting}

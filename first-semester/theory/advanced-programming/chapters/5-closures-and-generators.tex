@@ -22,240 +22,210 @@
 \end{itemize}
 
 \subsubsection{Regular Expression}
-...
-
-\subsection{Functional programming in Python}
-
-\subsubsection{map(), filter() \& reduce()}
-
-\textbf{Python has functional capability since its first release}
-with new  releases just a few syntactical sugar has been added
-
-\textbf{Basic elements of functional programming in python are:}
+A \textbf{regular expression} is a pattern to describe strings
 \begin{itemize}
-	\item \textbf{map()}: it applies a function to a sequence.
-\begin{lstlisting}[language=Python]
->>> import math
->>> print(list(map(math.sqrt, [x**2 for x in range(1,11)])))
-> [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-\end{lstlisting}
-	\item \textbf{filter()}: it extracts from a list those elements which verify the passed function.
-\begin{lstlisting}[language=Python]
->>> def odd(x): return (x%2 != 0)
->>> print(list(filter(odd, range(1,30))))
-> [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
-\end{lstlisting}
-\item \textbf{reduce()}: it reduces a list to a single element according to the passed funcion.
-\begin{lstlisting}[language=Python]
->>> import functools
->>> def sum(x,y): return x+y
->>> print(functools.reduce(sum, range(1000)))
-> 499500
-\end{lstlisting}
+	\item the functions in the \textbf{re} module enables us to check if a regular expression matches a string and to return the result of the match
 \end{itemize}
 
-Note, \textbf{map()} and \textbf{filter()} return an iterator rather than a list.
-
-\subsubsection{Eliminating flow control statements: if}
-\textbf{Short-circuit conditional call instead of if}
-\begin{lstlisting}[language=Python]
-def cond(x):
-	return (x==1 and 'one') or (x==2 and 'two') or 'other'
-
-def cond2(x):
-	return ('one' and x==1) or ('two' and x==2) or 'other'
-
-if __name__ == "__main__":
-	for i in range(3):
-		print("cond({0}) :- {1}".format(i, cond(i)))
-	for i in range(3):
-		print("cond2({0}) :- {1}".format(i, cond2(i)))
-\end{lstlisting}
-\begin{lstlisting}[language=Python]
-> cond(0) :- other
-> cond(1) :- one
-> cond(2) :- two
-
-> cond2(0) :- other
-> cond2(1) :- True
-> cond2(2) :- True
-\end{lstlisting}
-
-\textbf{Doing some abstraction}
-\begin{lstlisting}[language=Python]
-block = lambda s: s
-cond = lambda x: (x==1 and block('one')) or 
-                 (x==2 and block('two')) or 
-                 block('other')
-
-if __name__ == "__main__":
-	print("cond({0}) :- {1}".format(3, cond(3)))
-\end{lstlisting}
-\begin{lstlisting}[language=Python]
-> cond(3) :- other
-\end{lstlisting}
-
-
-\subsubsection{Do abstraction: Lambda functions}
-The name lambda comes from lambda-calculus which uses the greek letter lambda to represent a similar comncept.
-
-Lambda is a term used to refer to an \textbf{anonymous function}.
+Few bytes of syntax:
 \begin{itemize}
-	\item that is, a block of code which can be executed as if it were a function but without a name.
+	\item `.` any character but a newline
+	\item `\^` the begin of the string
+	\item `\$` the end of the string
+	\item `*`, `+` 0 (or 1) or more repetitions of the preceding RE
+	\item `?` 0 or 1 repetitions of the preceding REs
+	\item [] a set of characters
+	\item {} matching group
 \end{itemize}
 
-Lambdas can be defined anywhere a legal expression can occur.
-
-A lambda looks like this:
+\textbf{RE at work}
 \begin{lstlisting}[language=Python]
-lambda "args": "an expr on the argss"
+>>> email = `cazzola@dremove_thisi.unimi.it`
+>>> import re
+>>> m = re.search("remove_this", email)
+>>> email[:m.start()]+email[m.end():]
+`cazzola@di.unimi.it`
 \end{lstlisting}
 
-Thus the previous \textbf{reduce()} example could be rewritten as:
-\begin{lstlisting}[language=Python]
->>> import functools
->>> print(functools.reduce(lambda i,j: i+x, range(10000)))
-> 499500
-\end{lstlisting}
-Alternatively the lambda can assigned to a variable as in:
-\begin{lstlisting}[language=Python]
->>> add = lambda i,j: i+j
->>> print(functools.reduce(add, range(10000)))
-> 499500
-\end{lstlisting}
+\subsubsection{Do Some Abstraction: A List of Functions}
 
-\subsubsection{Envolving factorial}
-
-\textbf{Traditional implementation}
-\begin{lstlisting}[language=Python]
-def fact(n):
-	return 1 if n <= 1 else n*fact(n-1)
-\end{lstlisting}
-\textbf{Short-circuit implementation}
-\begin{lstlisting}[language=Python]
-def ffact(n):
-	return (n <= 1 and 1) or n*ffact(n-1)	
-\end{lstlisting}
-\textbf{reduce()-based implementation}
-\begin{lstlisting}[language=Python]
-from functools import reduce
-def f2fact(p):
-	return reduce(lambda n,m: n*m, range(1, p+1))
-\end{lstlisting}
-
-\subsubsection{Eliminating flow control statements: sequence}
-
-\textbf{Sequential program flow is typical of imperative programming}
-it basically relies on side-effect (variable assignments)
-
-\textbf{This is basically in contrast with the functional approach.}
-
-\textbf{In a list processing style we have:}
-\begin{lstlisting}[language=Python]
-# let's create an execution utility function
-do_it = lambda f: f()
-# let f1, f2, f3 (etc) be functions that perform actions
-map(do_it, [f1, f2, f3])
-\end{lstlisting}
+To abstract we have
 \begin{itemize}
-	\item single statements of the sequence are replaced by funcions
-	\item the sequene is realized by mapping an activation function to all the function objects that should compose the sequence.
+	\item to limit the number of tests to be done
+	\item to generalize the approach
 \end{itemize}
 
-\subsubsection{Eliminating while statements: Echo}
-
-\textbf{Statement-based echo function}
 \begin{lstlisting}[language=Python]
-def echo_IMP():
-	while True:
-		x = input("FP -- ")
-		if x == 'quit': break
-		else: print(x)
-		
-if __name__ == "__main__": echo_IMP()
+import re
+
+def match_sxz(noun): return re.search('[sxz]$', noun)
+def apply_sxz(noun): return re.sub('$', 'es', noun)
+def match_h(noun): return re.search('[^aeioudgkprt]h$', noun)
+def apply_h(noun): return re.sub('$', 'es', noun)
+def match_y(noun): return re.search('[^aeiou]y$', noun)
+def apply_y(noun): return re.sub('y$', 'ies', noun)
+def match_default(noun): return True
+def apply_default(noun): return noun + 's'
+
+rules = ((match_sxz, apply_sxz), (match_h, apply_h), (match_y, apply_y), (match_default, apply_default))
+
+def plural(noun):
+	for matches_rule, apply_rule in rules:
+		if matches_rule(noun):
+			return apply_rule(noun)
 \end{lstlisting}
 
-\textbf{First step toward a functional solution}
+Advantage:
+
+- to add new rules simply means to add a couple of function and a tuple in the rules tuple
+
+\subsubsection{Do Some Abstraction: A List of Patterns}
+To do better, we have
+
+- to avoid to write the single functions (boring \& error-prone task)
+
+\begin{lstlisting}[language=Python]
+import re
+
+def build_match_and_apply_functions(pattern, search, replace):
+	def matches_rule(word):
+		return re.search(pattern, word)
+	apply_rule = lambda word : \
+		re.sub(search, replace, word)
+	return (matches_rule, apply_rule)
+
+patterns = ( \
+	('[sxz]$', '$', 'es'), ('[^aeioudgkprt]h$', '$', 'es'),
+	('(qu|[^aeiou])y$', 'y$', 'ies'), ('$', '$', 's')
+)
+
+rules = [ \
+	build_match_and_apply_functions(pattern, search, replace)
+		for (pattern, search, replace) in patterns ]
+\end{lstlisting}
+
+\textbf{The technique of binding a value within the scope definition to a value in the outside scope is named closures}
+
 \begin{itemize}
-	\item No print
-	\item Utility function for "identity with side-effect" (a monad)
+	\item It fixes the value of some variables in the body of the functions it builds:
+	- both matches \_ rule and apply \_ rule take one parameter (word), they act on that plus three other values (pattern, search and replace) which were set when the functions are built
 \end{itemize}
+
+\subsubsection{Do Some Abstraction: A File of Patterns}
+
+\textbf{Separate data from code}
+
+- By moving the patterns in a separate file
+
 \begin{lstlisting}[language=Python]
-def monadic_print(x)
-	print(x)
-	return x
+[15:59]cazzola@hymir:~/esercizi-pa>cat plural-rules.txt
+[sxz]$           $ es
+[^aeioudgkprt]h$ $ es
+[^aeiou]y$      y$ ies
+$                $ s
 \end{lstlisting}
 
-\textbf{Functional version of the echo function}
-\begin{lstlisting}[language=Python]
-echo_FP = 
-	lambda : monodic_print(input("FP -- ")=='quit' or echo_FP())
+\textbf{Everything is still the same but}
 
-if __name__ == "__main__": echo_FP()
+- how is the rules list filled?
+
+\begin{lstlisting}[language=Python]
+rules = []
+with open('plural-rules.txt', encoding='utf-8') as pattern_file:
+	for line in pattern_file:
+		pattern, search, replace = line.split(None, 3)
+		rules.append(build_match_and_apply_functions(pattern, search, replace))
 \end{lstlisting}
 
-\subsubsection{Whys}
+\textbf{Benefits \& Drawbacks}
 
-\textbf{Why? To eliminate the side-effects}
 \begin{itemize}
-	\item mostly all errors depend on variables that obtain unexpected values.
-	\item functional programs bypass the issue by not assigning values to variables at all.
+	\item no need to change the code in order to add a new rule
+	\item to read a file is slower than to hardwire the data in the code
 \end{itemize}
 
-\textbf{E.g., To determine the pairs whose product is >25}
-\begin{lstlisting}[language=Python]
-def bigmuls(xs,ys):
-	bigmuls = []
-	for x in xs:
-		for y in ys:
-			if x*y > 25:
-				bigmuls.append((x,y))
-	return bigmuls
-	
-if __name__ == "__main__":
-print(bigmuls((1,2,3,4),(10,15,3,22)))
-\end{lstlisting}
+\subsection{Generators}
 
+\subsubsection{Introduction by Example}
+ A \textbf{generator} is a function that generates a value at a time
+ 
+ - a sort of resumable function or function with a memory
  
 \begin{lstlisting}[language=Python]
-from functools import reduce
-import itertools
+def make_counter(x):
+	print('entering make_counter')
+	while True:
+		yield x
+		print('incrementing x’ù')
+		x = x + 1
+\end{lstlisting}
 
-bigmuls = lambda xs, ys: [x_y for x_y in
-						  combine(xs,ys) if x_y[0]*x_y[1] > 25]
-						  
-combine = lambda xs, ys: itertools.zip_longest(
-			             xs*len(ys), dupelms(ys,len(xs)))
-			             
-dupelms = lambda lst, n: reduce(lambda s, t: s+t,
-                                list(map(lambda l,n=n: [l]*n, lst)))
-                                
+Let look at what happens here
+\begin{lstlisting}[language=Python]
+>>> import counter
+>>> counter = counter.make_counter(2)
+>>> next(counter)
+entering make_counter
+2
+>>> next(counter)
+incrementing x
+3
+\end{lstlisting}
+
+\begin{itemize}
+	\item a call to the function initializes the generator
+	\item the next() will “synchronize” with the yield statement
+	- the yield suspends the function execution and returns a value
+	- the next() resumes the computation from the yield and continues until it reaches another yield or the function end
+\end{itemize}
+
+\subsubsection{Finbonacci's generator}
+\begin{lstlisting}[language=Python]
+def gfib(max):
+	a, b = 0, 1
+	while a < max:
+		yield a
+		a, b = b, a + b
+		
 if __name__ == "__main__":
-print(bigmuls([1,2,3,4],[10,15,3,22]))
+	for n in gfib(1000):
+		print(n, end=’ ’)
+	print()
 \end{lstlisting}
 
-\subsubsection{Future of map(), reduce() \& filter()}
-\textbf{The future of the python's map(), filter(), and reduce is uncertain.}
+\begin{lstlisting}[language=Python]
+[15:43]cazzola@hymir:~/esercizi-pa>python3 gfib.py
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
 
-\textbf{Comprehensions can easily replace map() and filter()}
+>>> import gfib
+>>> list(gfib.gfib(1000))
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987]
+\end{lstlisting}
 
 \begin{itemize}
-	\item \textbf{map()} can be replaced by
-\begin{lstlisting}[language=Python]
->>> import math
->>> [math.sqrt(x**2) for x in range(1,11)]
-> [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-\end{lstlisting}
-	\item \textbf{filter()} can be replaced by
-\begin{lstlisting}[language=Python]
->>> def odd(x): return (x%2 != 0)
->>> [x for x in range(1,30) if odd(x)]
-[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
-\end{lstlisting}
+	\item a generator can be used in a for statement, the next() is automatically called at each iteration
+	\item the list constructor has a similar behavior
 \end{itemize}
 
-Guido von Rossum finds the \textbf{reduce()} too cryptic and prefers to use more ad hoc functions instead
+\subsubsection{Pluralizes Via Generators}
+
+\begin{lstlisting}[language=Python]
+def rules(rules_filename):
+	with open(rules_filename, encoding=’utf-8’) as pattern_file:
+		for line in pattern_file:
+			pattern, search, replace = line.split(None, 3)
+			yield build_match_and_apply_functions(pattern, search, replace)
+def plural(noun, rules_filename=’plural-rules.txt’):
+	for matches_rule, apply_rule in rules(rules_filename):
+			if matches_rule(noun):
+				return apply_rule(noun)
+	raise ValueError(’no matching rule for {0}’.format(noun))
+\end{lstlisting}
+
+\textbf{Benefits \& Drawbacks}
 \begin{itemize}
-	\item \textbf{sum()}, \textbf{any()} and \textbf{all()}
+	\item shorter start-up time (it just reads a row not the whole file)
+	\item performance losses (every call to plural() reopensthe file and reads it from the beginning again)
 \end{itemize}
-To have moved \textbf{reduce()} in a module in Python 3 should render manifest his intent.
+
+\textbf{To get the benefits from both approaches you need to define your own iterator}
