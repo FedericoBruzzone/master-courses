@@ -220,7 +220,7 @@ Design paterns are\textbf{formalized best practices} found to solve \textbf{comm
 Problem - Vendor Lock-In
 
 \begin{center}
-%\includegraphics[scale=0.35]{}
+%\includegraphics[scale=0.35]{21a-the-adapter-pattern}
 \end{center}
 
 \begin{itemize}
@@ -245,14 +245,32 @@ Problem - Operational System are always under pressure
 
 \subsubsection{A big data common problem}
 \begin{center}
-%\includegraphics[scale=0.3]{}
+%\includegraphics[scale=0.3]{21b-a-big-data-common-problem}
 \end{center}
 
-Extract Transform and Load
+\subsubsection{Extract Transform and Load}
 
 \begin{center}
-%\includegraphics[scale=0.3]{}
+%\includegraphics[scale=0.3]{21c-extract-transform-and-load}
 \end{center}
+
+\subsubsection{Big Tables - BKPF Table}
+\begin{center}
+%\includegraphics[scale=0.3]{21d-big-table-bkpf-table-1}
+\end{center}
+
+\begin{itemize}
+	\item BKPF (Accounting Document Header) is a standard table in SAP R/3 ERP
+	- Accounting documents make up the financial of your organization
+	- The same document number can be used in different company codes
+	- The same document number can also be used multiple time within the same company code in different years.s
+\end{itemize}
+
+\begin{center}
+%\includegraphics[scale=0.3]{21e-big-table-bkpf-table-2}
+\end{center}
+
+The main concept is that in ETL there isn't \textbf{incrementality}
 
 \subsubsection{A classic Big Data challenge}
 \begin{center}

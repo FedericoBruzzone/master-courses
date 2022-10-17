@@ -48,15 +48,19 @@ Today we will focus on 3 possibile design patterns
 	\item E.g., buy/sell transactions of a company in Stock Market
 \end{itemize}
 
-\begin{center}
-\includegraphics[scale=0.5]{25-data-source-log-data-2}
-\end{center}
+Solution: Remeber the \textbf{last timestamp}
 
 \hrulefill
 
 \begin{center}
+\includegraphics[scale=0.5]{25-data-source-log-data-2}
+\end{center}
+
+\begin{center}
 \includegraphics[scale=0.5]{26-data-source-log-data-3}
 \end{center}
+
+\hrulefill
 
 \subsubsection{Data Sources – Registry Data (a.k.a. Master Data Table)}
 
@@ -118,7 +122,7 @@ When a change happens, the timestamp of when it happened is added as “Last Upd
 When a change happens, a version+1 values is added to the fresh columns: all data with the latest version number is considered to have changed
 
 \begin{center}
-%\includegraphics[scale=0.3]{34-invasive-database-side-version-number-on-rows}
+\includegraphics[scale=0.3]{33-invasive-database-side-version-number-on-rows}
 \end{center}
 
 \subsubsection{Invasive Database-side – Status Indicator}
