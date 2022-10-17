@@ -1,0 +1,102 @@
+\section{Object Oriented Programming in Python}
+
+Classes, Inheritance & Polymorphism
+
+\subsection{Object-Oriented Programming}
+
+\subsubsection{Introduction}
+
+Python is a multi-paradigm programmin language
+
+Many claims that:
+
+\begin{center}
+Python is object-oriented
+\end{center}
+
+Python is just \textbf{object-based} but we can use it as if it is object-oriented
+
+Look at
+
+\begin{center}
+\textbf{Reference}
+Peter Wagner
+\textbf{Dimensions of Object-Based Language Design}
+In Proceegings of OOPSLA'87, pp. 168-182, October 1987.
+\end{center}
+
+for the differences
+
+\subsubsection{Wagner’s OO Taxonomy: Objects, Classes and Inheritance}
+
+\textbf{Objects}
+An object has a set of operations and a state that remembers the effect of the operations
+
+\textbf{Class}
+A class is a template from which objects may be created
+
+\begin{itemize}
+	\item object of the same class have common operations and (therefore) uniform behavior
+	\item Class expose a set of operations (public interface) to its clients
+\end{itemize}
+
+\textbf{Inheritance}
+A class may inherit operations from superclasses and its operations inherited by subclasses
+
+\begin{itemize}
+	\item  inheritance can be single or multiple
+\end{itemize}
+
+\subsubsection{Wagner’s OO Taxonomy (Cont.’d)}
+
+Wagner suggests 3 classes for programming languages:
+
+\begin{itemize}
+	\item object-based = object
+	\item class-based = object + classes
+	\item object-oriented = onject + classes + inheritance
+\end{itemize}
+
+\textbf{Data Abstraction}
+A data abstraction is an object whose state is accessible only through its operations
+
+\begin{itemize}
+	\iem this concept brings forth to the data hifing property
+\end{itemize}
+
+\textbf{Delegation}
+Delegation is a mechanism to delegate responsibility for performing an operation to one or more designed ancestors
+
+\begin{itemize}
+		\item note that ancestors are not always designed by inheritance in this case it is called clientship
+\end{itemize}
+
+\subsubsection{Class Definition: Rectangle}
+
+\begin{lstlisting}[language=Python]
+	class rectangle:
+		def __init__(self, width, height):
+			self._width=width
+			self._height=height
+		def calculate_area(self):
+			return self._width*self._height
+		def calculate_perimeter(self):
+			return 2*(self._height+self._width)
+		def __str__(self):
+			return "I’m a Rectangle! My sides are: {0}, {1}\nMy area is {2}".\
+			format(self._width,self._height, self.calculate_area())
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> from rectangle import rectangle
+>>> r = rectangle(7,42)
+>>> print(r)
+I’m a Rectangle! My sides are: 7, 42
+My area is 294
+\end{lstlisting}
+
+\subsubsection{Inheritance}
+
+Inheritance 
+
+
