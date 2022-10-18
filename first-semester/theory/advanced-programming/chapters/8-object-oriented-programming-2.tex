@@ -21,7 +21,7 @@ class C:
 >>> print(c)
 a value
 >>> c.class_attribute
-’a value’
+'a value'
 >>> c1 = C()
 >>> c1.instance_attribute = "another value"
 >>> c1.instance_attribute
@@ -35,19 +35,19 @@ AttributeError: 'C' object has no attribute 'instance_attribute'
 (42, 42)
 \end{lstlisting}
 
-\subsubsection{Alternative Way to Access Attributes: __dict__}
+\subsubsection{Alternative Way to Access Attributes: \_\_dict\_\_}
 
 \begin{lstlisting}[language=Python]
 >>> c.__dict__
 {'class_attribute': 'a value'}
 >>> c1.__dict__
 {'class_attribute': 'a value', 'instance_attribute': 'another value'}
->>> c.__dict__['class_attribute'] = ’the answer’
+>>> c.__dict__['class_attribute'] = 'the answer'
 >>> print(c)
 the answer
 \end{lstlisting}
 
-\textbf{__dict__ is an attribute}
+\textbf{\_\_dict\_\_ is an attribute}
 \begin{itemize}
 	\item it is a dictionary that contains the user-provided attributes
 	\item it permits introspection and intercession
@@ -98,7 +98,7 @@ False
 
 \textbf{A bound method is a callable object that calls a function passing an instance as the first argument}
 
-\subsubsection{Description}
+\subsubsection{Descriptors}
 
 \begin{lstlisting}[language=Python]
 class Desc(object):
@@ -120,241 +120,226 @@ class C(object):
 >>> from descriptor import Desc, C
 >>> cobj = C()
 >>> x = cobj.d # d.__get__(cobj, C)
-<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class ’descriptor.C’>)
+<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class 'descriptor.C'>)
 >>> cobj.d = "setting a value" # d.__set__(cobj, "setting a value")
 <descriptor.Desc object at 0x80c610c>.__set__(<descriptor.C object at 0x80c3b0c>, setting a value)
->>> cobj.__dict__[’d’] = "try to force a value" # set it via __dict__ avoiding the descriptor
+>>> cobj.__dict__['d'] = "try to force a value" # set it via __dict__ avoiding the descriptor
 >>> x = cobj.d # this calls d.__get__(cobj, C)
-<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class ’descriptor.C’>)
+<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class 'descriptor.C'>)
 >>> del cobj.d # d.__delete__(cobj)
 <descriptor.Desc object at 0x80c610c>.__delete__(<descriptor.C object at 0x80c3b0c>)
 >>> x = C.d # d.__get__(None, C)
-<descriptor.Desc object at 0x80c610c>.__get(None, <class ’descriptor.C’>)
+<descriptor.Desc object at 0x80c610c>.__get(None, <class 'descriptor.C'>)
 >>> C.d = "setting a value on class" 
 \end{lstlisting}
 
+\subsubsection{Method Resolution Disorder: the Diamond Problem}
 
+\begin{lstlisting}[language=Python]
+class A(object):
+	def do_your_stuff(self):
+		# do stuff for A
+		return
+\end{lstlisting}
 
+\begin{lstlisting}[language=Python]
+class B(A):
+	def do_your_stuff(self):
+		A.do_your_stuff(self)
+		# do stuff for B
+		return
+\end{lstlisting}
 
+\begin{lstlisting}[language=Python]
+class C(A):
+	def do_your_stuff(self):
+		A.do_your_stuff(self)
+		# do stuff for C
+		return
+\end{lstlisting}
 
+\begin{lstlisting}[language=Python]
+class D(B,C):
+	def do_your_stuff(self):
+		B.do_your_stuff(self)
+		C.do_your_stuff(self)
+		# do stuff for D
+		return
+\end{lstlisting}
 
+\textbf{Two copies of A}
+\begin{itemize}
+	\item if do\_your\_stuff() is called once B or C is incomplete
+	\item if called twice it could have undesired side-effects
+\end{itemize}
 
+\subsubsection{A Pythonic Solution: The "Who's Next" List}
+\textbf{The solution is to dynamically determine which do\_your\_stuff() to call in each do\_your\_stuff()}
 
-Python is a multi-paradigm programmin language
+\begin{lstlisting}[language=Python]
+B.next_class_list = [B,A]
+C.next_class_list = [C,A]
+D.next_class_list = [D,B,C,A]
 
-Many claims that:
+class B(A):
+	def do_your_stuff(self):
+		next_class = self.find_out_whos_next(B)
+		next_class.do_your_stuff(self)
+		# do stuff with self for B
+	def find_out_whos_next(self, clazz):
+		l = self.next_class_list # l depends on the actual instance
+		mypos = l.index(clazz) # Find this class in the list
+		return l[mypos+1] # Return the next one
+\end{lstlisting}
+
+\textbf{find\_out\_whos\_next() depends on who we are working with}
+- B.do() -> B.find(B) -> l = [B,A] ->  l[index(B)+1=1] = A ->  A.do()
+- D.do() -> D.find(D) -> l = [D,B,C,A] -> l[index(D)+1=1] = B -> B.do()
+         -> B.find(B) -> l = [D,B,C,A] -> l[index(B)+1=2] = C -> C.do()
+         -> C.find(C) -> l = [D,B,C,A] -> l[index(C)+1=3] = A -> A.do()
+
+do() = do\_your\_stuff() find(...) = find\_out\_whos\_next(...)
+
+\subsubsection{\_\_mro\_\_ \& super}
+\textbf{There are a class attribute \_\_mro\_\_ for each type and a super}
+\begin{itemize}
+	\item \_\_mro\_\_ keeps the list of the superclasses without duplicates in a
+predictable order
+	\item super is used in place of the find\_out\_whos\_next()
+\end{itemize}
 
 \begin{center}
-Python is object-oriented
+\includegraphics[scale=0.7]{3-OOP-1}
 \end{center}
 
-Python is just \textbf{object-based} but we can use it as if it is object-oriented
-
-Look at
-
-\begin{center}
-\textbf{Reference}
-Peter Wagner
-\textbf{Dimensions of Object-Based Language Design}
-In Proceegings of OOPSLA'87, pp. 168-182, October 1987.
-\end{center}
-
-for the differences
-
-\subsubsection{Wagner’s OO Taxonomy: Objects, Classes and Inheritance}
-
-\textbf{Objects}
-An object has a set of operations and a state that remembers the effect of the operations
-
-\textbf{Class}
-A class is a template from which objects may be created
-
+\textbf{Computing the method resolution order (MRO)}
 \begin{itemize}
-	\item object of the same class have common operations and (therefore) uniform behavior
-	\item Class expose a set of operations (public interface) to its clients
+	\item if A is a superclass of B then B>A
+	\item if C precedes D in the list of bases in a class statement then C>D
+	\item if E>F in one scenario then E>F must hold in all scenarios
 \end{itemize}
 
-\textbf{Inheritance}
-A class may inherit operations from superclasses and its operations inherited by subclasses
+\begin{lstlisting}[language=Python]
+[23:04]cazzola@hymir:~/esercizi-pa>python3
+>>> from mro import A,B,C, D
+>>> D.__mro__
+(<class 'mro.D'>, <class 'mro.C'>, <class 'mro.B'>, <class 'mro.A'>, <class 'object'>)
+>>> d = D()
+>>> d.do_stuff()
+A
+B
+C
+D
+\end{lstlisting}
 
+\subsubsection{Special Methods}
+
+\textbf{Special methods, as \_\_len\_\_(), \_\_str\_\_(), \_\_lt\_\_() and \_\_add\_\_(),
+govern the behavior of some standard operations}
+
+\begin{lstlisting}[language=Python]
+class C(object):
+	def __len__(self):
+		return 0
+def mylen():
+	return 1
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[10:03]cazzola@hymir:~/pa>python3
+>>> cobj = C()
+>>> cobj.__len__ = mylen
+>>> len(cobj)
+0
+\end{lstlisting}
+
+\textbf{Special methods are “class methods”}
 \begin{itemize}
-	\item  inheritance can be single or multiple
+	\item they cannot be changed through the instance
+	\item this goes straight to the type by calling C.\_\_len\_\_()
 \end{itemize}
 
-\subsubsection{Wagner’s OO Taxonomy (Cont.’d)}
-
-Wagner suggests 3 classes for programming languages:
-
-\begin{itemize}
-	\item object-based = object
-	\item class-based = object + classes
-	\item object-oriented = onject + classes + inheritance
-\end{itemize}
-
-\textbf{Data Abstraction}
-A data abstraction is an object whose state is accessible only through its operations
-
-\begin{itemize}
-	\item this concept brings forth to the data hifing property
-\end{itemize}
-
-\textbf{Delegation}
-Delegation is a mechanism to delegate responsibility for performing an operation to one or more designed ancestors
-
-\begin{itemize}
-		\item note that ancestors are not always designed by inheritance in this case it is called clientship
-\end{itemize}
-
-\subsubsection{Class Definition: Rectangle}
-
 \begin{lstlisting}[language=Python]
-	class rectangle:
-		def __init__(self, width, height):
-			self._width=width
-			self._height=height
-		def calculate_area(self):
-			return self._width*self._height
-		def calculate_perimeter(self):
-			return 2*(self._height+self._width)
-		def __str__(self):
-			return "I'm a Rectangle! My sides are: {0}, {1} \n My area is {2}".format(self._width,self._height, self.calculate_area())
+class C(object):
+	def __len__(self): return self._mylen()
+	def _mylen(self): return 0
+def mylen():
+	return 1
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
->>> from rectangle import rectangle
->>> r = rectangle(7,42)
->>> print(r)
-I'm a Rectangle! My sides are: 7, 42
-My area is 294
+[10:22]cazzola@hymir:~/pa>python3
+>>> cobj = C()
+>>> cobj._mylen = mylen
+>>> len(cobj)
+1
 \end{lstlisting}
 
-\subsubsection{Inheritance}
+\textbf{To be more flexible}
+- the special method must be forwarded to a method that can be overridden in the instance
 
-Inheritance permits to reuse and specialize a class
+\subsubsection{\_\_slots\_\_}
 
-\textbf{Shape <-- rectangle (super class) <-- square (sub class)}
-
-\begin{lstlisting}[language=Python]
-class shape:
-	def calculate_area(self): pass
-	def calculate_perimeter(self): pass
-	def __str__(self): pass
-\end{lstlisting}
+\textbf{Also built-in types, as list and tuple, can be subclassed}
 
 \begin{lstlisting}[language=Python]
-from rectangle import rectangle
-
-class square(rectangle):
-	def __init__(self, width):
-		self._width=width
-		self._height=width
-	def __str__(self):
-		return \
-			"I'm a Square! My side is: {0}\n \
-			   My area is {1}".format( \
-	             self._width, self.calculate_area())
-\end{lstlisting}
-
-\subsubsection{Inheritance \& Polymorphism}
-
-\begin{lstlisting}[language=Python]
->>> from rectangle import rectangle
->>> from square import square
->>> from circle import circle
->>> shapes = [square(7), circle(3.14), rectangle(6,7), square(5),
-circle(.7), rectangle(7,2), square(2)]
->>> shapes
-[<square.square object at 0x80c698c>, <circle.circle object at 0x80c69ac>,
-<rectangle.rectangle object at 0x80c69cc>, <square.square object at 0x80c69ec>,
-<circle.circle object at 0x80c6a0c>, <rectangle.rectangle object at 0x80c6a2c>,
-<square.square object at 0x80c6a4c>]
->>> for i in shapes: print(i)
-...
-I'm a Square! My side is: 7
-My area is 49
-I'm a Circle! My ray is: 3.14
-My area is 30.9748469273
-I'm a Rectangle! My sides are: 6, 7
-My area is 42
-I'm a Square! My side is: 5
-My area is 25
-I'm a Circle! My ray is: 0.7
-My area is 1.53938040026
-I'm a Rectangle! My sides are: 7, 2
-My area is 14
-I'm a Square! My side is: 2
-My area is 4
-\end{lstlisting}
-
-\subsubsection{Inheritance \& Polymorphism Duck Typing}
-
-... but is shape really necessary? NO
-
-\begin{lstlisting}[language=Python]
-class rectangle:
-	def __init__(self, w, h):
-		self._width=w
-		self._height=h
-def calculate_area(self):
-	return \
-	   self._width*self._height
-def calculate_perimeter(self):
-	return \
-	   2*(self._height+self._width)
-def __str__(self):
-	return ...
+class MyList(list):
+	"""A list that converts added items to ints"""
+	def append(self, item):
+		list.append(self, int(item))
+	def __setitem__(self, key, item):
+		list.__setitem__(self,key,int(item))
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
-class circle:
-	def __init__(self, ray):
-		self._ray=ray
-def calculate_area(self):
-	return self._ray**2*math.pi
-def calculate_perimeter(self):
-	return 2*self._ray*math.pi
-def __str__(self):
-	return ...
+[10:45]cazzola@hymir:~/esercizi-pa>python3
+>>> l = MyList()
+>>> l.append(1.3)
+>>> l.append(444)
+>>> l
+[1, 444]
+>>> len(l)
+2
+>>> l[1] = 3.14
+>>> l
+[1, 3]
 \end{lstlisting}
+
+\textbf{Unfortunately the subtype of list allow the adding of attributes}
+- this is due to the presence of \_\_dict\_\_
+
+\textbf{The presence of \_\_slots\_\_ in a class definition inhibits the introduction of \_\_dicts\_\_}
+- this disallows any user-define attributes
 
 \begin{lstlisting}[language=Python]
-class square(rectangle): 
-	def __init__(self, width):
-		self._width=width
-		self._height=width
-	def __str__(self):
-		return ...
+class MyList2(list):
+	__slots__ = []
+class MyList3(list):
+	__slots__ = ['color']
+class MyList4(list):
+	"""A list that contains only ints"""
+	def __init__(self, itr):
+		list.__init__(self, [int(x) for x in itr])
+	def append(self, item):
+		list.append(self, int(item))
+	def __setitem__(self, key, item):
+		list.__setitem__(self,key,int(item))
 \end{lstlisting}
+
 
 \begin{lstlisting}[language=Python]
->>> from rectangle import rectangle
->>> from square import square
->>> from circle import circle
->>> shapes = [square(7), circle(3.14), rectangle(6,7), square(5),
-... circle(.7), rectangle(7,2), square(2)]
->>> for i in shapes: print(i)
-I'm a Square! My side is: 7
-My area is 49
-... 
+[11:13]cazzola@hymir:~/esercizi-pa>python3
+>>> m2 = MyList2()
+>>> m2.color = 'red'
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+AttributeError:
+'MyList2' object has no attribute 'color'
+>>> m3 = MyList3()
+>>> m3.color = 'red'
+>>> m3.weight = 50
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+AttributeError:
+'MyList3' object has no attribute 'weight'
 \end{lstlisting}
-
-\subsubsection{Summarizing}
-
-\textbf{The meaning of class is changed}
-\begin{itemize}
-	\item super classes do not impose a behavior (no abstract classes or interfaces)
-	\item super classes are used to group and reuse functionality
-\end{itemize}
-
-\textbf{Late binding quite useless}
-\begin{itemize}
-	\item no static/dynamic type
-	\item duck typing
-\end{itemize}
-
-\textbf{Class vs instance members}
-\begin{itemize}
-	\item no real distinction between fields and methods
-	\item class is just the starting point
-	\item a member does not exist until you use it (dynamic typing)
-\end{itemize}
