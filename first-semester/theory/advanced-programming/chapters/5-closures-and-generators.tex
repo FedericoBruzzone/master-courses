@@ -156,7 +156,7 @@ def make_counter(x):
 	print('entering make_counter')
 	while True:
 		yield x
-		print('incrementing x’ù')
+		print('incrementing x'u')
 		x = x + 1
 \end{lstlisting}
 
@@ -189,7 +189,7 @@ def gfib(max):
 		
 if __name__ == "__main__":
 	for n in gfib(1000):
-		print(n, end=’ ’)
+		print(n, end=' ')
 	print()
 \end{lstlisting}
 
@@ -211,15 +211,15 @@ if __name__ == "__main__":
 
 \begin{lstlisting}[language=Python]
 def rules(rules_filename):
-	with open(rules_filename, encoding=’utf-8’) as pattern_file:
+	with open(rules_filename, encoding='utf-8') as pattern_file:
 		for line in pattern_file:
 			pattern, search, replace = line.split(None, 3)
 			yield build_match_and_apply_functions(pattern, search, replace)
-def plural(noun, rules_filename=’plural-rules.txt’):
+def plural(noun, rules_filename='plural-rules.txt'):
 	for matches_rule, apply_rule in rules(rules_filename):
 			if matches_rule(noun):
 				return apply_rule(noun)
-	raise ValueError(’no matching rule for {0}’.format(noun))
+	raise ValueError('no matching rule for {0}'.format(noun))
 \end{lstlisting}
 
 \textbf{Benefits \& Drawbacks}

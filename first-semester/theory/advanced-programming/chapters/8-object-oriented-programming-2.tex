@@ -1,0 +1,360 @@
+\section{Object Oriented Programming in Python 2}
+
+Part 2: Advance on OOP
+
+\subsection{Object-Oriented Programming}
+
+\subsubsection{Instance vs Class Attributes}
+
+\begin{lstlisting}[language=Python]
+class C:
+	def __init__(self):
+		self.class_attribute="a value"
+	def __str__(self):
+		return self.class_attribute
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[15:18]cazzola@hymir:~/oop>python3
+>>> from C import C
+>>> c = C()
+>>> print(c)
+a value
+>>> c.class_attribute
+’a value’
+>>> c1 = C()
+>>> c1.instance_attribute = "another value"
+>>> c1.instance_attribute
+'another value'
+>>> c.instance_attribute
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+AttributeError: 'C' object has no attribute 'instance_attribute'
+>>> C.another_class_attribute = 42
+>>> c1.another_class_attribute, c.another_class_attribute
+(42, 42)
+\end{lstlisting}
+
+\subsubsection{Alternative Way to Access Attributes: __dict__}
+
+\begin{lstlisting}[language=Python]
+>>> c.__dict__
+{'class_attribute': 'a value'}
+>>> c1.__dict__
+{'class_attribute': 'a value', 'instance_attribute': 'another value'}
+>>> c.__dict__['class_attribute'] = ’the answer’
+>>> print(c)
+the answer
+\end{lstlisting}
+
+\textbf{__dict__ is an attribute}
+\begin{itemize}
+	\item it is a dictionary that contains the user-provided attributes
+	\item it permits introspection and intercession
+\end{itemize}
+
+\textbf{Let’s dynamically change how things are printed}
+
+\begin{lstlisting}[language=Python]
+>>> def introspect(self):
+... 	result=""
+... 	for k,v in self.__dict__.items():
+... 		result += k+": "+v+"\n"
+... 	return result
+...
+>>> C.__str__ = introspect
+>>> print(c)
+class_attribute: the answer
+>>> print(c1)
+class_attribute: a value
+instance_attribute: another value
+\end{lstlisting}
+
+\subsection{What about the Methods? Bound Methods}
+
+\begin{lstlisting}[language=Python]
+>>> class D:
+... 	class_attribute = "a value"
+... 	def f(self):
+... 		return "a function"
+...
+>>> print(D.__dict__)
+{'__module__': '__main__', 'f': <function f at 0x80bbb6c>,
+'__dict__': <attribute '__dict__' of 'D' objects>, 'class_attribute': 'a value',
+'__weakref__': <attribute '__weakref__' of 'D' objects>, '__doc__': None}
+>>> d = D()
+>>> d.class_attribute is D.__dict__['class_attribute']
+True
+>>> d.f is D.__dict__['f']
+False
+>>> d.f
+<bound method D.f of <__main__.D object at 0x80c752c>>
+>>> D.__dict__['f'].__get__(d,D)
+<bound method D.f of <__main__.D object at 0x80c752c>>
+\end{lstlisting}
+
+\textbf{Functions are not accessed through the dictionary of the class}
+	- they must be bound to a an instance
+
+\textbf{A bound method is a callable object that calls a function passing an instance as the first argument}
+
+\subsubsection{Description}
+
+\begin{lstlisting}[language=Python]
+class Desc(object):
+	"""A descriptor example that just demonstrates the protocol"""
+	def __get__(self, obj, cls=None):
+		print("{0}.__get({1}, {2})".format(self,obj,cls))
+	def __set__(self, obj, val):
+		print("{0}.__set__({1}, {2})".format(self,obj,val))
+	def __delete__(self, obj):
+		print("{0}.__delete__({1})".format(self,obj))
+
+class C(object):
+	"A class with a single descriptor"
+	d = Desc()
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[15:17]cazzola@hymir:~/esercizi-pa>python3
+>>> from descriptor import Desc, C
+>>> cobj = C()
+>>> x = cobj.d # d.__get__(cobj, C)
+<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class ’descriptor.C’>)
+>>> cobj.d = "setting a value" # d.__set__(cobj, "setting a value")
+<descriptor.Desc object at 0x80c610c>.__set__(<descriptor.C object at 0x80c3b0c>, setting a value)
+>>> cobj.__dict__[’d’] = "try to force a value" # set it via __dict__ avoiding the descriptor
+>>> x = cobj.d # this calls d.__get__(cobj, C)
+<descriptor.Desc object at 0x80c610c>.__get(<descriptor.C object at 0x80c3b0c>, <class ’descriptor.C’>)
+>>> del cobj.d # d.__delete__(cobj)
+<descriptor.Desc object at 0x80c610c>.__delete__(<descriptor.C object at 0x80c3b0c>)
+>>> x = C.d # d.__get__(None, C)
+<descriptor.Desc object at 0x80c610c>.__get(None, <class ’descriptor.C’>)
+>>> C.d = "setting a value on class" 
+\end{lstlisting}
+
+
+
+
+
+
+
+
+Python is a multi-paradigm programmin language
+
+Many claims that:
+
+\begin{center}
+Python is object-oriented
+\end{center}
+
+Python is just \textbf{object-based} but we can use it as if it is object-oriented
+
+Look at
+
+\begin{center}
+\textbf{Reference}
+Peter Wagner
+\textbf{Dimensions of Object-Based Language Design}
+In Proceegings of OOPSLA'87, pp. 168-182, October 1987.
+\end{center}
+
+for the differences
+
+\subsubsection{Wagner’s OO Taxonomy: Objects, Classes and Inheritance}
+
+\textbf{Objects}
+An object has a set of operations and a state that remembers the effect of the operations
+
+\textbf{Class}
+A class is a template from which objects may be created
+
+\begin{itemize}
+	\item object of the same class have common operations and (therefore) uniform behavior
+	\item Class expose a set of operations (public interface) to its clients
+\end{itemize}
+
+\textbf{Inheritance}
+A class may inherit operations from superclasses and its operations inherited by subclasses
+
+\begin{itemize}
+	\item  inheritance can be single or multiple
+\end{itemize}
+
+\subsubsection{Wagner’s OO Taxonomy (Cont.’d)}
+
+Wagner suggests 3 classes for programming languages:
+
+\begin{itemize}
+	\item object-based = object
+	\item class-based = object + classes
+	\item object-oriented = onject + classes + inheritance
+\end{itemize}
+
+\textbf{Data Abstraction}
+A data abstraction is an object whose state is accessible only through its operations
+
+\begin{itemize}
+	\item this concept brings forth to the data hifing property
+\end{itemize}
+
+\textbf{Delegation}
+Delegation is a mechanism to delegate responsibility for performing an operation to one or more designed ancestors
+
+\begin{itemize}
+		\item note that ancestors are not always designed by inheritance in this case it is called clientship
+\end{itemize}
+
+\subsubsection{Class Definition: Rectangle}
+
+\begin{lstlisting}[language=Python]
+	class rectangle:
+		def __init__(self, width, height):
+			self._width=width
+			self._height=height
+		def calculate_area(self):
+			return self._width*self._height
+		def calculate_perimeter(self):
+			return 2*(self._height+self._width)
+		def __str__(self):
+			return "I'm a Rectangle! My sides are: {0}, {1} \n My area is {2}".format(self._width,self._height, self.calculate_area())
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> from rectangle import rectangle
+>>> r = rectangle(7,42)
+>>> print(r)
+I'm a Rectangle! My sides are: 7, 42
+My area is 294
+\end{lstlisting}
+
+\subsubsection{Inheritance}
+
+Inheritance permits to reuse and specialize a class
+
+\textbf{Shape <-- rectangle (super class) <-- square (sub class)}
+
+\begin{lstlisting}[language=Python]
+class shape:
+	def calculate_area(self): pass
+	def calculate_perimeter(self): pass
+	def __str__(self): pass
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+from rectangle import rectangle
+
+class square(rectangle):
+	def __init__(self, width):
+		self._width=width
+		self._height=width
+	def __str__(self):
+		return \
+			"I'm a Square! My side is: {0}\n \
+			   My area is {1}".format( \
+	             self._width, self.calculate_area())
+\end{lstlisting}
+
+\subsubsection{Inheritance \& Polymorphism}
+
+\begin{lstlisting}[language=Python]
+>>> from rectangle import rectangle
+>>> from square import square
+>>> from circle import circle
+>>> shapes = [square(7), circle(3.14), rectangle(6,7), square(5),
+circle(.7), rectangle(7,2), square(2)]
+>>> shapes
+[<square.square object at 0x80c698c>, <circle.circle object at 0x80c69ac>,
+<rectangle.rectangle object at 0x80c69cc>, <square.square object at 0x80c69ec>,
+<circle.circle object at 0x80c6a0c>, <rectangle.rectangle object at 0x80c6a2c>,
+<square.square object at 0x80c6a4c>]
+>>> for i in shapes: print(i)
+...
+I'm a Square! My side is: 7
+My area is 49
+I'm a Circle! My ray is: 3.14
+My area is 30.9748469273
+I'm a Rectangle! My sides are: 6, 7
+My area is 42
+I'm a Square! My side is: 5
+My area is 25
+I'm a Circle! My ray is: 0.7
+My area is 1.53938040026
+I'm a Rectangle! My sides are: 7, 2
+My area is 14
+I'm a Square! My side is: 2
+My area is 4
+\end{lstlisting}
+
+\subsubsection{Inheritance \& Polymorphism Duck Typing}
+
+... but is shape really necessary? NO
+
+\begin{lstlisting}[language=Python]
+class rectangle:
+	def __init__(self, w, h):
+		self._width=w
+		self._height=h
+def calculate_area(self):
+	return \
+	   self._width*self._height
+def calculate_perimeter(self):
+	return \
+	   2*(self._height+self._width)
+def __str__(self):
+	return ...
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+class circle:
+	def __init__(self, ray):
+		self._ray=ray
+def calculate_area(self):
+	return self._ray**2*math.pi
+def calculate_perimeter(self):
+	return 2*self._ray*math.pi
+def __str__(self):
+	return ...
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+class square(rectangle): 
+	def __init__(self, width):
+		self._width=width
+		self._height=width
+	def __str__(self):
+		return ...
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> from rectangle import rectangle
+>>> from square import square
+>>> from circle import circle
+>>> shapes = [square(7), circle(3.14), rectangle(6,7), square(5),
+... circle(.7), rectangle(7,2), square(2)]
+>>> for i in shapes: print(i)
+I'm a Square! My side is: 7
+My area is 49
+... 
+\end{lstlisting}
+
+\subsubsection{Summarizing}
+
+\textbf{The meaning of class is changed}
+\begin{itemize}
+	\item super classes do not impose a behavior (no abstract classes or interfaces)
+	\item super classes are used to group and reuse functionality
+\end{itemize}
+
+\textbf{Late binding quite useless}
+\begin{itemize}
+	\item no static/dynamic type
+	\item duck typing
+\end{itemize}
+
+\textbf{Class vs instance members}
+\begin{itemize}
+	\item no real distinction between fields and methods
+	\item class is just the starting point
+	\item a member does not exist until you use it (dynamic typing)
+\end{itemize}
