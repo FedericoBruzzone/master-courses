@@ -1,4 +1,4 @@
-# master-courses
+# Master's Degree in Computer Science 
 
 In this repository there are the notes of the Master's Degree in Computer Science @ UniMi
 
