@@ -4,5 +4,7 @@
 *.log
 *.toc
 *.gz
+*.bll
+*.blg
 
-#
+.ipynb_checkpoints
