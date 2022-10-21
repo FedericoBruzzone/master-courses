@@ -35,42 +35,62 @@ Intercession on classes and objects is forbidden
 
 \textbf{Since Java < 12}
 
-- java.lang.Object
-	- java.lang.Class
-	- java.lang.reflect.Member
-		- java.lang.reflect.Field (Member)
-		- java.lang.reflect.Method (Member)
-		- java.lang.reflect.Constructor (Member)
-
-- boolean.class, char.class, int.class, double.class, ...
+\begin{itemize}
+	\item java.lang.Object
+	\begin{itemize}
+		\item java.lang.Class
+		\item java.lang.reflect.Member
+		
+		java.lang.reflect.Field (Member)
+		
+		java.lang.reflect.Method (Member)
+		
+		java.lang.reflect.Constructor (Member)
+		
+	\end{itemize}
+\end{itemize}
 
 \textbf{Since Java 13}
-
-- java.lang.Object
-	- java.lang.Class
-	- java.lang.reflect.Member
-	- java.lang.reflect.AccessibleObject
-		- java.lang.reflect.Field (Member)
-		- java.lang.reflect.Method (Member)
-		- java.lang.reflect.Constructor (Member)
-	- java.lang.reflect.Proxy
-	- java.lang.reflect.InvocationHandler
+\begin{itemize}
+	\item java.lang.Object
+	\begin{itemize}
+		\item java.lang.Class
+		\item java.lang.reflect.Member
+		\item java.lang.reflect.AccessibleObject
+		
+		java.lang.reflect.Field (Member)
+		
+		java.lang.reflect.Method (Member)
+		
+		java.lang.reflect.Constructor (Member)
+		
+	\end{itemize}
+	\item java.lang.reflect.Proxy
+	\item java.lang.reflect.InvocationHandler
+\end{itemize}
 
 - boolean.class, char.class, int.class, double.class, ...
 
 \textbf{Since Java 15}
-
-- java.lang.Object
-	- java.lang.Class
-	- java.lang.reflect.Member
-	- java.lang.reflect.AccessibleObject
-		- java.lang.reflect.Field (Member)
-		- java.lang.reflect.Method (Member)
-		- java.lang.reflect.Constructor (Member)
-	- java.lang.reflect.Proxy
-	- java.lang.reflect.InvocationHandler
-	- java.lang.annotation.Annotation
-	- java.lang.instrument.Instrumentation
+\begin{itemize}
+	\item java.lang.Object
+	\begin{itemize}
+		\item java.lang.Class
+		\item java.lang.reflect.Member
+		\item java.lang.reflect.AccessibleObject
+		
+		java.lang.reflect.Field (Member)
+		
+		java.lang.reflect.Method (Member)
+		
+		java.lang.reflect.Constructor (Member)
+		
+	\end{itemize}
+	\item java.lang.reflect.Proxy
+	\item java.lang.reflect.InvocationHandler
+	\item java.lang.annotation.Annotation
+	\item java.lang.instrument.Instrumentation
+\end{itemize}
 
 boolean.class, char.class, int.class, double.class, ...
 
