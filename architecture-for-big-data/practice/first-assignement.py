@@ -14,91 +14,111 @@
 
 # 6. (Avoiding handover and people lock-in)
 
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, override
 
-class AbstractDatabase(): pass
-    # DB
-    # server
-    # user = ''
-    # pwd
+class AbstractDatabase(ABC):
+    user: str = ''
+    password: str = ''
+    port: str = ''
+    host: str = ''
+    database: str  = ''
 
-    # @abstractmethod
-    # database_conn()
+    def __init__(self, user: str = '', password: str = '', port: str = '', host: str, database: str):
+        self.user = user
+        self.password = password
+        self.port = port
+        self.host = host
+        self.database = database
 
-# Input Database (SquarePeg)
-class Service(AbstractDatabase): pass
-    # def __init__(DB, server): pass
+    @abstractmethod
+    def execute_query(self, sql, parameters={}): pass
 
-    # @overrides
-    # database_conn(): pass
+class IDatabaseSQL(AbstractDatabase):
+        connection = ''
+        curr = ''
 
-    # remove_security(): pass
+        def __init__():
+            self.connection = _database_connection(user, password, port, host, database)
+            self.curr = connection.cursor()
+            super().__init__()
 
-# Get from their Database (SquarePegAdapter)
-class Adapter(ClientInterface):
-    # def __init__(self, Service):
-    #    connection()
+        @abstractmethod
+        def _database_connection(self, ser: str, password: str, port: str, host: str, database: str): pass
 
-    # connection(Service):
-    #   Service.database_conn()
+        @override
+        def execute_query(self, sql, parameters={}):
 
-    # readFromService(TABLE, <parameters>):
-    #   select *
-    #   from database.TABLE
+            string_sql = ''
 
-    # queryToReadable() # from db to readable
-    #   generic method given a query returns dict of index_row: list[row_value]
-    #   table: List[] = [name, ...]
+            # make sql to string_sql
 
-    # @override
-    # getData():
-    #   return queryToReadable()
+            return curr.execute(string_sql)
 
-# Abstraction for our "local" Database
-class AbstractClient(ABC):
-    # @abstractmethod
-    # writeData(): pass
+class Service(IDatabaseSQL): # IMPORANT: e.g., for MySQL
+        import mysql.connector
 
-# Write on our "local" Database (RoundHole)
-# AbstractDatabase: if I would like to read from sql_db and write on excel file, i don't need this implementation (AbstractDatabase)
-class Client(AbstractClient, AbstractDatabase):
-    # def __init__(DB, server, ClientInterface): pass
+        @override
+        def _database_connection(self, ser: str, password: str, port:str, host: str, database: str):
+            return connection = mysql.connector.connect( \
+                host=host, #"localhost"
+                user=user, #"yourusername"
+                password=password, #"yourpassword"
+                database=database #"mydatabase"
+            )
 
-    # @override
-    # writeData():
-    #   ClientInterface.getData()
+class ClientInterface(ABC):
+    @abstractmethod
+    def execute(self, sql): pass
 
-    # @override
-    # database_conn(): pass
+    @abstractmethod
+    def make_readable(): pass
 
-    # lookAt():
-    #   ClientInterface.getData()
+class ServiceAdapter(ClientInterface):
+    service: Service = Service()
 
-# Data representation (RoundPeg)
-class ClientInterface(ABC): pass
-    # @abstractmethod
-    # getData(): pass
+    def __init__(self, service: Service):
+        self.service = service
 
+    @override
+    def execute(sql):
+        return service.execute_query(sql)
 
+    @override
+    def make_readable(sql):
+        pass # IMPLEMENTED
+
+class Client(IDatabaseSQL): # IMPORANT: e.g., for MariaDB
+        import mariadb
+
+        clientInterface: ClientInterface = ClientInterface()
+
+        def __init__(self, clientInterface: ClientInterface):
+            self.clientInterface = clientInterface
+            super().__init__()
+
+        @override
+        def _database_connection(self, ser: str, password: str, port:str, host: str, database: str):
+            return connection = mariadb.connect(
+                user=user, #"db_user"
+                password=password, #"db_user_passwd"
+                host=host, #"192.0.2.1"
+                port=port, #3306
+                database=database #"employees"
+            )
+
+        def writeUser(cloud_database_sql, local_database_query):
+            users = make_readable(clientInterface.execute_query(cloud_database_sql))
+
+            local_write = self.connection.execute_query(local_database_query, users)
 
 if __name__ == '__main__':
-    # mongo_service = Service2('Mongo', 'localhost')
-    sql_service = Service('SQL', 'www.cloud_server.com::6969')
+    cloud_database: Service = Service('user', 'password', 'host', 'database')
 
-    adapter_sql_service = Adapter(sql_service)
+    adapter_cloud_database = ServiceAdapter(cloud_database)
 
-    local_db = Client('Mongo', 'www.my_server.com::2424', adapter_sql_service)
+    local_database: Client = Client(adapter_cloud_database, 'user', 'password', 'port', 'host', 'database')
 
-    local_db.writeData()
-
-    local_db.lookAt()
-
-    # python3 nome_programma('Mongo', 'user', 'pwd')
-    # switch kargs[1]:
-    #   case 'mongo':
-    #   mongo_service = Service2(args)
-    #   start(mongo)
-
+    local_database.writeUser({'SELECT * FROM user', 'INSERT user'})
 
           #ad1
         #/     \
