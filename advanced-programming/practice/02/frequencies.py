@@ -5,10 +5,21 @@
 
 
 
-def freqs(filename, numebr):
-    words = {}
-    with open(filename, encoding = 'utf-8') as f:
-        for word in f.readline().lower().split():
-            #...
+class Dict():
+    dictionary: dict
+
+    def __init__(self):
+        self.dictionary = dict()
+
+    def __call__(self, selff, value):
+        self.dictionary[value] = self.dictionary[value] + 1 if value in self.dictionary else 1
+        return self
+
+from re import sub
+from functools import reduce
+
+def freqs(filename, number):
+
+    return [key for (key, value) in reduce(Dict(), list(filter(lambda x: x != "", sub(r"[\W]", " ", open(filename).read().lower().split(" "))))).dictionary.items() if value > number]
 
 print(freqs("test.txt", 10))
