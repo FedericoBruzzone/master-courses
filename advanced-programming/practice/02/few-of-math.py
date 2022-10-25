@@ -44,6 +44,7 @@ def sum_all(num):
 
 # 4
 
+# First implementation (It works in Python)
 def fibonacci(n):
     memoization = {}
 
@@ -59,7 +60,35 @@ def fibonacci(n):
 
     return fibonacci_helper(n)
 
-print(fibonacci(1000))
+# Second implementation (It works in Python)
+def memoize(f):
+    cache = {}
+    def inner(*args):
+        key = tuple(args)
+        if key in cache:
+            return cache[key]
+        value = f(*args)
+        cache[key] = value
+        return value
+    return inner
 
+@memoize
+def fibonacci_m(n):
+    if n == 1: return 1
+    elif n == 2: return 1
+    else: return fibonacci_m(n-1) + fibonacci_m(n-2)
+
+# Third implementation (It works in Python)
+from functools import *
+
+@lru_cache(maxsize = 1000) # Least Recently Used Cache
+def fibonacci_lru(n):
+    if n == 1: return 1
+    elif n == 2: return 1
+    else: return fibonacci_lru(n-1) + fibonacci_lru(n-2)
+
+print(fibonacci(500))
+print(fibonacci_m(500))
+print(fibonacci_lru(500))
 
 
