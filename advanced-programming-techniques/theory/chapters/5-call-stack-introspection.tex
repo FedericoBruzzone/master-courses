@@ -19,7 +19,7 @@ Call stack introspection allows a thread to examine its context
 	\item the execution trace, and the current frame
 \end{itemize}
 
-\subsubsection{Call Stack Reification: Throwable & StackTraceElement}
+\subsubsection{Call Stack Reification: Throwable \& StackTraceElement}
 
 In Java there is no accessibile call stack meta-object.
 
@@ -37,7 +37,7 @@ We have access to a representation of the call stack when the Throwable was crea
 
 The getStackTrace() method returns the current call stack as an array of StackTraceElement. The first is the current frame.
 
-\subsubsection{Call Stack Reification: Throwable & StackTraceElement (Cont'd)}
+\subsubsection{Call Stack Reification: Throwable \& StackTraceElement (Cont'd)}
 From a frame we can get:
 \begin{itemize}
 	\item the file name containing the execution point (getFileName())
@@ -91,9 +91,9 @@ public void withdrawal (int sum) {
 
 This approach is:
 \begin{itemize}
-	- boring
-	- fragile, e.g., the line number easily changes, and
-	- error-prone
+	\item boring
+	\item fragile, e.g., the line number easily changes, and
+	\item error-prone
 \end{itemize}
 
 \subsubsection{The Logging Facility (Version with Call Stack Introspection)}

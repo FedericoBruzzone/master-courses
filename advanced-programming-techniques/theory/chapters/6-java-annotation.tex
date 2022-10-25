@@ -80,296 +80,154 @@ There are three categories of custom annotations:
 \end{lstlisting}
 \end{itemize}
 
+\subsubsection{Creating Custom Annotation Types}
 
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Call Stack Reification: Throwable & StackTraceElement}
-
-In Java there is no accessibile call stack meta-object.
-
-So, where is our entry point?
+Annotation types are, basically, Java interfaces
 \begin{itemize}
-	\item when an instance of \textbf{Throwable} is created, the call stack as an array of \textbf{StackTraceElement}
+	\item They look similar to a normal Java interface definition, but you use @interface which tells the compiler that you are writing an annotation type
 \end{itemize}
 
-By writing:
-\begin{lstlisting}[language=Java]
-new Throwable().getStackTrace()
-\end{lstlisting}
-
-We have access to a representation of the call stack when the Throwable was created.
-
-The getStackTrace() method returns the current call stack as an array of StackTraceElement. The first is the current frame.
-
-\subsubsection{Call Stack Reification: Throwable & StackTraceElement (Cont'd)}
-From a frame we can get:
+Annotations’ members are defined by method signatures
 \begin{itemize}
-	\item the file name containing the execution point (getFileName())
-	\item the line number where the call occurs (getLineNumber())
-	\item the name of the class and of the method containing the execution point (getClassName() and getMethodName())
+	\item these do not take any input parameters
+	\item the return type defines the type of the member
 \end{itemize}
 
 \begin{lstlisting}[language=Java]
-public class ABC {
-public void a() {b();}
-public void b() {c();}
-private void c() {
-	for(StackTraceElement f: new Throwable().getStackTrace()) System.out.println(f);
+public @interface TODO {
+	String value();
 }
-public static void main(String args[]) { new ABC().a(); }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[language=Java]
-[14:16]cazzola@hymir:~/tsp>java ABC
-ABC.c(ABC.java:5)
-ABC.b(ABC.java:3)
-ABC.a(ABC.java:2)
-ABC.main(ABC.java:7)
-\end{lstlisting}
-
-\subsubsection{The Logging Facility (Naive Version)}
-We want to add the logging facility to all our applications
-
-The interface to the logging facility is:
-
-\begin{lstlisting}[language=Java]
-public interface Logger {
-	void logRecord(String clazz, String method, int lineno, String msg, int type);
-	void logProblem(String clazz, String method, int lineno, Throwable prob);
+@TODO("Figure out the amount of interest per month")
+	public void calculateInterest(float amount, float rate) {
+	// need to finish this method later
 }
 \end{lstlisting}
 
-The logging facility has to be called at each critical point
-
-\begin{lstlisting}[language=Java]
-public class Account {
-private Logger log = new LoggerImpl();
-			...
-public void withdrawal (int sum) {
-			...
-		this.log.logRecord("Account", "withdrawal", 23, "Execution ...", 0);
-	}
-}
-\end{lstlisting}
-
-This approach is:
+Actually
 \begin{itemize}
-	- boring
-	- fragile, e.g., the line number easily changes, and
-	- error-prone
+	\item when you write the method signature
+	\item the compiler adds a member to the annotation with the same name and type after the method return type
+	\item the method will be the selector for such a member
 \end{itemize}
 
-\subsubsection{The Logging Facility (Version with Call Stack Introspection)}
+\subsubsection{Creating Custom Annotation Types (Cont'd)}
 
-Inspecting the call stack helps in avoiding confusion
+Similatly, we can define  annotation types with several members
+
+\begin{lstlisting}[language=Java]
+public @interface GroupTODO {
+	public enum Severity {CRITICAL, IMPORTANT, TRIVIAL, DOCUMENTATION};
+	Severity severity() default Severity.IMPORTANT;
+	String item();
+	String assignedTo();
+}
+@GroupTODO(
+	severity=GroupTODO.Severity.CRITICAL,
+	item="Figure out the amount of interest per month",
+	assignedTo="Walter Cazzola"
+)
+public void calculateInterest(float amount, float rate) {
+	// need to finish this method later
+}
+\end{lstlisting}
+
+By omitting severity the default value would be used.
+
+
+\subsubsection{Meta-Annotations, i.e., Annotations on Annotations}
+
+The \textbf{meta-annotations} are annotations on annotations
+
+There are four kind of predefined meta-annotations:
+
 \begin{itemize}
-	\item class, method and line number can be got inspecting the frame
+	\item @Target, specifies which program elements (types, methods, ...) can have annotations of the defined type
+	\item  @Retention, indicates whether an annotation is tossed out by the compiler or retained in the compiled class file.
+	\item @Documented, indicates that the annotation should be considered as part of the public API of the annotated program element.
+	\item @Inherited, is used on annotation types targeted at classes and indicates that the annotated type is an inherited one
 \end{itemize}
 
-\begin{lstlisting}[language=Java]
-public interface Logger {
-	void logRecord(String msg, int type);
-	void logProblem(Throwable prob);
-}
-\end{lstlisting}
+\subsubsection{Reflecting on Annotations}
 
-That is impleented as:
-\begin{lstlisting}[language=Java]
-public class LoggerImpl implements Logger {
-	public void logRecord(String message, int logRecordType) {
-		StackTraceElement f = new Throwable().getStackTrace()[1];
-		String callerClassName = f.getClassName();
-		String callerMethodName = f.getMethodName();
-		int callerLineNumber = f.getLineNumber();
-		// write of log record goes here.
-	}
-}
-\end{lstlisting}
-
-\subsubsection{The Invariant Checking Facility: Problem Definition}
-
-Let’s define a class VisiblePoint
-\begin{itemize}
-	\item the instances are legit when their coordinates are within the display limits
-	\item the limits and the way to check them are defined by the Visible interface
-\end{itemize}
+The easiest way to check for an annotation is by using the isAnnotationPresent() method.
 
 \begin{lstlisting}[language=Java]
-public interface Visible {
-	public final int XMIN = -1080 ;
-	public final int XMAX = 1080 ;
-	public final int YMIN = -1920 ;
-	public final int YMAX = 1920 ;
-	default boolean isvisiblex(int x) { return (x>= XMIN && x <= XMAX) ; }
-	default boolean isvisibley(int y) { return (y>= YMIN && y <= YMAX) ; }
+import java.lang.annotation.RetentionPolicy ;
+import java.lang.annotation.Retention ;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TODO {
+	String value();
 }
 \end{lstlisting}
 
 \begin{lstlisting}[language=Java]
-public class VisiblePoint implements Visible {
-	private int x, y;
-	public VisiblePoint(int x, int y) {
-		this.x = x; this.y=y;
-		assert isvisiblex(this.x) && isvisibley(this.y):
-			"x or y coordinates outside the display margins" ;
-	}
-	public int getX() { return this.x; }
-	public int getY() { return this.y; }
-	public void setX(int x) { this.x=x; }
-	public void setY(int y) { this.y=y; }
-}
-\end{lstlisting}
-
-\subsubsection{The Invariant Checking Facility: Invariant Definition}
-An invariant is a property that must hold for the whole instance' lifecycle.
-- e.g., for a VisiblePoint must always hold that its coordinates are within the display borders
-
-The class to be checked must implement the interface:
-
-\begin{lstlisting}[language=Java]
-public interface InvariantSupporter { boolean invariant(); }
-\end{lstlisting}
-
-The invariant() must be invoked at the begin/end of each method
-
-\begin{lstlisting}[language=Java]
-public class VisiblePoint implements Visible, InvariantSupporter {
-		...
-	public boolean invariant() { return isvisiblex(getX()) && isvisibley(getY()) ; }
-	public int getX() {
-		InvariantChecker.checkInvariant(this); int result = this.x;
-		InvariantChecker.checkInvariant(this);
-		return result ;
-	}
-		...
-	public void setY(int y) {
-			InvariantChecker.checkInvariant(this); this.y=y;
-		InvariantChecker.checkInvariant(this);
-	}
-}
-\end{lstlisting}
-
-\subsubsection{The Invariant Checking Facility: InvariantChecker (Naive)}
-
-The check is carried out by a class InvariantChecker
-
-\begin{lstlisting}[language=Java]
-public class InvariantChecker {
-	public static void checkInvariant(InvariantSupporter obj) {
-		if (!obj.invariant()) throw new IllegalStateException("invariant failure");
-	}
-}
-\end{lstlisting}
-
-\begin{lstlisting}[language=Java]
-public class MainInvariantChecker {
+@TODO("Everything is still missing")
+class Test {}
+public class TestIsAnnotated {
 	public static void main(String[] args) {
-		VisiblePoint p = new VisiblePoint(-7, 25);
-		System.out.println("Point p is: ("+p.getX()+", "+p.getY()+")");
-		p.setX(-20); System.out.println("New Point is: ("+p.getX()+", "+p.getY()+")");
-		p.setX(-2000); System.out.println("New Point is: ("+p.getX()+", "+p.getY()+")");
+		Class c = Test.class;
+		boolean todo = c.isAnnotationPresent(TODO.class);
+		if (todo) System.out.println("The Test class is not completely implemented yet");
+		else System.out.println("The Test class is completely implemented");
 	}
 }
 \end{lstlisting}
 
 \begin{lstlisting}[language=Java]
-[11:16]cazzola@hymir:~/tsp/v2>java MainInvariantChecker
-Exception in thread "main" java.lang.StackOverflowError
-	at InvariantChecker.checkInvariant(InvariantChecker.java:3)
-	at VisiblePoint.getX(VisiblePoint.java:12)
-	at VisiblePoint.invariant(VisiblePoint.java:9)
-		...
+[23:01]cazzola@hymir:~/tsp>java TestIsAnnotated
+The Test class is not completely implemented yet
 \end{lstlisting}
 
-Unfortunately,
-\begin{itemize}
-	\item invariant() uses a method of VisiblePoint that is checked as well
-	\item this creates an infinite loop of invariant checkings
-\end{itemize}
+\subsubsection{Reflecting on Annotations}
 
-\subsubsection{The Invariant Checking Facility: InvariantChecker (with CSI)}
-
-Problem
-\begin{itemize}
-	\item there is a loop when the invariant() invokes a method under invariant check
-\end{itemize}
-
-Solution
-\begin{itemize}
-	\item inspecting the call stack before invoking the invariant() method looking for a loop
-\end{itemize}
+You can get the annotation’s members through its reification
 
 \begin{lstlisting}[language=Java]
-public class InvariantChecker {
-	public static void checkInvariant(InvariantSupporter obj) {
-		StackTraceElement[] ste = (new Throwable()).getStackTrace();
-		for (int i = 1 ; i<ste.length; i++)
-			if (ste[i].getClassName().equals("InvariantChecker") &&
-				ste[i].getMethodName().equals("checkInvariant") ) return ;
-		if ( !obj.invariant() )
-			throw new IllegalStateException("invariant failure");
+import java.lang.reflect.Method ;
+class Test {
+	@GroupTODO(
+		severity=GroupTODO.Severity.CRITICAL,
+		item="Figure out the amount of interest per month",
+		assignedTo="Walter Cazzola")
+	public void calculateInterest(float amount, float rate) {
+		// need to finish this method later
+	}
+}
+public class GetMembers {
+	public static void main(String[] args) throws NoSuchMethodException {
+	Class c = Test.class;
+	Method element = c.getMethod("calculateInterest", float.class, float.class);
+	GroupTODO groupTodo = element.getAnnotation(GroupTODO.class);
+	String assignedTo = groupTodo.assignedTo();
+	System.out.println("TODO item on Test is assigned to: '"+assignedTo+"'.");
 	}
 }
 \end{lstlisting}
 
-\begin{lstlisting}[language=Java]
-[11:15]cazzola@hymir:~/tsp/v3>java MainInvariantChecker
-Point p is: (-7, 25)
-New Point is: (-20, 25)
-Exception in thread "main" java.lang.IllegalStateException: invariant failure
-	at InvariantChecker.checkInvariant(InvariantChecker.java:9)
-	at VisiblePoint.setX(VisiblePoint.java:27)
-	at MainInvariantChecker.main(MainInvariantChecker.java:7)
-\end{lstlisting}
 
-\subsubsection{Selective Accessibility Permission Granting}
 
-Problem
-\begin{itemize}
-	\item accessibility permissions are all allowed or negated
-\end{itemize}
 
-Solution
-\begin{itemize}
-	\item call stack inspection when the permissions should be enabled
-\end{itemize}
 
-\begin{lstlisting}[language=Java]
-public class SelectiveAccessibilityCheck {
-	public static void main(String[] args) throws Exception {
-		System.setSecurityManager(new SecurityManager() {
-			public void checkPermission(Permission p) {
-				if (p instanceof ReflectPermission && "suppressAccessChecks".equals(p.getName()))
-				for (StackTraceElement e : Thread.currentThread().getStackTrace())
-					if ("SelectiveAccessibilityCheck".equals(e.getClassName()) &&
-"setName".equals(e.getMethodName())) throw new SecurityException();
-	}
-});
-	Employee eleonor = new Employee("Eleonor", "Runedottir"); System.out.println(eleonor);
-	setSurname(eleonor, "Odindottir"); System.out.println(eleonor);
-	setName(eleonor, "Angela"); System.out.println(eleonor);
-}
 
-private static void setName(Employee e, String n) throws Exception {
-	Field name = Employee.class.getDeclaredField("name") ;
-	name.setAccessible(true) ; name.set(e, n); }
-private static void setSurname(Employee e, String s) throws Exception {
-	Field surname = Employee.class.getDeclaredField("surname") ;
-	surname.setAccessible(true) ; surname.set(e, s); }
-}
-\end{lstlisting}
 
-\begin{lstlisting}[language=Java]
-[12:54]cazzola@hymir:~/tsp>java SelectiveAccessibilityCheck
-Employee: Eleonor Runedottir
-Employee: Eleonor Odindottir
-\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
