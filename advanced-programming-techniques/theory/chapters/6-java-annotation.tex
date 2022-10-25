@@ -1,23 +1,95 @@
-\section{Call Stack Introspection}
+\section{Java Annotations}
 
-\subsection{Call Stack Introspection}
+\subsection{Java Annotations}
 
-\subsubsection{State Introspection}
+\subsubsection{Meta-Data: What, Why and How}
 
-Introspection can't be only applied to the application structure.
+\textbf{Annotations}, also called \textbf{meta-data}, are:
 
 Data about the program execution can be introspected as well:
 \begin{itemize}
-	\item the execution state; and
-	\item the call stack
+	\item structured data that describe, explain, locate or make easier to retrieve, use or manage an information resource
 \end{itemize}
 
-Each thread has a call stack consisting of stack frames
+Annotations are information about information that are interpreted at some point by code or data analysis tools.
 
-Call stack introspection allows a thread to examine its context
+Annotations can be used to:
 \begin{itemize}
-	\item the execution trace, and the current frame
+	\item document the code
+	\item extract some specific data from the program (e.g., lint, metrics, and so on);
+	\item automatically generate configuration files
+	\item ...
 \end{itemize}
+
+\subsubsection{Meta-Data: A New Concept?}
+
+Do annotations facility introduce a new concept in Java?
+
+No, many applications require or produce files associated to a
+specific class,
+
+\begin{itemize}
+	\item JAX-RPC, XML-RPC, SOAP, . . . ;
+	\item EJB, JavaBean “BeanInfo” class
+	\item ...
+\end{itemize}
+
+Creating and maintaining these associated files is painful.
+
+Moreover many API need the use of special “placemarkers” 
+
+Remote, Serializable, Cloneable, ... 
+
+This feature adds a customizable mechanism for annotating classes, methods and fields
+
+\subsubsection{Standard Annotations}
+
+Standard annotation types are those provided "out-of-the-box"
+
+\begin{itemize}
+	\item \textbf{@Override}, to mark that a method overrides another method in its superclass
+	\item \textbf{@Deprecated}, to indicate that the use of this method is discouraged; and
+	\item \textbf{@SuppressWarning}, to turn off compiler warning for classes, methods, or field and variable initializers.
+\end{itemize}
+
+\begin{lstlisting}[language=Java]
+@Override
+public String toString() {
+	return super.toString() + "[modified by subclass]" ;
+}
+\end{lstlisting}
+
+\subsubsection{Categories of Custom Annotations}
+There are three categories of custom annotations:
+\begin{itemize}
+	\item Marker Annotations, these are annotations without parameters or that uses default values for all parameters.
+\begin{lstlisting}[language=Java]
+@MarkerAnnotation
+\end{lstlisting}	
+	\item Single-Value Annotations, the annotations of this kind have just a single member named value
+\begin{lstlisting}[language=Java]
+@SingleValueAnnotation("some value");
+\end{lstlisting}
+	\item Full Annotations, these annotations exploits the full range of the annotation syntax
+\begin{lstlisting}[language=Java]
+@RevieVws({ // curly braces indicate an array of values
+	@Review(grade=Review.Grade.EXCELLENT, reviewer="DF"),
+	@Review(grade=Review.Grade.UNSATISFACTORY, reviewer="EG",
+		comment="This method needs and @Override annotation.")
+})
+\end{lstlisting}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Call Stack Reification: Throwable & StackTraceElement}
 
