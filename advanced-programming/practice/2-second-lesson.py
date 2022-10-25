@@ -33,10 +33,34 @@ def sum_all(num):
 
     return reduce(f_sum, filter(divisible_by_3_and_5, numbers))
 
+
 # 2
 
+# ...
+
+# 3
+
+# ...
+
+# 4
+
+def fibonacci(n):
+    memoization = {}
+
+    def fibonacci_helper(n):
+        if n in memoization:
+            return memoization[n]
+        if n == 1: return 1
+        elif n == 2: return 1
+        else:
+            value = fibonacci_helper(n-1) + fibonacci_helper(n-2)
+        memoization[n] = value
+        return value
+
+    return fibonacci_helper(n)
 
 if __name__ == '__main__':
     print(sum_all_natural_number_divisile_by(0, 1000, 3, 5))
     print(sum_all(1000))
+    print(fibonacci(10))
 
