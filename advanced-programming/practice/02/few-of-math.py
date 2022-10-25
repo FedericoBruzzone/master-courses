@@ -43,6 +43,7 @@ def sum_all(num):
 # ...
 
 # 4
+print('''%%%%%%%%%%%%%%%%%%  4  %%%%%%%%%%%%%%%%%%%%''')
 
 # First implementation (It works in Python)
 def fibonacci(n):
