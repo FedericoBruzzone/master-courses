@@ -59,8 +59,7 @@ def fibonacci(n):
 
     return fibonacci_helper(n)
 
-if __name__ == '__main__':
-    print(sum_all_natural_number_divisile_by(0, 1000, 3, 5))
-    print(sum_all(1000))
-    print(fibonacci(10))
+print(fibonacci(1000))
+
+
 
