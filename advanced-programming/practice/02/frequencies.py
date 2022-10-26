@@ -6,8 +6,6 @@
 
 
 class Dict():
-    dictionary: dict
-
     def __init__(self):
         self.dictionary = dict()
 
@@ -15,11 +13,11 @@ class Dict():
         self.dictionary[value] = self.dictionary[value] + 1 if value in self.dictionary else 1
         return self
 
-from re import sub
-from functools import reduce
+import  re
+import functools
 
 def freqs(filename, number):
 
-    return [key for (key, value) in reduce(Dict(), list(filter(lambda x: x != "", sub(r"[\W]", " ", open(filename).read().lower().split(" "))))).dictionary.items() if value > number]
+    return [key for (key, value) in functools.reduce(Dict(), list(filter(lambda x: x != "", re.sub(r"[\W]", " ", open(filename).read().lower()).split(" ")))).dictionary.items() if value > number]
 
-print(freqs("test.txt", 10))
+print(freqs("test.txt", 100))
