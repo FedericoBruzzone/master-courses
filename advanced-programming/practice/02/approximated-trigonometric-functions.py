@@ -22,8 +22,19 @@ def generator_factorial():
 # for f in generator_factorial(10):
 #     print(f)
 
-def taylor_series(n, apx):
+def taylor_series(x, apx):
     gen = generator_factorial()
-    return reduce(lambda a,b: a+b, [(n**i / next(gen)) for i in range(apx)])
+    gen_plus_2 = lambda gen: (next(gen) and next(gen))
 
-print(taylor_series(2,5))
+    #return list(zip(range(1, apx), [((x**i) / gen_plus_2(gen)) for i in range(1, apx, 2)])) IT WORKS
+    
+    print(list(map(lambda x: (x[0]%2==0 and x[1]*-1) or x[1], \
+            list(zip(range(1, apx), [((x**i) / gen_plus_2(gen)) \
+            for i in range(1, apx, 2)])))))
+
+    print(reduce(lambda a,b: a+b, \
+            list(map(lambda x: (x[0]%2==0 and x[1]*-1) or x[1], \
+            list(zip(range(1, apx), [((x**i) / gen_plus_2(gen)) \
+            for i in range(1, apx, 2)]))))))
+
+taylor_series(2, 10)
