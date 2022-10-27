@@ -10,6 +10,7 @@ print('''%%%%%%%%%%%%%%%%%%  1  %%%%%%%%%%%%%%%%%%%%''')
 # 4. Calculate the first term in the Fibonacci sequence to contain 1000 digits.
 
 # 1
+print('''%%%%%%%%%%%%%%%%%%  1.1 %%%%%%%%%%%%%%%%%%%%''')
 from functools import *
 
 def sum_all_natural_number_divisile_by(f, t, *divisors):
@@ -33,17 +34,16 @@ def sum_all(num):
 
     return reduce(f_sum, filter(divisible_by_3_and_5, numbers))
 
-
 # 2
-
+print('''%%%%%%%%%%%%%%%%%%  1.2 %%%%%%%%%%%%%%%%%%%%''')
 # ...
 
 # 3
-
+print('''%%%%%%%%%%%%%%%%%%  1.3  %%%%%%%%%%%%%%%%%%%%''')
 # ...
 
 # 4
-print('''%%%%%%%%%%%%%%%%%%  4  %%%%%%%%%%%%%%%%%%%%''')
+print('''%%%%%%%%%%%%%%%%%%  1.4  %%%%%%%%%%%%%%%%%%%%''')
 
 # First implementation (It works in Python)
 def fibonacci(n):
