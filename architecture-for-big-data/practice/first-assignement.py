@@ -26,11 +26,11 @@ class AbstractDatabase(ABC):
     database: str  = ''
 
     def __init__(self, host: str, database: str, user: str = '', password: str = '', port: str = ''):
+        self.host = host
+        self.database = database
         self.user = user
         self.password = password
         self.port = port
-        self.host = host
-        self.database = database
 
     @abstractmethod
     def execute_query(self, sql): pass
@@ -45,7 +45,7 @@ class IDatabaseSQL(AbstractDatabase):
         super().__init__(host, database, user, password, port)
 
     @abstractmethod
-    def _database_connection(self, user: str, password: str, port: str, host: str, database: str): pass
+    def _database_connection(self, host: str, database: str, user: str = '', password: str = '', port: str = ''): pass
 
     def execute_query(self, sql): 
         
@@ -57,7 +57,7 @@ class IDatabaseSQL(AbstractDatabase):
 class Service(IDatabaseSQL): 
     # import mysql.connector
 
-    def _database_connection(self, host: str, database: str, user: str, password: str, port: str):
+    def _database_connection(self, host: str, database: str, user: str = '', password: str = '', port: str = ''):
         # self._connection = mysql.connector.connect( 
         #     host=host, 
         #     user=user, 
@@ -66,13 +66,6 @@ class Service(IDatabaseSQL):
         # )
         # return self.connection != ''
         print('Succesfull connection to the service (CLOUD)', host, database, user, password, port)
-
-class ClientInterface(ABC):
-    @abstractmethod
-    def _execute(self, sql): pass
-
-    @abstractmethod
-    def get_data(self, sql): pass
 
 class ServiceAdapter(ClientInterface):
     service: Service = ''
@@ -89,6 +82,12 @@ class ServiceAdapter(ClientInterface):
         res = self._execute(sql) 
         # return e.g., JSON fromat from query sorted by column
         return [('value1.1', 'value2.1'), ('value1.2', 'value2.2'), ('value1.3', 'value2.3')]
+
+class ClientInterface(ABC):
+    @abstractmethod
+    def _execute(self, sql): pass
+
+    def get_data(self, sql): pass
 
 class Client(IDatabaseSQL): 
     # import mariadb
