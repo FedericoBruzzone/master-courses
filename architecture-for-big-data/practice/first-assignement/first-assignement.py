@@ -67,6 +67,12 @@ class Service(IDatabaseSQL):
         # return self.connection != ''
         print('Succesfull connection to the service (CLOUD)', host, database, user, password, port)
 
+class ClientInterface(ABC):
+    @abstractmethod
+    def _execute(self, sql): pass
+
+    def get_data(self, sql): pass
+
 class ServiceAdapter(ClientInterface):
     service: Service = ''
 
@@ -82,12 +88,6 @@ class ServiceAdapter(ClientInterface):
         res = self._execute(sql) 
         # return e.g., JSON fromat from query sorted by column
         return [('value1.1', 'value2.1'), ('value1.2', 'value2.2'), ('value1.3', 'value2.3')]
-
-class ClientInterface(ABC):
-    @abstractmethod
-    def _execute(self, sql): pass
-
-    def get_data(self, sql): pass
 
 class Client(IDatabaseSQL): 
     # import mariadb
