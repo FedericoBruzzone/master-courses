@@ -119,8 +119,8 @@ class Client(IDatabaseSQL):
         print(f'Connection successfull to the: {host} {database} {user} {password} {port}')
         return self._connection
 
-    def write_to(self, cloud_query, table, column=''):
-        response = self.clientInterface.read_from(cloud_query) 
+    def write_to(self, read_query, table, column='') -> Bool:
+        response = self.clientInterface.read_from(read_query)
         new_column = f"({', '.join(column)})"
         for i in response:
             self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};') 

@@ -38,21 +38,53 @@ We are able to read from any database and any table of them, if the adapters of 
 
 \textbf{Security}
 
-% Our code could be vulnerable by \textbf{sql injection} if the historical and external database
-Query precompiled and prepare statement
+Our code could be vulnerable by \textbf{sql injection} if the historical and external database doesen't implement internal security feature.
+
+For example:
+\begin{itemize}
+	\item We could give the right permission to each user to avoid security issues.
+	\item Implement the \textbf{prepare statement} database side, so having queries precomipled.
+\end{itemize}
 
 \subsection{Being the technical basis for design}
 
-% code screenshot
+\begin{lstlisting}[language=Python]
+class Client(IDatabaseSQL): 
+	clientInterface: ClientInterface = ''
+	
+	[...]
+\end{lstlisting}
 
-In the our code you can find an interface called \textit{ClientInterface} and its implementation that allows modularization because the \textit{Client} stay unchenged and you could change, add, delete and modify the \textit{Services} as you prefer.
+In our code you can find an interface called \textit{ClientInterface} and its implementation that allows modularization because the \textit{Client} stay unchanged and you could change, add, delete and modify the \textit{Services} as you prefer.
 
 \subsection{Being the managerial basis for cost estimation and process management}
 % -------
 
 \subsection{Enabling component reuse}
 
-% code screenshot
+\begin{lstlisting}[language=Python]
+class ClientInterface(ABC):
+    @abstractmethod
+    def _execute(self, sql): pass
+
+    @abstractmethod
+    def read_from(self, sql): pass
+
+class ServiceAdapter(ClientInterface):
+    service: Service = ''
+
+    def __init__(self, service: Service):
+        self.service = service
+        print('ServiceAdapter has been created')
+
+    def _execute(self, sql):
+        query_res = self.service.execute_query(sql)
+        return query_res
+    
+    def read_from(self, sql):
+        query_res = self._execute(sql) 
+        return query_res
+\end{lstlisting}
 
 Our code is reusable beacuse if you want to change the databse where you read you should only write a new \textit{ServiceAdapter} and \textit{Service} to connect them to the \textit{Client}.
 
@@ -60,12 +92,33 @@ So, if you to use a NoSQL type database, you will implement a new \textit{Servic
 
 \subsection{Allowing a tidy scalability}
 
-Our code allow you to do more INSERT at a time. With an only one Query, thanks to the \textit{ServiceAdapter}, you could read a set of tuples and write them on the historical database with a for loops.
+\begin{lstlisting}[language=Python]
+class Client(IDatabaseSQL): 
 
-\textbf{TODO:}
+	[...]
+	
+	def write_to(self, read_query, table, column='') -> Bool:
+		response = self.clientInterface.read_from(read_query) 
+		new_column = f"({', '.join(column)})"
+		for i in response:
+			self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};') 
+
+		self._connection.commit()
+		return True
+\end{lstlisting}
+
+Our code allow you to do more INSERT at a time. With an only one Query, thanks to the \textit{ServiceAdapter}, you could read a set of tuples and write them on the historical database with a for loops.
 
 In our code is not implemented, but a possibile solution for more scalability is to implement a multi-thread read/write structure.
 
 \subsection{Avoiding handover and people lock-in}
 
 To avoiding handover and people lock-in we could write more comments and documentation about our code.
+
+\section{Testing}
+
+We have tested the code by creating table \textbf{user1} and \textbf{user2} with \textit{id} (Primary Key, Auto Increment), \textit{name} and \textit{surname} respectively and then we have tried to read from \textbf{user1} and write to \textbf{user2}.
+
+For simplicity, we have read and wrote in the same database instance.
+
+Our tests were performed succesfully.
