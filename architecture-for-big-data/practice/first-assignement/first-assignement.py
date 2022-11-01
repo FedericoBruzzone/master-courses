@@ -19,23 +19,29 @@
 from abc import ABC, abstractmethod
 import mysql.connector
 
+'''
+@dev AbstractDatabase is an abstract class that contains the information to connect with any database
+'''
 class AbstractDatabase(ABC):
-    user: str = ''
-    password: str = ''
-    port: str = ''
-    host: str = ''
-    database: str  = ''
+    _user: str = ''
+    _password: str = ''
+    _port: str = ''
+    _host: str = ''
+    _database: str  = ''
 
     def __init__(self, user: str, password: str, host: str, database: str, port: str = ''):
-        self.host = host
-        self.database = database
-        self.user = user
-        self.password = password
-        self.port = port
+        self._host = host
+        self._database = database
+        self._user = user
+        self._password = password
+        self._port = port
 
     @abstractmethod
     def execute_query(self, sql): pass
 
+'''
+@dev IDatabaseSQL are an abstract classes that define behavior of the specified database
+'''
 class IDatabaseSQL(AbstractDatabase):
     _connection: str = ''
     _curr: str = ''
@@ -47,23 +53,29 @@ class IDatabaseSQL(AbstractDatabase):
 
     @abstractmethod
     def _database_connection(self, user: str, password: str, host: str, database: str, port: str = ''): pass
-
+    
     def execute_query(self, sql): 
         self._curr.execute(sql)
         res = [i for i in self._curr]
 
         print(f'\nQuery has been executed: {sql}')
         for i in res:
-            print(f"{i}")
+            print(f'{i}')
        
         return res
-        
+
+'''
+@dev Service is a concrete class that contains the methods to read from the external database
+'''
 class Service(IDatabaseSQL): 
     def _database_connection(self, user: str, password: str, host: str, database: str, port: str = ''):
         self._connection = mysql.connector.connect(user=user, password=password, host=host, database=database)
         print(f'Connection successfull to the: {host} {database} {user} {password} {port}')
         return self._connection
-        
+
+'''
+@dev ClientInterface is an interface that contains the delcarations of methods defined for each adapters
+'''
 class ClientInterface(ABC):
     @abstractmethod
     def _execute(self, sql): pass
@@ -71,6 +83,11 @@ class ClientInterface(ABC):
     @abstractmethod
     def read_from(self, sql): pass
 
+'''
+@dev ServiceAdapter is a concrete class that inherits from ClientInterface and contains a Service object. 
+     Its purpose is to get data from service and make it readable for the client 
+     through the implemented ClientInterface methods.
+'''
 class ServiceAdapter(ClientInterface):
     service: Service = ''
 
@@ -79,13 +96,17 @@ class ServiceAdapter(ClientInterface):
         print('ServiceAdapter has been created')
 
     def _execute(self, sql):
-        res = self.service.execute_query(sql)
-        return res
+        query_res = self.service.execute_query(sql)
+        return query_res
     
     def read_from(self, sql):
         query_res = self._execute(sql) 
         return query_res
 
+'''
+@dev Client is a concrete class that contains the methods to write in the historical database,
+     to make it, it use the ClientInterface methods to read adapted data from the external database.
+'''
 class Client(IDatabaseSQL): 
     clientInterface: ClientInterface = ''
 
@@ -102,21 +123,15 @@ class Client(IDatabaseSQL):
         response = self.clientInterface.read_from(cloud_query) 
         new_column = f"({', '.join(column)})"
         for i in response:
-            #print(f'INSERT INTO {table} {(new_column)} VALUES {(name, surname)};')
-            self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};')  
+            self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};') 
+
         self._connection.commit()
         return True
 
 if __name__ == '__main__':
     cloud_database: Service = Service(user='root', password='welcome123', host='127.0.0.1', database='test_database')
-    # cloud_database.execute_query('SELECT * FROM user')
-
     adapter_cloud_database: ServiceAdapter = ServiceAdapter(cloud_database)
-    #adapter_cloud_database._execute('SELECT * FROM user')
-    #adapter_cloud_database.read_from('SELECT * FROM user')
-
     local_database: Client = Client(adapter_cloud_database, user='root', password='welcome123', host='127.0.0.1', database='test_database')
-    #local_database.execute_query('SELECT * FROM user')
     local_database.write_to('SELECT name, surname FROM user', 'user2', ('name', 'surname'))
 
     

@@ -11,17 +11,17 @@ This implementation uses the object composition principle: the adapter implement
 \end{center}
 
 \begin{enumerate}
-	\item The \textit{AbstractDatabase} is an abstract class that contains data to connect with any database
+	\item \textit{AbstractDatabase} is an abstract class that contains data to connect with any database
 
-	\item The \textit{IDatabaseSQL \& IDatabaseNoSQL} are an abstract classes that define behavior of the specified database
+	\item \textit{IDatabaseSQL \& IDatabaseNoSQL} are an abstract classes that define behavior of the specified database
 
-	\item The \textit{service} is a concrete class that contains the methods to read from the external database
+	\item \textit{service} is a concrete class that contains the methods to read from the external database
 
-	\item The \textit{ServiceAdapter} is a concrete class that inherits from \textit{ClientInterface} and contains a \textit{Service} object. Its purpose is to get data from service and make it readable for the client through the implemented \textit{ClientInterface} methods.
+	\item \textit{ServiceAdapter} is a concrete class that inherits from \textit{ClientInterface} and contains a \textit{Service} object. Its purpose is to get data from service and make it readable for the client through the implemented \textit{ClientInterface} methods.
 
-	\item The \textit{ClientInterface} is an interface that contains the delcarations of methods defined for each adapters
+	\item \textit{ClientInterface} is an interface that contains the delcarations of methods defined for each adapters
 
-	\item The \textit{Client} is a concrete class that contains the methods to write in the historical database, to make it, it use the \textit{ClientInterface} methods to read adapted data from the external database.
+	\item \textit{Client} is a concrete class that contains the methods to write in the historical database, to make it, it use the \textit{ClientInterface} methods to read adapted data from the external database.
 \end{enumerate}
 
 \section{Software Architecture Pillars}
