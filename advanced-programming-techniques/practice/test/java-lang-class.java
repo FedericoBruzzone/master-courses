@@ -15,7 +15,13 @@ class MOP { // meta-object protocol
         return result.toArray(new Class<?>[0]);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
+        Class new_class = Class.forName("java.lang.String");
+        System.out.println(new_class);
+        System.out.println(MOP.classNameToString(new_class));
+
+        System.out.println("----------");
+
         System.out.println(MOP.classNameToString(String.class));
 
         System.out.println("----------");
