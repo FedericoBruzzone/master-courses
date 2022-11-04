@@ -28,6 +28,10 @@ class MOP { // meta-object protocol
         for (var superclass : MOP.getAllSuperClasses(java.util.ArrayList.class))
             System.out.println(superclass);
 
+        Class type = Class.fromName(args[0]);
+        System.out.println(type);
+
+
 //         System.out.println(args[0]);
 //         for (int i = 0; i < args.length; i++) {
 //             System.out.println(args[i]);

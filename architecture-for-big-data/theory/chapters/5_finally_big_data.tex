@@ -49,10 +49,6 @@ MapReduce is a programming model proposed in a Google paper (2003)to easier mult
 	- a nde in the cluster that accepts tasks from a JobTracker. It expose a finite number of slots that represents its capability of run parallel tasks. Each task is executed on a spawned JVM. It also sends an heartbeat to the Job Tracker every minute to reassure it is still alive
 \end{itemize}
 
-\begin{center}
-\includegraphics[scale=0.5]{52-hadoop-architecture-2}
-\end{center}
-
 \begin{itemize}
 	\item \textbf{NameNode}
 	- It keeps the directory tree of all files in the file system, and tracks where across the cluster the file data is kept. It does not store the data of these files itself. It is the Single Point of Failure of an Hadoop application. It routes request between application and DataNode
@@ -60,5 +56,31 @@ MapReduce is a programming model proposed in a Google paper (2003)to easier mult
 	- Still under development to give to Hadoop High Availability
 	\item \textbf{DataNode}
 	- Stores data. DataNodes work with each other to replicate data. DataNode with data to process should be deployed on the same machine where TaskTracker is running
+\end{itemize}
+
+\begin{itemize}
+	\item \textbf{Master Node}
+	- Made by a Job Tracker, Task Traker, NameNode, and DataNode
+	\item \textbf{Worker Node}
+	- Made by a DataNode and TaskTracker
+\end{itemize}
+
+
+\subsection{Apache Sequence}
+
+\begin{center}
+\includegraphics[scale=0.5]{52-hadoop-architecture-sequence}
+\end{center}
+
+\begin{itemize}
+	\item Application submits an asyncronous job to the Job Tracker, then it can start polling the Job Tracker for job status
+	\item Job Tracker gets data locations in the Name Node registry
+	\item Job Tracker identifies the set of Task Trackers with available slots nearest to Data Nodes
+	\item The JobTracker submits the work to the chosen Task Trackes
+	\item ob Tracker starts to monitor Task Trackers heartbeat: If they do not submit heartbeat signals often enough, it presumes they failed and work is scheduled on a different Task Tracker.
+	\item When each Task Tracker completes the task, it notify the Job Tracker the final status. If it failed, the Job Tracker can:
+	1. resubmit the job elsewhere
+	2. mark that specific record as to-skip
+	3. blacklist the task traker as unreliable
 \end{itemize}
 
