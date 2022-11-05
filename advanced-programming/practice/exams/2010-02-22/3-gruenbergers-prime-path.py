@@ -1,3 +1,18 @@
+'''
+Exercise 3: Gruenberger's Prime Path.
+Among the prime numbers, 2 and 3 are exceptions to the rule that all primes are of one of two forms: 6k+1 or 6k-1.
+
+if you take a check sheet and draw a path of odd integers (one each check) starting from 3 that at every prime:
+
+turns left for primes of the form 6k+1
+turns right for primes of the form 6k-1
+Eventually the path will cross itself, so that a check will contain two or more odd numbers. This exercise goes under the name of Gruenberger's prime path after the name of its creator.
+
+Write a program that calculates the path intersections in the path from 3 to 10001 and lists them sorted by the smallest the largest table-wise a row for each list of intersections.
+
+The exercise must be solved in a functional manner any other solution will be considered wrong.
+'''
+
 def is_prime(n):
     return [i for i in range(1, n//2 + 1) if n%i == 0] == [1]
 
