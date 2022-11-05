@@ -38,8 +38,9 @@ def gruenbergersPrimePath():
 
     return {x: y for x, y in res.items() if len(y) > 1}
 
-print(gruenbergersPrimePath())
+res = gruenbergersPrimePath()
 
+print(set(sorted([values[-1] for values in res.values()])))
 
 
 
