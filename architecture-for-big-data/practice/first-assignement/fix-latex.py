@@ -25,3 +25,22 @@ Avoidinf Handover and people lock-in
 Tutorial per come cambiare lettura database esterno ecc...
 
 '''
+
+
+# MIRO FILE: https://miro.com/app/board/uXjVPL-PaYM=/
+
+# 1. Satisfying requirements
+# - Functional Requirement
+# - Technical Requirement
+# - Security requirement
+
+# 2. Design
+# - Modularization and detailed interface to satisfy the requirements
+
+# 3. Process management (and Cost estimation)
+
+# 4. Enabling component Reuse
+
+# 5. Allowing a tidy scalability
+
+# 6. (Avoiding handover and people lock-in)

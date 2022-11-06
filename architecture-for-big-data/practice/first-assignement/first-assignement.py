@@ -1,21 +1,3 @@
-# MIRO FILE: https://miro.com/app/board/uXjVPL-PaYM=/
-
-# 1. Satisfying requirements
-# - Functional Requirement
-# - Technical Requirement
-# - Security requirement
-
-# 2. Design
-# - Modularization and detailed interface to satisfy the requirements
-
-# 3. Process management (and Cost estimation)
-
-# 4. Enabling component Reuse
-
-# 5. Allowing a tidy scalability
-
-# 6. (Avoiding handover and people lock-in)
-
 from abc import ABC, abstractmethod
 import mysql.connector
 import json
@@ -44,12 +26,12 @@ class AbstractDatabase(ABC):
 '''
 @dev IDatabaseSQL are an abstract class that define behavior of the SQL database.
      Since IDatabaseSQL inherits from AbstractDatabase it must implements `execute_query(...)` method.
-     In the inherit class, you will have to implement `_database_connection()` method.
+     In the inherit class, you will have to implement `_database_connection(...)` method.
 
      Assuming that in python any database sql library implement `.connector.connect(...)` and `.cursor()` methods: 
         1. we use `_connection` field to store the connection to the specific database;
         2. we use `_cursor` field to store the cursor to the specific database.
-        Note that `_cursor` contanis the `.execute()` method that is used to execute the query.
+        Note that `_cursor` contanis the `.execute(...)` method that is used to execute the query.
 '''
 class IDatabaseSQL(AbstractDatabase):
     _connection: str = ''
@@ -116,12 +98,15 @@ class ExternalDatabaseAdapter(IHistoricalDatabse):
         return query_res
 
 '''
-@dev HistoricalDatabse is a concrete class that contains the methods to write into the historical database,
+@dev HistoricalDatabse is a concrete class that contains the methods to execute query into the historical database.
      Since HistoricalDatabse inherits from IDatabaseSQL it must implements `_database_connection(...)`.
      Since HistoricalDatabse has a IHistoricalDatabase object it can get data from it.
      
-     The `.write_to(...)` mothod use the `.read_from(...)` of the adapter to get a list of tuple 
+     To remember the last item we read, we store the identifier of it (ordered) into a `sync.json` file,
+        and when we want to execute the next query, we should read from `sync.json` the identifier.
+     The `.write_to(...)` mothod use the `.read_from(...)` method of the adapter to get a list of tuple 
      and then it will insert it to historical database. 
+     
      After this, it will commit the changes.
 '''
 class HistoricalDatabse(IDatabaseSQL): 
