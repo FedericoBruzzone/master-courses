@@ -90,13 +90,6 @@ For example:
 
 \subsection{Being the technical basis for design}
 
-\begin{lstlisting}[language=Python]
-class Client(IDatabaseSQL): 
-	clientInterface: ClientInterface = ''
-	
-	[...]
-\end{lstlisting}
-
 In our code you can find an interface called \textit{ClientInterface} and its implementation that allows modularization because the \textit{Client} stay unchanged and you could change, add, delete and modify the \textit{Services} as you prefer.
 
 \subsection{Being the managerial basis for cost estimation and process management}
@@ -105,53 +98,38 @@ In our code you can find an interface called \textit{ClientInterface} and its im
 \subsection{Enabling component reuse}
 
 \begin{lstlisting}[language=Python]
-class ClientInterface(ABC):
+class IHistoricalDatabse(ABC):
     @abstractmethod
     def _execute(self, sql): pass
 
     @abstractmethod
     def read_from(self, sql): pass
 
-class ServiceAdapter(ClientInterface):
-    service: Service = ''
+class ExternalDatabaseAdapter(IHistoricalDatabse):
+    external_databse: ExternalDatabase = ''
 
-    def __init__(self, service: Service):
-        self.service = service
-        print('ServiceAdapter has been created')
+    def __init__(self, external_databse: ExternalDatabase):
+        self.external_databse = external_databse
+        print('ExternalDatabaseAdapter has been created')
 
     def _execute(self, sql):
-        query_res = self.service.execute_query(sql)
+        query_res = self.external_databse.execute_query(sql)
         return query_res
     
     def read_from(self, sql):
         query_res = self._execute(sql) 
-        return query_res
+        return query_res   
 \end{lstlisting}
 
 Talking about reusability, as you can see in the uml diagram in 1.2 chapter, there are the gray part that are not implemented. 
 
+These parts are just examples of external sources that could be implemented if we need to read from other service. 
 
+Doing so, we do not need to change the historical database writing code, because we can use external adapters to make writable the data from the external source, as it happens, in our implementation, for the external database class.
 
-Our code is reusable beacuse if you want to change the database where you read you should only write a new \textit{ServiceAdapter} and \textit{Service} to connect them to the \textit{Client}.
-
-So, if you to use a NoSQL type database, you will implement a new \textit{ServiceAdapter} and \textit{Service} that will inherit from \textit{IDatabaseNoSQL}. Acutally, the most importat thing is that the other part of the code will not change.
+Obviously, it you want to create a new adapter, you will have to code a class which will inherit from IHistoricalDatabase. This allow the historical database, which contains an IHistorical database object to not change the internal code.
 
 \subsection{Allowing a tidy scalability}
-
-\begin{lstlisting}[language=Python]
-class Client(IDatabaseSQL): 
-
-	[...]
-	
-	def write_to(self, read_query, table, column='') -> Bool:
-		response = self.clientInterface.read_from(read_query) 
-		new_column = f"({', '.join(column)})"
-		for i in response:
-			self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};') 
-
-		self._connection.commit()
-		return True
-\end{lstlisting}
 
 Our code allow you to do more INSERT at a time. With an only one Query, thanks to the \textit{ServiceAdapter}, you could read a set of tuples and write them on the historical database with a for loops.
 
@@ -176,14 +154,17 @@ Our tests were performed succesfully.
 
 \textbf{First execution}
 \begin{lstlisting}
-Connection successfull to the: 127.0.0.1 test_database root welcome123 
+Connection successfull to the: 
+          127.0.0.1 test_database root welcome123 
 ExternalDatabaseAdapter has been created
-Connection successfull to the: 127.0.0.1 test_database root welcome123 
+Connection successfull to the: 
+          127.0.0.1 test_database root welcome123 
 
-Query has been executed: SELECT name, surname FROM user where id > 0
-                         ('federico', 'bruzzone')
-                         ('andrea', 'longoni')
-                         ('massimiliano', 'visconti')
+Query has been executed: 
+          SELECT name, surname FROM user where id > 0
+          ('federico', 'bruzzone')
+          ('andrea', 'longoni')
+          ('massimiliano', 'visconti')
 
 Query has been executed: INSERT INTO user2 (name, surname) 
                          VALUES ('federico', 'bruzzone');
@@ -201,9 +182,12 @@ Query has been executed: INSERT INTO user2 (name, surname)
 The second execution did not write data since in the user1 table there are only three tuples and in the our sync.json the counter is set to three after the first execution.
 
 \begin{lstlisting}
-Connection successfull to the: 127.0.0.1 test_database root welcome123 
+Connection successfull to the: 
+          127.0.0.1 test_database root welcome123 
 ExternalDatabaseAdapter has been created
-Connection successfull to the: 127.0.0.1 test_database root welcome123 
+Connection successfull to the: 
+          127.0.0.1 test_database root welcome123 
 
-Query has been executed: SELECT name, surname FROM user where id > 3
+Query has been executed: 
+          SELECT name, surname FROM user where id > 3
 \end{lstlisting}
