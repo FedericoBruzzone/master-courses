@@ -1,12 +1,60 @@
-\section{Architecture}
+\section{Overview}
 
-\subsection{Implementation}
+The assignment is focused on implementing a simple Architecture using Python Abstract Classes to build a structure that is lead to retrieve data from generics externals data source for importing them into an internal DB that will be used from the analyst’s team for analysis purposes.
+
+\section{Project Requirements}
+
+The project requirements are reduced to the ideation and abstract implementation of a software architecture which satisfies to follow the \textit{Software Architecture Pillars} seen during the class lessons.
+
+In specific those pillars are:
+
+\begin{enumerate}
+	\item Being the framework for satisfying requirements
+	\item Being the technical basis for design
+	\item Being the managerial basis for cost estimation and process management
+	\item Enabling component reuse
+	\item Allowing a tidy scalability 
+	\item Avoiding handover and people lock in
+\end{enumerate}
+
+\section{Software Architecture Pillars}
+
+\subsection{Being the framework for satisfying requirements}
+
+\begin{center}
+\includegraphics[scale=0.20]{scheme-diagram}
+\end{center}
+
+\subsubsection{Functional Requirements}
+
+The software will need the ability to read data from generic external sources (like Databases, public API, Data Stream, …) and to prepare and process them before their insertion inside the local Company Historical DB.
+
+This software, that furthermore we will call ‘Batch Extractor’, will need to be able to adapt itself for retrieving data from any data source that the company will need to import inside the system for allowing analysts to be free of finding which data source should fit better for their needs.
+
+The batch system will also need to be adaptable for changes on the internal structure of the Company, in particular the DB, for letting free the company to make the best business and behavioral choices in any moment free of the current implementations of the system.
+
+Important will also be that the structure should be scalable on multiple and concurrent input data source, for allowing the system to inject data at different speeds based on the need of the analysts.
+
+\subsubsection{Technical Requirements}
+
+Due to accomplish the necessity of the structure of being adaptable to any external source is important that the software will presents a layer of external adapters that will be used to connect to the external sources for retrieving properly data based on the external infrastructures and needs. 
+
+Important will be the possibility for the system to be able to add new adapters to interact with new outside data sources. Those will simply need to pass the data to the script unknowingly of the internal DB implementation and this will then take care of them for the inserting inside the Historical DB.
+
+Important will also be the presence of wrappers for the connection with the internal Historical DB. 
+This feature will provide another abstraction layer that will be important for allow the company any change on the internal technologies used for storing data.
+
+\subsubsection{Security Requirements}
+
+The system will need to be placed inside the company network due to avoid the necessity of opening external ports directly to the Historical DB, for reduce the possibility of penetration of malicious actors inside the system.
+
+Important will also be the process of input sanitization after receiving data from the external source and before inserting them inside the queries, due to avoid the exposure of the system to attack like SQL injection or similar.
+
+\subsection{Being the framework for satisfying requirements}
 
 We developed the architecture later illustrated keeping in mind that we have a single immutable database on which we write (historical database) and possible multiple databases or data sources from which to read.
 
 To interface on these databases or data sources we thought to use multiple adapters to transform the data coming in a writable format on hisotircal database.
-
-\subsection{Adapter Pattern}
 
 \begin{center}
 \includegraphics[scale=0.45]{uml-diagram}
@@ -66,32 +114,6 @@ Note that \_cursor contanis the .execute(...) method that is used to execute the
      After this, it will commit the changes.
 \end{enumerate}
 
-\section{Software Architecture Pillars}
-
-\subsection{Being the framework for satisfying requirements}
-
-\textbf{Functional}
-
-Our code is able to read from the external database and write to the historical database without any problems.
-
-\textbf{Technical}
-
-We are able to read from any database and any table of them, if the adapters of the databases are setted. And we can write on the historical database if the same table exists and the right fields are setted.
-
-\textbf{Security}
-
-Our code could be vulnerable by \textbf{sql injection} if the historical and external database doesen't implement internal security feature.
-
-For example:
-\begin{itemize}
-	\item We could give the right permission to each user to avoid security issues.
-	\item Implement the \textbf{prepare statement} database side, so having queries precomipled.
-\end{itemize}
-
-\subsection{Being the technical basis for design}
-
-In our code you can find an interface called \textit{ClientInterface} and its implementation that allows modularization because the \textit{Client} stay unchanged and you could change, add, delete and modify the \textit{Services} as you prefer.
-
 \subsection{Being the managerial basis for cost estimation and process management}
 % -------
 
@@ -131,13 +153,18 @@ Obviously, it you want to create a new adapter, you will have to code a class wh
 
 \subsection{Allowing a tidy scalability}
 
-Our code allow you to do more INSERT at a time. With an only one Query, thanks to the \textit{ServiceAdapter}, you could read a set of tuples and write them on the historical database with a for loops.
+The system has been ideated and structured to be scalable on the quantity of data received on input from the external sources.
+This choice born from the unknown of the availability of data during time on the remote source.
 
-In our code is not implemented, but a possibile solution for more scalability is to implement a multi-thread read/write structure.
+Allowing this scalability help the system to be ready for situation where the data are given “real time” and are not retrievable in a second moment. For not losing data will be important that the system will be able to adapt his capability of reading data without losing on performance or reliability.
+
+At this purpose the script will have more internal threads that will be capable of increasing in number when there will be high inbound traffic and then reduce themselves when not anymore necessary.
 
 \subsection{Avoiding handover and people lock-in}
 
-To avoiding handover and people lock-in we could write more comments and documentation about our code.
+The problem of vendor lock-in is commonly forcing the company to be stuckked to use some internal technologies that cannot be changed because the cost of the replacement would be higher than the benefits. This problem can also raise on company’s employees when the develop of code has not been well documented and the company find herself to be in the position to cannot replace an employee due to his only known about the project code.
+
+To avoid those problem the solution proposal has been to implement an internal wrapper between the script and the internal DB to allow in a second moment the change of internal technologies configurations and a fully code documentation to let any new future worker on the project be able to understand every snip of code what is doing and how to manage them in case of bug or unexpected behavior.
 
 \section{Testing}
 

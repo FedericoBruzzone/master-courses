@@ -134,6 +134,7 @@ class HistoricalDatabse(IDatabaseSQL):
         response = self.adapter_for_historical_database.read_from(read_query)
         new_column = f"({', '.join(column)})"
         for i in response:
+            # SANIFICATION(i)
             self.execute_query(f'INSERT INTO {table} {new_column} VALUES {(i)};') 
         self._connection.commit()
 
