@@ -1,0 +1,27 @@
+\section{Modularizing Pythons}
+
+Modules \& Packages
+
+\subsection{Modules}
+
+\subsubsection{Basics on Modules}
+
+A \textbf{module} is a simple text file of Python's statements
+
+\begin{lstlisting}[language=Python]
+import <<module name>>
+\end{lstlisting}
+
+Lets a client (importer) fetch a module as a whole
+
+\begin{lstlisting}[language=Python]
+from <<module name>> import <<name list>>|*
+\end{lstlisting}
+
+Allows clients to fetch particular names from a module
+
+\begin{lstlisting}[language=Python]
+imp.reload <<module name>>
+\end{lstlisting}
+
+Provides a way to reload a module’s code without stopping the Python interpreter

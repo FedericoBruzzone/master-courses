@@ -112,21 +112,23 @@ Then, we look for the solution, if any, by
 \begin{lstlisting}[language=Python]
 import re, itertools, sys
 def solve(puzzle):
-	words = re.findall(’[A-Z]+’, puzzle.upper())
-	unique_characters = set(’’.join(words))
-	assert len(unique_characters) <= 10, ’Too many letters’
+	words = re.findall('[A-Z]+', puzzle.upper())
+	unique_characters = set(''.join(words))
+	assert len(unique_characters) <= 10, 'Too many letters'
 	first_letters = {word[0] for word in words}
 	n = len(first_letters)
-	sorted_characters = ’’.join(first_letters) + ’’.join(unique_characters-first_letters)
-	characters = tuple(ord(c) for c in sorted_characters) # generator expression
-	digits = tuple(ord(c) for c in ’0123456789’)
+	sorted_characters = ''.join(first_letters) + 
+						 ''.join(unique_characters-first_letters)
+	characters = tuple(ord(c) for c in sorted_characters) 
+	                    # generator expression
+	digits = tuple(ord(c) for c in '0123456789')
 	zero = digits[0]
 	for guess in itertools.permutations(digits, len(characters)):
 		if zero not in guess[:n]:
 			equation = puzzle.translate(dict(zip(characters, guess)))
 			if eval(equation): return equation
 
-if __name__ == ’__main__’:
+if __name__ == '__main__':
 	for puzzle in sys.argv[1:]:
 		print(puzzle)
 		solution = solve(puzzle)
@@ -134,7 +136,8 @@ if __name__ == ’__main__’:
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
-[15:06]cazzola@hymir:~/>python3 cryptarithms.py "HAWAII + IDAHO + IOWA + OHIO == STATES"
+[15:06]cazzola@hymir:~/>python3 cryptarithms.py 
+              "HAWAII + IDAHO + IOWA + OHIO == STATES"
 HAWAII + IDAHO + IOWA + OHIO == STATES
 510199 + 98153 + 9301 + 3593 == 621246
 \end{lstlisting}
@@ -146,8 +149,9 @@ HAWAII + IDAHO + IOWA + OHIO == STATES
 - permutations(), combinations(), and so on
 
 \begin{lstlisting}[language=Python]
->>> list(itertools.combinations(’ABCD’,2))
-[(’A’, ’B’), (’A’, ’C’), (’A’, ’D’), (’B’, ’C’), (’B’, ’D’), (’C’, ’D’)]
+>>> list(itertools.combinations('ABCD',2))
+[('A', 'B'), ('A', 'C'), ('A', 'D'), 
+ ('B', 'C'), ('B', 'D'), ('C', 'D')]
 \end{lstlisting}
 
 \textbf{Infinite Iterators}
@@ -155,23 +159,43 @@ HAWAII + IDAHO + IOWA + OHIO == STATES
 - count(), cycle() and repet()
 
 \begin{lstlisting}[language=Python]
->>> list(itertools.repeat(’ABCDF’,3))
-[’ABCDF’, ’ABCDF’, ’ABCDF’]
+>>> list(itertools.repeat('ABCDF',3))
+['ABCDF', 'ABCDF', 'ABCDF']
 \end{lstlisting}
 
 \textbf{Iterators}
 
-- zip_longest(), groupby(), islice() and so on
+- zip\_longest(), groupby(), islice() and so on
 
 \begin{lstlisting}[language=Python]
->>> list(itertools.starmap(lambda x,y:x+y,itertools.zip_longest(’a’*7,’1234567’)))
-[’a1’, ’a2’, ’a3’, ’a4’, ’a5’, ’a6’, ’a7’]
->>> names = [’alpha’, ’beta’, ’gamma’, ’delta’, ’epsilon’, ’zeta’, ’eta’,
-	’theta’, ’iota’, ’kappa’, ’lambda’, ’nu’, ’mu’, ’xi’, ’omicron’, ’pi’,
-	’rho’, ’sigma’, ’tau’, ’upsilon’, ’phi’, ’chi’, ’psi’, ’omega’]
+>>> list(itertools.starmap(lambda x,y:x+y,itertools
+                          .zip_longest('a'*7,'1234567')))
+['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7']
+>>> names = ['alpha', 'beta', 'gamma', 
+             'delta', 'epsilon', 'zeta', 'eta',
+	         'theta', 'iota', 'kappa', 'lambda', 
+	         'nu', 'mu', 'xi', 'omicron', 'pi',
+	         'rho', 'sigma', 'tau', 'upsilon', 
+	         'phi', 'chi', 'psi', 'omega']
 >>> groups = itertools.groupby(sorted(names, key=len), len)
->>> for g, itr in groups: print(list(itr), end=’ ’)
-[’nu’, ’mu’, ’xi’, ’pi’] [’eta’, ’rho’, ’tau’, ’phi’, ’chi’, ’psi’]
-[’beta’, ’zeta’, ’iota’] [’alpha’, ’gamma’, ’delta’, ’theta’, ’kappa’, ’sigma’,
-’omega’] [’lambda’] [’epsilon’, ’omicron’, ’upsilon’]
+>>> for g, itr in groups: print(list(itr), end=' ')
+['nu', 'mu', 'xi', 'pi'] 
+['eta', 'rho', 'tau', 'phi', 'chi', 'psi']
+['beta', 'zeta', 'iota'] 
+['alpha', 'gamma', 'delta', 'theta', 'kappa', 'sigma', 'omega'] 
+['lambda'] ['epsilon', 'omicron', 'upsilon']
 \end{lstlisting}
+
+\subsubsection{The module itertools: precooked recipes}
+
+\begin{center}
+\includegraphics[scale=0.7]{5-iterators-the-module-itertools}
+\end{center}
+
+\subsubsection{The module itertools: precooked recipes}
+
+\begin{center}
+\includegraphics[scale=0.7]{6-iterators-eval}
+\end{center}
+
+
