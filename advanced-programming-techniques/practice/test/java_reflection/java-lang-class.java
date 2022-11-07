@@ -2,7 +2,7 @@ package java_reflection;
 import java.util.ArrayList;
 import java.util.List;
 
-class MOP { // meta-object protocol
+class MOP_java_lang_class { // meta-object protocol
     public static String classNameToString(Class<?> cls) {
         if (!cls.isArray())
             return cls.getName();
@@ -17,22 +17,22 @@ class MOP { // meta-object protocol
     }
 
     public static void main(String[] args) throws ClassNotFoundException {
-        Class new_class = Class.forName("java.lang.String");
+        Class<?> new_class = Class.forName("java.lang.String");
         System.out.println(new_class);
-        System.out.println(MOP.classNameToString(new_class));
+        System.out.println(classNameToString(new_class));
 
         System.out.println("----------");
 
-        System.out.println(MOP.classNameToString(String.class));
+        System.out.println(classNameToString(String.class));
 
         System.out.println("----------");
 
         Integer[] a = new Integer[]{1,2,3};
-        System.out.println(MOP.classNameToString(a.getClass()));
+        System.out.println(classNameToString(a.getClass()));
 
         System.out.println("----------");
 
-        for (var superclass : MOP.getAllSuperClasses(java.util.ArrayList.class))
+        for (var superclass : getAllSuperClasses(java.util.ArrayList.class))
             System.out.println(superclass);
 
 //         System.out.println(args[0]);
