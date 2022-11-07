@@ -16,6 +16,16 @@ class MOP_java_lang_class { // meta-object protocol
         return result.toArray(new Class<?>[0]);
     }
 
+    // My Methods
+    public static String classArrayToString(Class<?>[] cls_list) {
+        String result = new String();
+        for (Class<?> cls : cls_list) {
+            result += cls.getName() + ", ";
+        }
+        
+        return result.substring(0, result.length()-2);
+    }
+
     public static void main(String[] args) throws ClassNotFoundException {
         Class<?> new_class = Class.forName("java.lang.String");
         System.out.println(new_class);
