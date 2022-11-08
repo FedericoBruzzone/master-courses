@@ -1,8 +1,198 @@
-\section{Dynamic Proxy}
+\section{Class Loading}
 
-\subsection{Java's Dynamic Proxy}
+\subsection{Java Class Loader}
 
-\subsubsection{What Is a Proxy?}
+\subsubsection{About the Java Class Loader}
+
+\textbf{Class Loader}
+\\
+Defined by the abstract class \textbf{ClassLoader} and its subcalsses.\\
+- e.g., SecureClassLoader, URLClassLoader,...
+
+A class loader is an object responsible of loading the classes.
+
+Given the name of a class,
+
+\begin{itemize}
+	\item it locates the class according to the class loader rules or
+	\item it generates the data (array of bytes) that constitutes a definition for the class
+\end{itemize}
+
+and makes it available to the running application.
+
+Class loaders define namespaces.
+
+\begin{itemize}
+	\item Every Class object contains a \textbf{Class\#getClassLoader()} reference to the \textbf{ClassLoader} that defined it.
+	\item <Class A loaded by CL1> = <Class A loaded by CL2> <> CL1 = CL2
+\end{itemize}
+
+\subsubsection{Class Loaders and Name Spaces}
+
+\begin{center}
+\includegraphics[scale=0.7]{13-class-loader-namespace}
+\end{center}
+
+\subsubsection{Effect of the Namespaces: A Broken Singleton}
+
+\begin{lstlisting}[language=Java]
+public class Singleton {
+	static private boolean runOnce = false;
+	public Singleton() {
+		if (runOnce)
+			throw new IllegalStateException("[ERROR] re-instantiation of «Singleton»!!!");
+		runOnce = true;
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+public class SingletonViolationTest {
+	public static void main(String[] 	args) throws Exception {
+	SimpleClassLoader CL1 = new 	SimpleClassLoader("testclasses");
+	Class<?> c1 = 	CL1.loadClass("Singleton");
+	println("Loaded class «Singleton» via the «CL1» class loader");
+	Field flag = 	c1.getDeclaredField("runOnce"); 	flag.setAccessible(true);
+	println("Let’s instatiate 	«Singleton@CL1»\n### runOnce :- 	"+flag.get(null));
+	Object x = c1.getDeclaredConstructor().newInstance();
+println("### runOnce :- "+flag.get(null));
+	try {
+		println("Let’s re-instantiate «Singleton@CL1»\n### runOnce :- "+flag.get(null));
+		Object y = c1.getDeclaredConstructor().newInstance() ;
+		throw new RuntimeException("Test Fails!!!");
+	} catch (Exception e) { println(e.getCause().getMessage()); }
+	SimpleClassLoader CL2 = new SimpleClassLoader("testclasses");
+	println("Loaded class «Singleton» via the «CL2» class loader");
+	Class<?> c2 = CL2.loadClass("Singleton");
+	Field flag2 = c2.getDeclaredField("runOnce"); 	flag2.setAccessible(true);
+	println("Let’s instatiate «Singleton@CL2»\n### runOnce :- "+flag2.get(null));
+Object z = c2.getDeclaredConstructor().newInstance();
+println("### runOnce :- "+flag.get(null));
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+[11:34]cazzola@hymir:~/tsp>java SingletonViolationTest
+Loaded class «Singleton» via the «CL1» class loader
+Let’s instatiate «Singleton@CL1»
+### runOnce :- false
+### runOnce :- true
+Let’s re-instantiate «Singleton@CL1»
+### runOnce :- true
+[ERROR] re-instantiation of «Singleton»!!!
+Loaded class «Singleton» via the «CL2» class loader
+Let’s instatiate «Singleton@CL2»
+### runOnce :- false
+### runOnce :- true
+\end{lstlisting}
+
+\subsubsection{Why Subclass the Class Loader?}
+
+\textbf{Applications implement subclasses of ClassLoader in order}
+\begin{itemize}
+	\item to extend the manner in which the Java virtual machine dynamically loads classes;
+	\item to obtain different protected name spaces; ands
+	\item to transform bytecode!
+\end{itemize}
+
+\textbf{Some applications related to the class loaders are:}
+\begin{itemize}
+	\item Securty
+	- examine classes for a proper digital signature
+	- disallow the loading of particular packages (for example, java.io)
+	\item Encrypting
+	-  decrypt classes on the fly, so that your class files on disk are not readable by someone with a decompiler
+	\item Archiving
+	- distribute your code in a special format or with special compression
+	\item Testing
+	- keep context for test cases sandboxed/separated by using different loaders
+\end{itemize}
+
+\subsubsection{Another Reason to Create Your Own Class Loader}
+
+\textbf{Problem}
+
+Write a method that outputs the inheritance hierarchy of an
+application.
+
+\textbf{Subproblem}
+
+How do you discover what classes belong to your application?
+
+\textbf{Solution}
+
+Impossible - The subproblem is extrinsic to Java meta-object
+protocol.
+
+\textbf{So what can we do?}
+
+\begin{center}
+\textbf{Create our own class loader}
+\end{center}
+
+The class loader object knows what classes have been loaded.
+
+\subsubsection{java.lang.ClassLoader}
+
+\begin{lstlisting}[language=Java]
+public class ClassLoader {
+	protected ClassLoader() { ... }
+	protected ClassLoader(ClassLoader parent) { ... }
+	public final ClassLoader getParent() { ... }
+	public static ClassLoader getSystemClassLoader()
+			throws SecurityException, IllegalStateException { ... }
+	public static ClassLoader getPlatformClassLoader() throws 		SecurityException { ... }
+	protected Class<?> findClass(String name) throws 	ClassNotFoundException { ... }
+	protected Class<?> findClass(String moduleName, String name)
+throws ClassNotFoundException { ... }
+	protected Class<?> findLoadedClass(String name) { ... }
+	protected Class<?> findSystemClass(String name) throws 	ClassNotFoundException { ... }
+	public Class<?> loadClass(String name) throws ClassNotFoundException { ... }
+	protected final void resolveClass(Class<?> c) throws 	NullPointerException { ... }
+	protected Class<?> defineClass (String name, byte[] b, int off, int len)
+			throws ClassFormatError { ... }
+...
+}
+\end{lstlisting}
+
+\subsubsection{Class Loading: How It Works}
+
+\begin{center}
+\includegraphics[scale=0.7]{13-java-class-loader}
+\end{center}
+
+\textbf{loadClass() is where the loading process start}
+\begin{itemize}
+	\item it calls findLoadedClass() to check if the class is already loaded;
+	\item– if yes it returns the found class otherwise it delegates the task to its parent; Delegation Model.
+	\item if everything fails, it invokes the findClass() to find the class, read the bytecode and create the class object (defineClass())
+\end{itemize}
+
+\textbf{Something like (Pseudo-Java):}
+\begin{lstlisting}[language=Java]
+public Class loadClass(String name) throws ClassNotFoundException {
+	Class c = findLoadedClass(name);
+	if (c != null) return c;
+	try {
+		return parent.loadClass(name);
+	} catch (ClassNotFoundException e) {
+		return findClass(name);
+	}
+}
+\end{lstlisting}
+
+\textbf{How to subclass the class ClassLoader:}
+
+\begin{itemize}
+	\item create a default constructor and one linking to the parent;
+	\item override findClass();
+	\item absolutely do not override loadClass() because its original implementation supports the delegation model.
+\end{itemize}
+
+
+
+
 
 The homonym design pattern defines a proxy as an:
 
