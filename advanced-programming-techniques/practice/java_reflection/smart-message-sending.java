@@ -2,14 +2,17 @@ import java.lang.reflect.Method;
 
 interface SmartMessageSending { // public
     default public Object receive(String selector, Object[] args) throws Exception {
-        Method mth = null; Class<?>[] classes = null;
+        Method method = null; 
+        Class<?>[] classes = null;
+
         if (args != null) {
             classes = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++) 
                 classes[i] = args[i].getClass();
         }
-        mth = this.getClass().getMethod(selector, classes);
-        return mth.invoke(this, args);
+
+        method = this.getClass().getMethod(selector, classes);
+        return method.invoke(this, args);
     }
 }
 

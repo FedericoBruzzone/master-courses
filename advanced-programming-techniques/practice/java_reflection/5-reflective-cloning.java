@@ -1,14 +1,17 @@
 import java.lang.reflect.Field;
+
 interface ReflectiveCloning { // public
     default public Object copy() throws Exception {
         Object tmp = this.getClass().getDeclaredConstructor().newInstance();
         Field[] fields = this.getClass().getDeclaredFields();
+
         for (int i = 0; i < fields.length; i++) {
             fields[i].setAccessible(true);
             fields[i].set(tmp, fields[i].get(this));
         }
+
         return tmp;
-}
+    }
 }
 
 class Employee_cloning implements ReflectiveCloning {

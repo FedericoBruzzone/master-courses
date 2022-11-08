@@ -23,16 +23,17 @@ class MOP_java_lang_reflect_method {  // meta-object protocol
         
         return result;
     }
-
+    
     public static void main(String[] args) throws ClassNotFoundException {
         Class<?> new_class = Class.forName("java.util.stream.IntStream");
          
         Stream<Method> methods  = Arrays.asList(new_class.getDeclaredMethods())
                                         .stream()
-                                        .filter(s -> s.getName() == "iterate");
+                                        .filter(s -> s.getName() == "iterate"); 
+                            
         methods.forEach(method -> 
             System.out.println(method.getName()+": "+formalParametersToString(method)));
-
+        
         System.out.println("----------");
             
         Class<?> new_class_2 = Class.forName("java.lang.reflect.Method");

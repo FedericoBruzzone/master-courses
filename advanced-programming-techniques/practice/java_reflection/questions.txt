@@ -1,0 +1,15 @@
+1. Aggiungere metodi a una classe (final)
+2. Cambiare Modifier di una classe 
+3. Estendere con `SmartFieldAccess` una classe final
+4. Mettere come tipo di variabile il tipo di una classe chiamante (Object)
+
+    default public Object copy() throws Exception {
+        Object tmp = this.getClass().getDeclaredConstructor().newInstance();
+        System.out.println(tmp.getClass());
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            fields[i].setAccessible(true);
+            fields[i].set(tmp, fields[i].get(this));
+        }
+        return tmp;
+    }

@@ -16,6 +16,7 @@ interface SmartFieldAccess { // public
             f.set(this, value);
     }
 }
+
 class Employee_access implements SmartFieldAccess {
     private String name;
     public Employee_access(String name) {
@@ -26,10 +27,11 @@ class Employee_access implements SmartFieldAccess {
 class AccessibilityCheck_access {
     public static void main(String[] args) throws Exception {
         try {
-            Employee_access mike = new Employee_access("Mike");
-            System.out.println(mike.instVarAt("name"));
-            mike.instVarAtPut("name", "Eleonor");
-            System.out.println(mike.instVarAt("name"));
+            Employee_access employee = new Employee_access("Mike");
+            System.out.println(employee.instVarAt("name"));
+
+            employee.instVarAtPut("name", "Eleonor");
+            System.out.println(employee.instVarAt("name"));
         } catch(NoSuchFieldException | SecurityException | IllegalAccessException e) {
             System.out.println(e.getMessage());
         }
