@@ -13,16 +13,25 @@ a commitment without test cases will be considered completely wrong.
 
 is_prime = lambda x: len([i for i in range(1, x+1) if x%i == 0]) == 2
 
-def generator_prime():
-    yield 2
-    i = 1
-    while True:
-        i += 2
-        (is_prime(i) and (yield i))
+def res_generator_prime_opt(n=2):
+    if (is_prime(n)):
+        yield n
+    ((n%2==0 or n==1) and (yield from res_generator_prime_opt(n+1))) or (yield from res_generator_prime_opt(n+2))
 
+# def res_generator_prime(n=2):
+#     if (is_prime(n)):
+#         yield n
+#     yield from res_generator_prime(n+1)
+
+# def generator_prime():
+#     yield 2
+#     i = 1
+#     while True:
+#         i += 2
+#         (is_prime(i) and (yield i))
 
 def prime_factors(number_to_factor):
-    G = generator_prime()
+    G = res_generator_prime_opt()
     current = next(G)
     while True:
         if number_to_factor <= 1: 
