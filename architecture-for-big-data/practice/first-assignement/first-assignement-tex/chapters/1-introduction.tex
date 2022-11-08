@@ -115,7 +115,31 @@ Note that \_cursor contanis the .execute(...) method that is used to execute the
 \end{enumerate}
 
 \subsection{Being the managerial basis for cost estimation and process management}
-% -------
+
+\begin{lstlisting}[language=Python, numbers=none]
+Infrastructure Cost: Physical Server owning:    4 x 9000$ = 36000$
+                     Estimated power:           4 x 250$ = 1000$/month
+                     Estimated internet access: 2250$/month
+    D eveloper Cost: 3 Agents:                  30000$
+                     Software developing:       35000$
+                     Network adapt:             20000$
+ Algorithmical Cost: Business logics:           10000$
+   Maintenance Cost:                            20000$/Year
+
+
+        TOTAL COSTS: One Shot:                  131000$
+                     Running:                   57K000/Year 
+\end{lstlisting}
+
+\textbf{Infrastructure Specs}
+
+Physical Server: 4 * ProLiant DL385 Gen10 Plus : 9,000.00 
+
+Power costs:     4* 1600W (Server alimentation) = 6400W * 13c\$/KwH : 1000\$
+
+Internet costs:  Dedicated Internet Access, 40Gbps IP Transit: 2250\$/month
+
+Developer cost:  Based on 6 months working\\
 
 \subsection{Enabling component reuse}
 
