@@ -1,3 +1,5 @@
+package java_reflection;
+
 import java.lang.reflect.Method;
 
 interface SmartMessageSending { // public
