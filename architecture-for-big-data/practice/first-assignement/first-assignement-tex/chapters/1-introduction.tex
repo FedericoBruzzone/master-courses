@@ -22,27 +22,27 @@ In specific those pillars are:
 \subsection{Being the framework for satisfying requirements}
 
 \begin{center}
-\includegraphics[scale=0.4]{scheme-diagram}
+\includegraphics[scale=0.20]{scheme-diagram}
 \end{center}
 
 \subsubsection{Functional Requirements}
 
 The software will need the ability to read data from generic external sources (like Databases, public API, Data Stream, …) and to prepare and process them before their insertion inside the local Company Historical DB.
 
-This software, that furthermore we will call ‘Batch Extractor’, will need to be able to adapt itself for retrieving data from any data source that the company will inside the system for allowing analysts to be free of finding data source should fit better for their needs.
+This software, that furthermore we will call ‘Batch Extractor’, will need to be able to adapt itself for retrieving data from any data source that the company will need to import inside the system for allowing analysts to be free of finding which data source should fit better for their needs.
 
 The batch system will also need to be adaptable for changes on the internal structure of the Company, in particular the DB, for letting free the company to make the best business and behavioral choices in any moment free of the current implementations of the system.
 
-Important will also be that the structure should be scalable on multiple and concurrent input data source, for allowing the system to inject data at different speeds based on the need of the analyst.
+Important will also be that the structure should be scalable on multiple and concurrent input data source, for allowing the system to inject data at different speeds based on the need of the analysts.
 
 \subsubsection{Technical Requirements}
 
-Due to accomplish the necessity of the structure of being adaptable to any external sources is important that the software will presents a layer of external adapters that will be used to connect to the external sources for retrieving properly data based on the external infrastructures and needs. 
+Due to accomplish the necessity of the structure of being adaptable to any external source is important that the software will presents a layer of external adapters that will be used to connect to the external sources for retrieving properly data based on the external infrastructures and needs. 
 
 Important will be the possibility for the system to be able to add new adapters to interact with new outside data sources. Those will simply need to pass the data to the script unknowingly of the internal DB implementation and this will then take care of them for the inserting inside the Historical DB.
 
 Important will also be the presence of wrappers for the connection with the internal Historical DB. 
-This feature will provide another abstraction layer that will be important on the internal technologies used for storing data.
+This feature will provide another abstraction layer that will be important for allow the company any change on the internal technologies used for storing data.
 
 \subsubsection{Security Requirements}
 
@@ -52,20 +52,26 @@ Important will also be the process of input sanitization after receiving data fr
 
 \subsection{Being the framework for satisfying requirements}
 
+We developed the architecture later illustrated keeping in mind that we have a single immutable database on which we write (historical database) and possible multiple databases or data sources from which to read.
+
+To interface on these databases or data sources we thought to use multiple adapters to transform the data coming in a writable format on hisotircal database.
+
 \begin{center}
 \includegraphics[scale=0.45]{uml-diagram}
 \end{center}
 
 \textbf{Please note: The gray part is not implemented. We will talk about it in the reusability chapter.}
 
+We thought to use \textbf{Adapter (Wrapper)} pattern beacuse this allow us to keep the same \textit{historical databse} and make it to comunicate with different types of \textit{external database}. We want to write into the \textit{historical databse}, and we want to read from the \textit{external database}.
+
 This implementation uses the object composition principle: the adapter implements the interface of one object and wraps the other one.
 
 \begin{enumerate}
-	\item \textit{AbstractDatabase} is an abstract class that contains the information with any database.
+	\item \textit{AbstractDatabase} is an abstract class that contains the information to connect with any database.
      
      In the inherit class, you will have to implement execute\_query(...) method.
 
-	\item \textit{IDatabaseSQL} is an abstract class that define behavior of the SQL database.
+	\item \textit{IDatabaseSQL} are an abstract class that define behavior of the SQL database.
      
      Since IDatabaseSQL inherits from AbstractDatabase it must implements execute\_query(...) method.
      
@@ -83,13 +89,15 @@ Note that \_cursor contanis the .execute(...) method that is used to execute the
 	
      Since ExternalDatabase inherits from IDatabaseSQL it must implements \_database\_connection(...).
 
-	\item \textit{ExternalDatabaseAdapter} is a concrete class that data from ExternalDatadases readable and writable for HistoricalDatabase. 
+	\item \textit{ExternalDatabaseAdapter} is a concrete class that make the data from ExternalDatadase readable and writable for HistoricalDatabase. 
 	
      Since ExternalDatabaseAdapter inherits from IHistoricalDatabse it must implements \_read\_from(...) and \_execute(...) methods.
      
-     Since ExternalDatabaseAdapter has a ExternalDatabase object it can execute query or more specifically read the data from it.
+     Since ExternalDatabaseAdapter has a ExternalDatabase object and it can execute query or more specifically read the data from it.
+     
+     (e.g., If the our HistoricalDatabase would like to has a list of tuple we should implement this method in the way it returns it)
 
-	\item \textit{IHistoricalDatabse} is an interface that contains the delcarations of methods that must be implemented by each adapters.
+	\item \textit{IHistoricalDatabse} is an interface that contains the delcarations of methods that they must be implemented by each adapters.
 	
      We expect the read\_from(...) mothod returns a fitted content for the HistoricalDatabase. 
 
@@ -112,7 +120,7 @@ Note that \_cursor contanis the .execute(...) method that is used to execute the
 Infrastructure Cost: Physical Server owning:    4 x 9000$ = 36000$
                      Estimated power:           4 x 250$ = 1000$/month
                      Estimated internet access: 2250$/month
-     Developer Cost: 3 Agents:                  30000$
+    D eveloper Cost: 3 Agents:                  30000$
                      Software developing:       35000$
                      Network adapt:             20000$
  Algorithmical Cost: Business logics:           10000$
@@ -159,16 +167,20 @@ class ExternalDatabaseAdapter(IHistoricalDatabse):
         return query_res   
 \end{lstlisting}
 
-Talking about reusability, as you can see in the uml diagram in 1.2 chapter, these parts are just examples of external sources that could be implemented if we need to read from other service. 
+Talking about reusability, as you can see in the uml diagram in 1.2 chapter, there are the gray part that are not implemented. 
 
-Obviously, it you want to create a new adapter, you will have to code a class which will inherit from IHistoricalDatabase. This allow the historical database, which contains an IHistorical database objects to not change the internal code.
+These parts are just examples of external sources that could be implemented if we need to read from other service. 
+
+Doing so, we do not need to change the historical database writing code, because we can use external adapters to make writable the data from the external source, as it happens, in our implementation, for the external database class.
+
+Obviously, it you want to create a new adapter, you will have to code a class which will inherit from IHistoricalDatabase. This allow the historical database, which contains an IHistorical database object to not change the internal code.
 
 \subsection{Allowing a tidy scalability}
 
-The system has been ideated and structured to be scalable on the quantity of data received input from the external sources.
+The system has been ideated and structured to be scalable on the quantity of data received on input from the external sources.
 This choice born from the unknown of the availability of data during time on the remote source.
 
-Allowing this scalability help the system to be ready for where the data are given “real time” and are not retrievable in a second moment. For not losing data will be important that the system will be able to adapt his capability of reading data without losing on performance or reliability.
+Allowing this scalability help the system to be ready for situation where the data are given “real time” and are not retrievable in a second moment. For not losing data will be important that the system will be able to adapt his capability of reading data without losing on performance or reliability.
 
 At this purpose the script will have more internal threads that will be capable of increasing in number when there will be high inbound traffic and then reduce themselves when not anymore necessary.
 
@@ -176,7 +188,7 @@ At this purpose the script will have more internal threads that will be capable 
 
 The problem of vendor lock-in is commonly forcing the company to be stuckked to use some internal technologies that cannot be changed because the cost of the replacement would be higher than the benefits. This problem can also raise on company’s employees when the develop of code has not been well documented and the company find herself to be in the position to cannot replace an employee due to his only known about the project code.
 
-To avoid those problem the solution proposal has been to implement an internal wrapper between the script and the internal DB to allow in a second moment change internal technologies configurations and a fully code documentation to let any new future worker on the project be able to understand every snip of code what is doing and how to manage them in case of bug or unexpected behavior.
+To avoid those problem the solution proposal has been to implement an internal wrapper between the script and the internal DB to allow in a second moment the change of internal technologies configurations and a fully code documentation to let any new future worker on the project be able to understand every snip of code what is doing and how to manage them in case of bug or unexpected behavior.
 
 \section{Testing}
 
@@ -184,9 +196,9 @@ We have tested the code by creating table \textbf{user1} and \textbf{user2} with
 
 We have used sync.json file to store the last tuple that we read from the \textbf{user1}.
 
-Reading this file we were able to resume reading \textbf{user1} from the last writing in table \textbf{user2}, whitout the whole database every time.
+Reading this file we were able to resume reading \textbf{user1} from the last writing in table \textbf{user2}, whitout having read the whole database every time.
 
-For simplicity, we have been using the id of the \textbf{user1} to keep track the last tuple stored in the sync.json file, and we have read and wrote in the same database instance.
+For simplicity, we have been using the id filed of the \textbf{user1} to keep track the last tuple stored in the sync.json file, and we have read and wrote in the same database instance.
 
 Our tests were performed succesfully.
 
