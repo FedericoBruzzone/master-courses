@@ -2,6 +2,7 @@ TODO: Proxy String to get private field (probabily doesn't work)
       Hard coded get private filed doesn't work
       
 1. Aggiungere metodi a una classe (final) / estendere final class
+   Aggiungere una notazione a una classe a runtime
 2. Cambiare Modifiers di una classe 
 3. Estendere con `SmartFieldAccess` una classe final
 4. Mettere come tipo di variabile il tipo di una classe chiamante (Object)
@@ -22,7 +23,7 @@ grant {
     permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
 };
 
-(It Doesn't works) java -Djava.security.manager AccessibilityCheck
+(It Doesn't work) java -Djava.security.manager AccessibilityCheck
 
 (It Works) java -Djava.security.policy=granted.policy
                 -Djava.security.manager AccessibilityCheck
