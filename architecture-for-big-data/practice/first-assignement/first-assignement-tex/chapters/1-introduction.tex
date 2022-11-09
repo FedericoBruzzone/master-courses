@@ -39,7 +39,7 @@ Important will also be that the structure should be scalable on multiple and con
 
 Due to accomplish the necessity of the structure of being adaptable to any external source, is important that the software will presents a layer of external adapters that will be used to connect to the external sources for retrieving properly data based on the external infrastructures and needs. 
 
-Important will be the possibility for the system to be able to add new adapters to interact with new outside data sources. Those will simply need to pass the data to the script unknowingly of the internal DB implementation and this will then take care of them for the inserting inside the Historical DB.
+Important will also be the possibility for the system to be able to add new adapters to interact with new outside data sources. Those will simply need to pass the data to the script unknowingly of the internal DB implementation and this will then take care of them for the inserting inside the Historical DB.
 
 Important will also be the presence of wrappers for the connection with the internal Historical DB. 
 This feature will provide another abstraction layer that will be important to allow the company to apport in any moment whatever changes on the internal technologies used for storing data.
@@ -165,7 +165,7 @@ class ExternalDatabaseAdapter(IHistoricalDatabse):
         return query_res   
 \end{lstlisting}
 
-Talking about reusability, as you can see in the uml diagram in 1.2 chapter, the not implemented gray parts are just examples of external sources that could be implemented if we will need to read from other services. 
+Talking about reusability, as you can see in the uml diagram in chapter 1.2, the not implemented gray parts are just examples of external sources that could be implemented if we will need to read from other services. 
 
 Doing so we we'll not have to change each time the way we are going to write into the internal DB, because the adapter will achieve the goal to manage the importing of data inside the script. From here then the data will be passed by the wrapper to the internal DB.
 
