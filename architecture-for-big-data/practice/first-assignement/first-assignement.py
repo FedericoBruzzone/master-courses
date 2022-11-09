@@ -24,13 +24,13 @@ class AbstractDatabase(ABC):
     def execute_query(self, sql): pass
 
 '''
-@dev IDatabaseSQL are an abstract class that define behavior of the SQL database.
+@dev IDatabaseSQL is an abstract class that define behavior of the SQL database.
      Since IDatabaseSQL inherits from AbstractDatabase it must implements `execute_query(...)` method.
      In the inherit class, you will have to implement `_database_connection(...)` method.
 
      Assuming that in python any database sql library implement `.connector.connect(...)` and `.cursor()` methods: 
         1. we use `_connection` field to store the connection to the specific database;
-        2. we use `_cursor` field to store the cursor to the specific database.
+        2. we use `_cursor` field to store the cursor off the specific database.
         Note that `_cursor` contanis the `.execute(...)` method that is used to execute the query.
 '''
 class IDatabaseSQL(AbstractDatabase):
@@ -66,7 +66,7 @@ class ExternalDatabase(IDatabaseSQL):
         return self._connection
 
 '''
-@dev IHistoricalDatabse is an interface that contains the delcarations of methods that they must be implemented by each adapters.
+@dev IHistoricalDatabse is an interface that contains the delcarations of methods that each adapters must have to implement.
      We expect the `read_from(...)` mothod returns a fitted content for the HistoricalDatabase. 
 '''
 class IHistoricalDatabse(ABC):
@@ -77,10 +77,9 @@ class IHistoricalDatabse(ABC):
     def read_from(self, sql): pass
 
 '''
-@dev ExternalDatabaseAdapter is a concrete class that make the data from ExternalDatadase readable and writable for HistoricalDatabase. 
+@dev ExternalDatabaseAdapter is a concrete class that allow the data from ExternalDatadase to be readable and writable for the HistoricalDatabase. 
      Since ExternalDatabaseAdapter inherits from IHistoricalDatabse it must implements `_read_from(...)` and `_execute(...) methods`.
-     Since ExternalDatabaseAdapter has a ExternalDatabase object and it can execute query or more specifically read the data from it.
-     (e.g., If the our HistoricalDatabase would like to has a list of tuple we should implement this method in the way it returns it)
+     Since ExternalDatabaseAdapter has an ExternalDatabase object instance, it is able to execute query for retreaving or writing data.
 '''
 class ExternalDatabaseAdapter(IHistoricalDatabse):
     external_databse: ExternalDatabase = ''
@@ -98,14 +97,14 @@ class ExternalDatabaseAdapter(IHistoricalDatabse):
         return query_res
 
 '''
-@dev HistoricalDatabse is a concrete class that contains the methods to execute query into the historical database.
-     Since HistoricalDatabse inherits from IDatabaseSQL it must implements `_database_connection(...)`.
+@dev HistoricalDatabse is a concrete class that contains methods to execute query into the historical database.
+	Since HistoricalDatabse inherits from IDatabaseSQL it must implements _database_connection(...).
      Since HistoricalDatabse has a IHistoricalDatabase object it can get data from it.
      
-     To remember the last item we read, we store the identifier of it (ordered) into a `sync.json` file,
-        and when we want to execute the next query, we should read from `sync.json` the identifier.
-     The `.write_to(...)` mothod use the `.read_from(...)` method of the adapter to get a list of tuple 
-     and then it will insert it to historical database. 
+     To remember the last item we have read, we store its identifier (ordered) into a sync.json file, 
+     and when we will have to execute the next query, we'll read from sync.json the identifier.
+     The .write_to(...) mothod use the .read_from(...) method of the adapter to get a list of tuple and then 
+     insert them into the historical database. 
      
      After this, it will commit the changes.
 '''
