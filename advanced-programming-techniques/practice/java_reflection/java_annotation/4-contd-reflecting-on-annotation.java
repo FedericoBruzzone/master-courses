@@ -20,7 +20,7 @@ class Test2 {
     )
     public void calculateInterest(float amount, float rate) {
         // need to finish this method later
-    } 
+    }    
 }
 
 class GetMembers {
