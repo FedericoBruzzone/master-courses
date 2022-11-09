@@ -1,8 +1,8 @@
 package call_stack_introspection;
 
-import java.lang.reflect.ReflectPermission;
-import java.security.Permission;
 import java.lang.reflect.Field;
+// import java.lang.reflect.ReflectPermission;
+// import java.security.Permission;
 
 class Employee {
     private String name;
@@ -36,15 +36,14 @@ class Employee {
 
 class SelectiveAccessibilityCheck {
     public static void main(String[] args) throws Exception {
-        System.setSecurityManager(new SecurityManager() {
-            public void checkPermission(Permission p) {
-                if (p instanceof ReflectPermission && "suppressAccessChecks".equals(p.getName()))
-                    for (StackTraceElement e : Thread.currentThread().getStackTrace())
-                        if ("SelectiveAccessibilityCheck".equals(e.getClassName()) &&
-                            "setName".equals(e.getMethodName())) 
-                            throw new SecurityException();
-                }
-        });
+        // System.setSecurityManager(new SecurityManager() {
+        //     public void checkPermission(Permission p) {
+        //         if (p instanceof ReflectPermission && "suppressAccessChecks".equals(p.getName()))
+        //             for (StackTraceElement e : Thread.currentThread().getStackTrace())
+        //                 if ("SelectiveAccessibilityCheck".equals(e.getClassName()) && "setName".equals(e.getMethodName())) 
+        //                     throw new SecurityException();
+        //     }
+        // });
 
         Employee eleonor = new Employee("Eleonor", "Runedottir");
         setSurname(eleonor, "Odindottir");
