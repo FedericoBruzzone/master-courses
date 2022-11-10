@@ -1,0 +1,14 @@
+*.out
+*.aux
+*.idx
+*.log
+*.toc
+*.gz
+*.bll
+*.blg
+
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+*.class
+#*.pdf
