@@ -28,7 +28,3 @@ print('How many leap years between 2000 and 2050: {0} '.format(calendar.leapdays
 
 # 5
 print('Day name of July 29, 2016: {0}'.format(calendar.day_name[calendar.weekday(2016, 7, 29)]))
-
-
-
-
