@@ -1,0 +1,11 @@
+TODO: Proxy String to get private field (probabily doesn't work)
+      Hard coded get private field doesn't work
+
+grant {
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+(It Doesn't work) java -Djava.security.manager AccessibilityCheck
+
+(It Works) java -Djava.security.policy=granted.policy
+                -Djava.security.manager AccessibilityCheck
