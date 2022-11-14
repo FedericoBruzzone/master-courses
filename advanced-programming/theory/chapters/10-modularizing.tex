@@ -59,7 +59,7 @@ Modules are imported only once, so, code is executed just at import time.
 
 Let us consider:
 \begin{center}
-  \includegraphics[scale=0.7]{7-import-open-only-once}
+%  \includegraphics[scale=0.7]{7-import-open-only-once}
 \end{center}
 
 - the module simple is imported just the first time
@@ -82,7 +82,7 @@ import assigns an entire module object to a single name
 [23:10]cazzola@hymir:~/esercizi-pa>python3
 >>> import small
 >>> small
-<module ’small’ from ’small.py’>
+<module 'small' from 'small.py'>
 \end{lstlisting}
 
 from assigns new names to homonyms objects of another module
@@ -119,17 +119,17 @@ del small
 >>> small
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
-NameError: name ’small’ is not defined
+NameError: name 'small' is not defined
 >>> import small
 >>> small
-<module ’small’ from ’small.py’>
+<module 'small' from 'small.py'>
 >>> x = small.x
 >>> y = small.y
 >>> del small
 >>> small
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
-NameError: name ’small’ is not defined
+NameError: name 'small' is not defined
 >>> x
 1
 \end{lstlisting}
@@ -146,11 +146,11 @@ Files generate namespaces
 
 
 \begin{lstlisting}[language=Python]
-print(’starting to load...’)
+print('starting to load...')
 import sys
 name = 42
 def func(): pass
-print(’done loading’)
+print('done loading')
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
@@ -159,13 +159,13 @@ print(’done loading’)
 starting to load...
 done loading
 >>> module2.sys
-<module ’sys’ (built-in)>
+<module 'sys' (built-in)>
 >>> module2.name
 42
 >>> module2.func
 <function func at 0xb7a0cbac>
 >>> list(module2.__dict__.keys())
-[’name’,’__builtins__’,’__file__’,’__package__’,’sys’,’func’,’__name__’,’__doc__’]
+['name','__builtins__','__file__','__package__','sys','func','__name__','__doc__']
 \end{lstlisting}
 
 \subsubsection{Module reload}
@@ -196,7 +196,7 @@ python3
 # changer.py after the editing
 message = "After editing"
 def printer():
-print(’reloaded:’, message)
+print('reloaded:', message)
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
@@ -205,7 +205,7 @@ print(’reloaded:’, message)
 First version
 >>> from imp import reload
 >>> reload(changer)
-<module ’changer’ from ’changer.py’>
+<module 'changer' from 'changer.py'>
 >>> changer.printer()
 reloaded: After editing
 \end{lstlisting}
@@ -222,27 +222,123 @@ An import can name a directory path.
 
 Packages are organized in directories, e.g., dir0/dir1/mod0
 
+\begin{itemize}
+  \item imports are independent of the file system conventions, i.e., import dir0.dir1.mod0 loads dir0/dir1/mod0;
+  \item the package must be reachable via the Python’s search path mechanism
+\end{itemize}
+
+\subsubsection{Package \_\_init\_\_.py files}
+
+Each directory named within the path of a package import statement must contain a file named \_\_init\_\_.py
+
+\begin{itemize}
+  \item They contain standard python code
+  \item They provide a hook for package-initialization-time actions, generate a module namespace for a directory, and support the from * when used in combination with package imports
+\end{itemize}
+
+\textbf{Package Initialization}
+The first time Python imports through a directory, it automatically runs all the code in the directory’s \_\_init\_\_.py file
+
+\textbf{Package Namespace Initialization}
+In the package import model, the directory paths in your script become real nested object paths after an import.
+
+\textbf{From * statement behavior}
+\_\_all\_\_ lists in \_\_init\_\_.py files can be used to define what is exported when a directory is imported with the from * statement form
+
+\subsubsection{Package example}
+
+\begin{lstlisting}[language=Python]
+# dir0/__init__.py
+print('dir0 init')
+x = 1
+
+# dir0/dir1/__init__.py
+print('dir1 init')
+y = 2
+
+# dir0/dir1/mod.py
+print('in mod.py')
+z = 3
+\end{lstlisting}
 
 
+\begin{lstlisting}[language=Python]
+[11:08]cazzola@hymir:~/esercizi-pa>python3
+>>> import dir0.dir1.mod
+dir0 init
+dir1 init
+in mod.py
+>>> from imp import reload
+>>> reload(dir0)
+dir0 init
+<module 'dir0' from 'dir0/__init__.py'>
+>>> reload(dir0.dir1)
+dir1 init
+<module 'dir0.dir1' from 'dir0/dir1/__init__.py'>
+>>> dir0.dir1
+<module 'dir0.dir1' from 'dir0/dir1/__init__.py'>
+>>> dir0.dir1.mod
+<module 'dir0.dir1.mod' from 'dir0/dir1/mod.py'
+>>> dir0.x,dir0.dir1.y,dir0.dir1.mod.z
+(1, 2, 3)
+>>> from dir0.dir1.mod import z
+>>> z
+3
+>>> import dir0.dir1.mod as mod
+>>> mod.z
+3
+\end{lstlisting}
+
+\subsubsection{imports in packages have a slightly different behavior}
+
+- they are absolute with respect to the Python’s search path
+- to look for modules in the package you have to use the relative path search statement from .
+
+\begin{lstlisting}[language=Python]
+# mypkg/spam.py
+from . import eggs
+print(eggs.X)
 
 
+# mypkg/eggs.py
+X = 99999
+import string
+print(string)
+\end{lstlisting}
 
+\begin{lstlisting}[language=Python]
+[11:33]cazzola@hymir:~/esercizi-pa>python3
+>>> import mypkg.spam
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+File "mypkg/spam.py", line 2, in <module>
+import eggs
+ImportError: No module named eggs
+>>> import mypkg.spam
+<module 'string' from '/usr/lib/python3.1/string.py'>
+99999
+>>>
+\end{lstlisting}
 
+\subsection{Advances on Packages \& Modules}
 
+\subsubsection{Data Hiding \& Future Extensions}
 
+Data hiding in Python is only a convention
 
+\begin{itemize}
+  \item to prefix a name with a '\_' will prevent the from * statement to import such a name
+\item to assign a list of strings to the \_\_all\_\_ will force the from * statement to import only the listed names
+\end{itemize}
 
+\textbf{Enabling Future Language Features}
 
+Python permits a gradual introduction of new concepts in the language
 
+\begin{lstlisting}
+from \_\_future\_\_ import featurename
+\end{lstlisting}
 
+\textbf{This permits to turn on a novel featured disabled by default}
 
-
-
-
-
-
-
-
-
-
-
+- this is particularly useful for backwards compatibility.
