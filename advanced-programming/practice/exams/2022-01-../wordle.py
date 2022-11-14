@@ -1,5 +1,3 @@
-
-    
 def position(word, secret):
     yellow_letter = list(set(word).intersection(set(secret)))
     green_letter = [ch if ch == secret[i] else ' ' for i, ch in enumerate(word)]
