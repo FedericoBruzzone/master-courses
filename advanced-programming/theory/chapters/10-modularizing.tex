@@ -25,3 +25,224 @@ imp.reload <<module name>>
 \end{lstlisting}
 
 Provides a way to reload a module’s code without stopping the Python interpreter
+
+\subsubsection{How import work}
+
+Import are run-time operations that:
+
+\begin{itemize}
+  \item find the module's file
+  \begin{lstlisting}[language=Python]
+  import rectangle
+  \end{lstlisting}
+  This looks for rectangle.py though a standard module search path
+  \item load module’s bytecode (from a .pyc file named after the module)
+  - if a source file newer than the .pyc is found or
+  - no bytecode is found the module source file is compiled
+  compilation occurs when the module is imported
+  -so only imported modules will leave a .pyc file on your system
+  \item run the module’s code to build the objects it defines.
+\end{itemize}
+
+\subsubsection{Python’s Module Search Path}
+
+\begin{itemize}
+  \item The current directory
+  \item PYTHONPATH directory (if set)
+  \item Standard library directories
+  \item The content of any .pth files
+\end{itemize}
+
+\subsubsection{Imports Happen Only Once}
+
+Modules are imported only once, so, code is executed just at import time.
+
+Let us consider:
+\begin{center}
+  \includegraphics[scale=0.7]{7-import-open-only-once}
+\end{center}
+
+- the module simple is imported just the first time
+- the assignment to spam in the module is only executed the first time
+
+\subsubsection{import and from Are Assignments}
+
+- they may be used in statements, in function definition, ...;
+- they are not resolved or run until the execution flow reaches them.
+
+import and from are assignement
+\begin{lstlisting}[language=Python]
+x = 1
+y = [1, 2]
+\end{lstlisting}
+
+import assigns an entire module object to a single name
+
+\begin{lstlisting}[language=Python]
+[23:10]cazzola@hymir:~/esercizi-pa>python3
+>>> import small
+>>> small
+<module ’small’ from ’small.py’>
+\end{lstlisting}
+
+from assigns new names to homonyms objects of another module
+
+\begin{lstlisting}[language=Python]
+>>> from small import x, y
+>>> x = 42
+>>> y[0] = 42
+>>> import small
+>>> small.x
+1
+>>> small.y
+[42, 2]
+\end{lstlisting}
+
+\subsubsection{"import" and "form" equivalence}
+
+The following
+\begin{lstlisting}[language=Python]
+from small import x,y
+\end{lstlisting}
+
+is equivalent to
+\begin{lstlisting}[language=Python]
+import small
+x = small.x
+y = small.y
+del small
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[9:03]cazzola@hymir:~/esercizi-pa>python3
+>>> from small import x,y
+>>> small
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+NameError: name ’small’ is not defined
+>>> import small
+>>> small
+<module ’small’ from ’small.py’>
+>>> x = small.x
+>>> y = small.y
+>>> del small
+>>> small
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+NameError: name ’small’ is not defined
+>>> x
+1
+\end{lstlisting}
+
+\subsubsection{Module namespace}
+Files generate namespaces
+
+\begin{itemize}
+   \item module statements run once at the first import
+   \item every name that is assigned to a value at the top level of a module file becomes one of its attributes
+   \item module namespaces can be accessed via \_\_dict\_\_ or dir(module)
+   \item  module are single scope (i.e., local is global)
+\end{itemize}
+
+
+\begin{lstlisting}[language=Python]
+print(’starting to load...’)
+import sys
+name = 42
+def func(): pass
+print(’done loading’)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:37]cazzola@hymir:~/esercizi-pa>python3
+>>> import module2
+starting to load...
+done loading
+>>> module2.sys
+<module ’sys’ (built-in)>
+>>> module2.name
+42
+>>> module2.func
+<function func at 0xb7a0cbac>
+>>> list(module2.__dict__.keys())
+[’name’,’__builtins__’,’__file__’,’__package__’,’sys’,’func’,’__name__’,’__doc__’]
+\end{lstlisting}
+
+\subsubsection{Module reload}
+
+The imp.reload function forces an already loaded module’s code to be reloaded and rerun
+
+- Assignments in the file’s new code change the existing module object in-place
+
+\begin{lstlisting}[language=Python]
+# changer.py
+message = "First version"
+def printer():
+print(message)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> import changer
+>>> changer.printer()
+First version
+>>> ^Z
+Suspended
+[9:57]cazzola@hymir:~/esercizi-pa>gvim changer.py
+[9:58]cazzola@hymir:~/esercizi-pa>fg
+python3
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+# changer.py after the editing
+message = "After editing"
+def printer():
+print(’reloaded:’, message)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+>>> import changer
+>>> changer.printer()
+First version
+>>> from imp import reload
+>>> reload(changer)
+<module ’changer’ from ’changer.py’>
+>>> changer.printer()
+reloaded: After editing
+\end{lstlisting}
+
+\subsection{Packages}
+
+\subsubsection{Basics on Python’s Packages}
+
+An import can name a directory path.
+\begin{itemize}
+  \item A directory of Python code is said to be a package, so such imports are known as package imports.
+  \item A package import turns a directory into another Python namespace, with attributes corresponding to the subdirectories and module files that the directory contains. 
+\end{itemize}
+
+Packages are organized in directories, e.g., dir0/dir1/mod0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
