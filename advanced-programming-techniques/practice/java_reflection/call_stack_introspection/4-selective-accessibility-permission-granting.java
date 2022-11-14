@@ -1,8 +1,8 @@
 package call_stack_introspection;
 
 import java.lang.reflect.Field;
-// import java.lang.reflect.ReflectPermission;
-// import java.security.Permission;
+import java.lang.reflect.ReflectPermission;
+import java.security.Permission;
 
 class Employee {
     private String name;
