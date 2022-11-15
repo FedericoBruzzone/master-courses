@@ -48,37 +48,3 @@ print(next(i_a))
 print(next(i_a))
 print(next(i_a))
 print(next(i_a))
-
-
-def get(k):
-    return res 
-
-def add(k, v):
-    res = lambda x: (k == other_k and v) or get()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
