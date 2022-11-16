@@ -27,24 +27,3 @@ add('2', '2')
 print(show())
 print(get('2'))
 print(show())
-
-
-# def find(k):
-# 	return None
-
-# def show():
-# 	return ""
-
-# def add(k,v):
-# 	old_find = globals()["find"]
-# 	old_show = globals()["show"]
-# 	globals()["find"] = lambda x:x==k and v or old_find(x)
-# 	globals()["show"] = lambda : f"{k}:{v} "+ old_show() 
-
-# add('1', '1')
-# add('2', '2')
-# add('3', '3')
-# add('4', '4')
-# print(show())
-# print(find(1))
-
