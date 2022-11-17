@@ -1,3 +1,4 @@
+import java.lang.reflect.*;
 import java.util.Date;
 
 class TestingFields {
@@ -5,7 +6,7 @@ class TestingFields {
     private Date dd;
     public static final int i = 42;
     protected static String s = "testing ...";
-  
+    
     public TestingFields(int n, double val) {
       dd = new Date();
       d = new Double[n];
@@ -15,11 +16,11 @@ class TestingFields {
 
 class MainTestingFields {
   public static void main(String[] args) throws Exception {
-    var t = new TestingFields(7, 3.14);
-    var f = TestingFields.class.getDeclaredField("s");
-    System.out.println(t.s);
-    f.setAccessible(true);
-    f.set(t, "testing ... passed!!!");
-    System.out.println(t.s);
+    TestingFields cls = new TestingFields(7, 3.14);
+    Field field = cls.getClass().getDeclaredField("s");
+    System.out.println(field.get(cls));
+    // field.setAccessible(true);
+    field.set(cls, "testing ... passed!!!");
+    System.out.println(field.get(cls));
   }
 }
