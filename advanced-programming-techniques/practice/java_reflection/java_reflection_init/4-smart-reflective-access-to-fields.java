@@ -1,5 +1,3 @@
-package java_reflection;
-
 import java.lang.reflect.*;
 
 interface SmartFieldAccess { // public

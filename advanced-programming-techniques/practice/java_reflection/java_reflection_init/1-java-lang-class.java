@@ -1,5 +1,3 @@
-package java_reflection;
-
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
