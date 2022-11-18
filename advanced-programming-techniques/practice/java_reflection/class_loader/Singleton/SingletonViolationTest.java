@@ -2,7 +2,7 @@ import java.lang.reflect.*;
 
 public class SingletonViolationTest {
     public static void main(String[] args) throws Exception {
-        SimpleClassLoader CL1 = new SimpleClassLoader("testclasses");
+        SimpleClassLoader CL1 = new SimpleClassLoader("testclasses;testclasses/testclasses2");
         Class<?> c1 = CL1.loadClass("Singleton");
         System.out.println("Loaded class «Singleton» via the «CL1» class loader");
         Field flag = c1.getDeclaredField("runOnce");
@@ -20,7 +20,7 @@ public class SingletonViolationTest {
             System.out.println(e.getCause().getMessage());
         }
 
-        SimpleClassLoader CL2 = new SimpleClassLoader("testclasses");
+        SimpleClassLoader CL2 = new SimpleClassLoader("testclasses;testclasses/testclasses2");
         Class<?> c2 = CL2.loadClass("Singleton");
         System.out.println("Loaded class «Singleton» via the «CL1» class loader");
         Field flag2 = c2.getDeclaredField("runOnce");
