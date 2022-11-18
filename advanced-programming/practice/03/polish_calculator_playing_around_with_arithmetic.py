@@ -1,3 +1,20 @@
+'''
+Write a PolishCalculator class that implements a stack-based calculator that adopts polish notation for the expressions to be evaluated.
+
+Polish Notation is a prefix notation wherein every operator follows all of its operands; this notation has the big advantage of being 
+unambiguous and permits to avoid the use of parenthesis. E.g., (3+4)*5 is equal to 3 4 + 5 *.
+
+An instance of the PolishCalculator class will understand the following API:
+
+__init(self)__ with the obvious meaning
+__str(self)__ which will format the expression in the corresponding infix notation
+eval(str) which will evaluate the expression contained in the string str and written in the polish notation
+The recognized operators are +, - (both unary and binary), *, /, ** over integers and floats, or, and and not over booleans. 
+At least a space ends each operands and operators, T and F respectively represent True and False.
+
+Hint. The evaluation/translation can be realized by pushing the recognized elements on a stack.
+'''
+
 import operator, functools
 
 class PolishCalculator:
