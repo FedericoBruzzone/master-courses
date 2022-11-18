@@ -11,7 +11,7 @@ public class RecognizingElements {
         this.classes = classes;
 
         ArrayList<String> tmp = new ArrayList<String>();
-        for (String cls : classes) {
+        for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
             for (Method m : c_cls.getDeclaredMethods()) {
                 tmp.add(m.getName());
@@ -28,7 +28,8 @@ public class RecognizingElements {
     public Boolean checkFieldsMethodsIn() throws Exception {
         List<String> method = new ArrayList<String>();
         List<String> field = new ArrayList<String>();
-        for (String cls : classes) {
+        
+        for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
             method.addAll(Stream.of(c_cls.getDeclaredMethods())
                 .map(m -> m.getName())
@@ -37,12 +38,11 @@ public class RecognizingElements {
                 .map(f -> f.getName())
                 .toList());
         }
-        for (String f_m : fields_methods) {
+        for (String f_m : this.fields_methods) {
             if (!(method.contains(f_m) || field.contains(f_m))) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -50,7 +50,7 @@ public class RecognizingElements {
         List<String> method = new ArrayList<String>();
         List<String> field = new ArrayList<String>();
 
-        for (String cls : classes) {
+        for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
             method.addAll(Stream.of(c_cls.getDeclaredMethods())
                 .map(m -> m.getName())
@@ -59,7 +59,7 @@ public class RecognizingElements {
                 .map(f -> f.getName())
                 .toList());
 
-            for (String f_m : fields_methods) {
+            for (String f_m : this.fields_methods) {
                 if ((method.contains(f_m) || field.contains(f_m))) {
                     System.out.println(f_m + " is in " + cls);
                 }
@@ -71,7 +71,7 @@ public class RecognizingElements {
         List<String> method = new ArrayList<String>();
         List<String> field = new ArrayList<String>();
 
-        for (String cls : classes) {
+        for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
             method.addAll(Stream.of(c_cls.getDeclaredMethods())
                 .map(m -> m.getName())
@@ -80,7 +80,7 @@ public class RecognizingElements {
                 .map(f -> f.getName())
                 .toList());
 
-            for (String f_m : fields_methods) {
+            for (String f_m : this.fields_methods) {
                 if (method.contains(f_m)) {
                     System.out.println(f_m + " is a method of \t\t" + cls);
                 }
@@ -95,7 +95,7 @@ public class RecognizingElements {
         List<String> method = new ArrayList<String>();
         List<String> field = new ArrayList<String>();
 
-        for (String cls : classes) {
+        for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
             method.addAll(Stream.of(c_cls.getDeclaredMethods())
                 .map(m -> m.getName())
@@ -104,7 +104,7 @@ public class RecognizingElements {
                 .map(f -> f.getName())
                 .toList());
 
-            for (String f_m : fields_methods) {
+            for (String f_m : this.fields_methods) {
                 if (method.contains(f_m)) {
                     Stream.of(c_cls.getDeclaredMethods())
                         .filter(i -> i.getName().contains(f_m))

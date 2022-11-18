@@ -32,13 +32,11 @@ interface I {
 }
 
 class MyTestingFields extends TestingFields implements I {
-
     public MyTestingFields(int n, double val) {
         super(n, val);
     }
 }
 
-// Logging
 class MyProxy implements InvocationHandler {
     private Object object;
 
@@ -49,11 +47,14 @@ class MyProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method m, Object[] args) throws Exception {
         try {
             //System.out.println(object.getClass().getMethod("message").invoke(object));
-            System.out.println(object.toString());
-            Object r = m.invoke(object, args);
-            System.out.println(object.toString());
+            //Object r = m.invoke(object, args);
             //System.out.println(object.getClass().getMethod("message").invoke(object));
+            
+            //System.out.println(object.toString());
+            Object r = m.invoke(object, args);
             Collections.sort((List<Integer>)object);
+            //System.out.println(object.toString());
+
             return r;
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,30 +66,35 @@ class MyProxy implements InvocationHandler {
 class MainProxy {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception {
-        // I tf = new MyTestingFields(7, 3.14); 
-        // I i_MyTestingFields = (I) Proxy.newProxyInstance(
+        MyTestingFields tf = new MyTestingFields(7, 3.14); // I could put I after the variable name
+        
+        I i_MyTestingFields = (I) Proxy.newProxyInstance(
+            tf.getClass().getClassLoader(), 
+            tf.getClass().getInterfaces(), 
+            new MyProxy(tf));
+         
+        i_MyTestingFields.setAnswer(10);
+        
+        // List<Integer> tf = new ArrayList<Integer>();
+        // List<Integer> i_MyTestingFields = (List<Integer>) Proxy.newProxyInstance(
         //     tf.getClass().getClassLoader(), 
         //     tf.getClass().getInterfaces(), 
         //     new MyProxy(tf));
         
-        // i_MyTestingFields.setAnswer(10);
-
-        List<Integer> tf = new ArrayList<Integer>();
-        List<Integer> i_MyTestingFields = (List<Integer>) Proxy.newProxyInstance(
-            tf.getClass().getClassLoader(), 
-            tf.getClass().getInterfaces(), 
-            new MyProxy(tf));
+        // i_MyTestingFields.add(10);
+        // i_MyTestingFields.add(22);
+        // i_MyTestingFields.add(33);
+        // i_MyTestingFields.add(1);
+        // i_MyTestingFields.add(2);
+        // i_MyTestingFields.add(-1);
         
-        i_MyTestingFields.add(10);
-        i_MyTestingFields.add(22);
-        i_MyTestingFields.add(33);
-        i_MyTestingFields.add(1);
-        i_MyTestingFields.add(2);
-        i_MyTestingFields.add(-1);
+        // // for (var i : i_MyTestingFields) {
+        // //     System.out.println(i);
+        // // }
         
-        for (var i : i_MyTestingFields) {
-            System.out.println(i);
-        }
+        // for (var i : i_MyTestingFields.toArray()) {
+        //     System.out.println(i);
+        // }
 
     }
 }
