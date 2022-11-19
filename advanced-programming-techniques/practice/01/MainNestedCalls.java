@@ -1,7 +1,5 @@
 import java.lang.reflect.*;
 import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 interface NestedCallsI {
     public int a();
