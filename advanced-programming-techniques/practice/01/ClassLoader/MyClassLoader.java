@@ -1,44 +1,56 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+//import java.lang.*;
+//import java.util.*;
+import java.io.*;
 
-class MyClassLoader extends ClassLoader {
-    String[] directory;
+public class MyClassLoader extends ClassLoader {
+    String[] directories;
 
     public MyClassLoader(String path) {
-        directory = path.split(";");
+        directories = path.split(";");
+    }
+
+    public MyClassLoader(ClassLoader parent) {
+        super(parent);
+        directories = new String[]{""};
     }
 
     public MyClassLoader(String path, ClassLoader parent) {
         super(parent);
-        directory = path.split(";");
+        directories = path.split(";");
     }
 
-    @Override 
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
-        System.out.println("Loading Class: " + name);
-        if (!name.startsWith("java")) return getClass(name);
+    @Override public Class<?> loadClass(String name) throws ClassNotFoundException {
+        System.out.println("Loading class: " + "`" + name + "`");
+        if (!name.startsWith("java")) { return findClass(name); }
         return super.loadClass(name);
+
     }
 
-    private Class<?> getClass(String name) throws Exception {
-        String file = name.replace('.', File.separatorChar) + ".class";
+    public synchronized Class<?> findClass(String name) throws ClassNotFoundException {
+        for ( int i = 0; i < directories.length; i++ ) {
+            byte[] buf = getClassData( directories[i], name ) ;
+            if (buf != null) return defineClass(name,buf,0,buf.length);
+         }
+         throw new ClassNotFoundException();
+    }
+
+    private byte[] getClassData(String directory, String name) {
+        String classFile;
+        if (directory != "") {
+            classFile = directory + "/" + name.replace('.', '/') + ".class";
+        } else {
+            classFile = name.replace('.', '/') + ".class";
+        }
+        
+        int classFileSize = (int)(new File(classFile)).length();
+        byte[] bufferClass = new byte[classFileSize];
         try {
-            byte[] b = 
+            FileInputStream fileInputStream = new FileInputStream(classFile);
+            classFileSize = fileInputStream.read(bufferClass);
+            fileInputStream.close();
         } catch (Exception e) { e.printStackTrace(); return null; }
+        return bufferClass;
     }
 
-    public Class<?> findClass(String name) {
-        return null;
-    }
 
-    protected byte[] getClassData(String fileName) throws IOException {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(fileName);
-        int size = stream.available();
-        byte[] buff = new byte[size];
-        DataInputStream in = new DataInputStream(stream);
-        in.readFully(buff);
-        in.close();
-        return buff;
-    }
 }
