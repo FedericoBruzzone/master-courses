@@ -37,23 +37,19 @@ class MyProxy extends NestedCalls implements InvocationHandler {
         Object r = null;
         try {
             System.out.println(method.getName());
-            //Method superMethod = NestedCalls.class.getDeclaredMethod(method.getName(), method.getParameterTypes()); 
-            
+            Method superMethod = NestedCalls.class.getDeclaredMethod(method.getName(), method.getParameterTypes()); 
+            // System.out.println("here");
+            superMethod.invoke(proxy, args);
+            // if (method.getName().equals("a")) {super.a();}
+            // if (method.getName().equals("b")) {super.b((int)args[0]);}
+            // if (method.getName().equals("c")) {super.c((int)args[0]);}
         } catch (Exception e) { e.printStackTrace(); return null; }
         return r;
     }
 
-    @Override public int a() {
-        return proxy.a();
-    }
-
-    @Override public int b(int a) {
-        return proxy.b(a);
-    }
-
-    @Override public int c(int a) {
-        return proxy.c(a);
-    }
+    @Override public int a() { return proxy.a(); }
+    @Override public int b(int a) { return proxy.b(a); }
+    @Override public int c(int a) { return proxy.c(a); }
 }
 
 public class MainNestedCalls {
