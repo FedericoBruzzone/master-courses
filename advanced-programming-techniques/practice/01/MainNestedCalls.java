@@ -22,50 +22,50 @@ class NestedCalls implements NestedCallsI {
         return --a;
     }
 }
-
-class MyNestedCalls extends NestedCalls {
-    public NestedCallsI proxy;
-
-    public MyNestedCalls(NestedCallsI proxy) {
-        this.proxy = proxy;
-    }    
-
-    @Override public int a() { return proxy.a(); }
-    @Override public int b(int a) { return proxy.b(a); }
-    @Override public int c(int a) { return proxy.c(a); }
-}
-
-class MyProxy implements InvocationHandler {
+  
+class MyProxy extends NestedCalls implements InvocationHandler {
     public NestedCallsI target;
-    
-    public MyProxy(NestedCallsI target) {
-        this.target = target;
+    public Field f;
+    public MyProxy() throws NoSuchFieldException, SecurityException {
+        this.target = (NestedCallsI)Proxy.newProxyInstance(NestedCalls.class.getClassLoader(), NestedCalls.class.getInterfaces(), this);
+        f = NestedCalls.class.getDeclaredField("i");
+        f.setAccessible(true);
+    }
+
+    public Object myInvoke(String methodName, Object[] args) throws IllegalArgumentException, IllegalAccessException {
+        Object r = null;
+        if (methodName == "a") {
+            System.out.println("a: " + f.get(this));
+            r = super.a();
+        }
+        if (methodName == "b") {
+            System.out.println("b: " + f.get(this));
+            r = super.b((int)args[0]);
+        }
+        if (methodName == "c") {
+            System.out.println("c: " + f.get(this));
+            r = super.c((int)args[0]);
+        }
+        return r;
     }
 
     public Object invoke(Object proxed, Method method, Object[] args) {
         Object r = null;
         try {
-            // System.out.println(method.getName());
-            Method superMethod = MyNestedCalls.class.getDeclaredMethod(method.getName(), method.getParameterTypes()); 
-            r = superMethod.invoke(target, args);
-            
+            r = myInvoke(method.getName(), args);
         } catch (Exception e) { e.printStackTrace(); return null; }
-        return (NestedCalls)r;
+        return r;
     }
+
+    @Override public int a() { return target.a(); }
+    @Override public int b(int a) { return target.b(a); }
+    @Override public int c(int a) { return target.c(a); }
 }
 
 public class MainNestedCalls {
     public static void main(String[] args) throws Exception {
-        NestedCallsI proxy = (NestedCallsI)Proxy.newProxyInstance(
-            NestedCalls.class.getClassLoader(), 
-            NestedCalls.class.getInterfaces(), 
-            new MyProxy(new NestedCalls()));
-
-        MyNestedCalls myNestedCalls = new MyNestedCalls(proxy);    
+        MyProxy myNestedCalls = new MyProxy();    
         System.out.println("a() :- " + myNestedCalls.a());
-        //System.out.println("b() :- " + proxyNestedCalls.b(proxyNestedCalls.a()));
-        //System.out.println("c() :- " + proxyNestedCalls.c(proxyNestedCalls.b(proxyNestedCalls.a())));
-
     }
 
     
