@@ -4,5 +4,4 @@ public class TestClass {
         System.out.println(testString);
         String[] testArrayString = new String[]{"testArrayString"};
         System.out.println(testArrayString);
-    }
 }

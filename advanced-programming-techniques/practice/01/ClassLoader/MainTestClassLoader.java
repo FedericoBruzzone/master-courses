@@ -1,7 +1,7 @@
 public class MainTestClassLoader {
     
     public static void main(String[] args) throws Exception {
-        MyClassLoader CL1 = new MyClassLoader("testclasses", (ClassLoader)null);
+        MyClassLoader CL1 = new MyClassLoader("", (ClassLoader)null);
         Class<?> tc = CL1.loadClass("TestClass");
         println("Loaded class `TestClass` via the `CL1` class loader");
         Object testClass = tc.getDeclaredConstructor().newInstance();

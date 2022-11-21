@@ -20,8 +20,11 @@ public class MyClassLoader extends ClassLoader {
     }
 
     @Override public Class<?> loadClass(String name) throws ClassNotFoundException {
-        System.out.println("Loading class: " + "`" + name + "`");
-        if (!name.startsWith("java")) { return findClass(name); }
+        System.out.println("Loading class: " + "`" + name + "`"); 
+        if (!name.startsWith("java")) { 
+            return findClass(name); 
+        }
+
         return super.loadClass(name);
 
     }

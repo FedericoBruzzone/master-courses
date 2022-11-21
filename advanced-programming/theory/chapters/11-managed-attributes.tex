@@ -1,0 +1,337 @@
+\section{Managed Attributes}
+
+How to silently extend classes
+
+\subsection{Class Extensions through Managed Attributes}
+
+\subsubsection{Case Study: Account}
+
+Let us consider the classic implementation for the account class
+
+\begin{lstlisting}[language=Python]
+class account:
+	def __init__(self, initial_amount):
+		self.amount = initial_amount
+	def balance(self):
+		return self.amount
+	def withdraw(self, amount):
+		self.amount -= amount
+	def deposit(self, amount):
+		self.amount += amount
+if __name__ == "__main__":
+	a = account(1000)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(3000)
+	print("The current balance is {0}".format(a.balance()))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:15]cazzola@hymir:~/esercizi-pa/managed>python3 account.py
+The current balance is 1000
+The current balance is 1650
+The current balance is -1350
+\end{lstlisting}
+
+What’s about adding a functionality w/o polluting its code?
+- key concept: separation of concerns
+
+\subsubsection{Inserting Code to Run on Attribute Access}
+A clean approach is to (automatically) execute extra code when an attribute is accessed.
+
+Python provides 3 Approaches:
+- properties
+- descriptor protocol (deja vu)
+- operator overloading
+
+\subsubsection{Properties: To Avoid Red Balances}
+
+\begin{lstlisting}[language=Python]
+import account
+
+class safe_account(account.account):
+	def __init__(self, initial_amount):
+		self._amount = initial_amount
+	def save_get(self):
+		return self._amount
+	def save_set(self, amount):
+		assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+		self._amount=amount
+		amount = property(save_get, save_set, None, "Managed balance against excessive withdrawals")
+
+if __name__ == "__main__":
+	a = safe_account(1000)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(3000)
+	print("The current balance is 0".format(a.balance()))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:31]cazzola@hymir:~/esercizi-pa/managed>python3 account+property.py
+The current balance is 1000
+The current balance is 1650
+Traceback (most recent call last):
+File "account+property.py", line 19, in <module>
+a.withdraw(3000)
+File "/home/cazzola/esercizi-pa/managed/account.py", line 7, in withdraw
+self.amount -= amount
+File "account+property.py", line 9, in save_set
+assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+AssertionError: Not admitted operation: the final balance (-1350) MUST be positive
+\end{lstlisting}
+
+\subsubsection{Properties: To Dynamically Calculate the Balance}
+
+\begin{lstlisting}[language=Python]
+class account_with_calculated_balance:
+	def __init__(self, initial_amount):
+		self._deposits = initial_amount
+		self._withdrawals = 0
+	def deposit(self, amount):
+		self._deposits += amount
+	def withdraw(self, amount):
+		self._withdrawals += amount
+	def calculated_balance(self):
+		return self._deposits-self._withdrawals
+	def zeroing_balance(self):
+		self._deposits = 0
+		self._withdrawals = 0
+	balance = property(calculated_balance, None, zeroing_balance, "Calculate Balance")
+
+if __name__ == "__main__":
+	a = account_with_calculated_balance(1000)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(3000)
+	print("The current balance is {0}".format(a.balance))
+	del a.balance
+	print("The current balance is {0}".format(a.balance))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:57]cazzola@hymir:~/esercizi-pa/managed>python3 account+property2.py
+The current balance is 1000
+The current balance is 1650
+The current balance is -1350
+The current balance is 0
+\end{lstlisting}
+
+\subsubsection{Descriptor Protocol: To Avoid Red Balances}
+
+\begin{lstlisting}[language=Python]
+import account
+
+class safe_descriptor:
+	"""Managed balance against excessive withdrawals"""
+	def __get__(self, instance, owner):
+		return instance._amount
+	def __set__(self, instance, amount):
+		assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+		instance._amount=amount
+class safe_account(account.account):
+	def __init__(self, initial_amount):
+		self._amount = initial_amount
+		amount = safe_descriptor()
+
+if __name__ == "__main__":
+	a = safe_account(1000)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(3000)
+	print("The current balance is 0".format(a.balance()))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:59]cazzola@hymir:~/esercizi-pa/managed>python3 account+descriptors.py
+The current balance is 1000
+The current balance is 1650
+Traceback (most recent call last):
+File "account+descriptors.py", line 22, in <module>
+a.withdraw(3000)
+File "/home/cazzola/esercizi-pa/managed/account.py", line 7, in withdraw
+self.amount -= amount
+File "account+descriptors.py", line 8, in __set__
+assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+AssertionError: Not admitted operation: the final balance (-1350) MUST be positive
+\end{lstlisting}
+
+\subsubsection{Descriptor Protocol: To Dynamically Calculate the Balance}
+
+\begin{lstlisting}[language=Python]
+class balance_descriptor:
+	"""Calculate Balance"""
+	def __get__(self, instance, owner):
+		return instance._deposits-instance._withdrawals
+	def __delete__(self, instance):
+		instance._deposits = 0
+		instance._withdrawals = 0
+class account_with_calculated_balance:
+	def __init__(self, initial_amount):
+		self._deposits = initial_amount
+		self._withdrawals = 0
+	def deposit(self, amount):
+		self._deposits += amount
+	def withdraw(self, amount):
+		self._withdrawals += amount
+		balance = balance_descriptor()
+if __name__ == "__main__":
+	a = account_with_calculated_balance(1000)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(3000)
+	print("The current balance is {0}".format(a.balance))
+	del a.balance
+	print("The current balance is {0}".format(a.balance))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[0:05]cazzola@hymir:~/esercizi-pa/managed>python3 account+descriptors2.py
+The current balance is 1000
+The current balance is 1650
+The current balance is -1350
+The current balance is 0
+\end{lstlisting}
+
+\subsubsection{Operator Overloading Protocol}
+
+\begin{itemize}
+	\item \_\_getattr\_\_ is run for fetches on undefined attributes
+	\item \_\_getattribute\_\_ is run for fetches on every attribute, so when using it you must be cautious to avoid recursive loops by passing attribute accesses to a superclass.
+	\item \_\_setattr\_\_ try to guess
+	\item \_\_delattr\_\_ is run for deletion on every attribute
+\end{itemize}
+
+\subsubsection{Operator Overloading Protocol: To Avoid Red Balances}
+
+\begin{lstlisting}[language=Python]
+import account
+
+class safe_account(account.account):
+	def __setattr__(self, attr, amount):
+		assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+		self.__dict__[attr] = amount
+
+if __name__ == "__main__":
+	a = safe_account(1000)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance()))
+	a.withdraw(3000)
+	print("The current balance is 0".format(a.balance()))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[0:29]cazzola@hymir:~/esercizi-pa/managed>python3 account+overloading.py
+The current balance is 1000
+The current balance is 1650
+Traceback (most recent call last):
+File "account+overloading.py", line 16, in <module>
+a.withdraw(3000)
+File "/home/cazzola/esercizi-pa/managed/account.py", line 7, in withdraw
+self.amount -= amount
+File "account+overloading.py", line 7, in __setattr__
+assert amount > 0, ’Not admitted operation: the final balance ({0}) MUST be positive’.format(amount)
+AssertionError: Not admitted operation: the final balance (-1350) MUST be positive
+\end{lstlisting}
+
+\subsubsection{Operator Overloading: To Dynamically Calculate the Balance}
+
+\begin{lstlisting}[language=Python]
+class account_with_calculated_balance:
+	def __init__(self, initial_amount):
+		self._deposits = initial_amount
+		self._withdrawals = 0
+	def deposit(self, amount):
+		self._deposits += amount
+	def withdraw(self, amount):
+		self._withdrawals += amount
+	def __getattr__(self, attr):
+		if attr == ’balance’:
+			return self._deposits-self._withdrawals
+		else: raise AttributeError(attr)
+	def __delattr__(self, attr):
+		if attr == ’balance’:
+			self._deposits = 0
+			self._withdrawals = 0
+		else: raise AttributeError(attr)
+
+if __name__ == "__main__":
+	a = account_with_calculated_balance(1000)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(100)
+	a.deposit(750)
+	print("The current balance is {0}".format(a.balance))
+	a.withdraw(3000)
+	print("The current balance is {0}".format(a.balance))
+	del a.balance
+	print("The current balance is {0}".format(a.balance))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[0:38]cazzola@hymir:~/aux_work/projects/python/esercizi-pa/managed>python3 account+overloading2.py
+The current balance is 1000
+The current balance is 1650
+The current balance is -1350
+The current balance is 0
+\end{lstlisting}
+
+\subsubsection{\_\_getattr\_\_ vs \_\_getattribute\_\_}
+
+\begin{lstlisting}[language=Python]
+class GetAttr:
+	attr1 = 1
+	def __init__(self):
+		self.attr2 = 2
+	def __getattr__(self, attr):
+		print(’get: ’ + attr)
+		return 3
+
+class GetAttribute(object):
+	attr1 = 1
+	def __init__(self):
+		self.attr2 = 2
+	def __getattribute__(self, attr):
+		print(’get: ’ + attr)
+		if attr == ’attr3’:
+			return 3
+		else:
+			return object.__getattribute__(self, attr)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[0:51]cazzola@hymir:~/esercizi-pa/managed>python3
+>>> from GetAttr import GetAttr
+>>> X=GetAttr()
+>>> print(X.attr1)
+1
+>>> print(X.attr2)
+2
+>>> print(X.attr3)
+get: attr3
+3
+
+[0:58]cazzola@hymir:~/esercizi-pa/managed>python3
+>>> from GetAttribute import GetAttribute
+>>> X = GetAttribute()
+>>> print(X.attr1)
+get: attr1
+1
+>>> print(X.attr2)
+get: attr2
+2
+>>> print(X.attr3)
+get: attr3
+3
+\end{lstlisting}
