@@ -17,10 +17,12 @@ public class MainControlFlowGraph {
                 if (method.getDeclaredAnnotations() != null) {
                     for (Annotation annotation : method.getDeclaredAnnotations()) {
                         System.out.println("\t\tAnnotation: " + annotation);
+                        System.out.println((GraphAnnotation)annotation.clazz());
                     }
                 }
             }
         }
     }
-
 }
+
+

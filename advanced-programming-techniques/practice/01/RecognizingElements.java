@@ -1,5 +1,6 @@
 import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.*;
 
@@ -31,12 +32,8 @@ public class RecognizingElements {
         
         for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
-            method.addAll(Stream.of(c_cls.getDeclaredMethods())
-                .map(m -> m.getName())
-                .toList());
-            field.addAll(Stream.of(c_cls.getDeclaredFields())
-                .map(f -> f.getName())
-                .toList());
+            Stream.of(c_cls.getDeclaredMethods()).forEach(m -> method.add(m.getName()));
+            Stream.of(c_cls.getDeclaredMethods()).forEach(f -> field.add(f.getName()));    
         }
         for (String f_m : this.fields_methods) {
             if (!(method.contains(f_m) || field.contains(f_m))) {
@@ -52,12 +49,8 @@ public class RecognizingElements {
 
         for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
-            method.addAll(Stream.of(c_cls.getDeclaredMethods())
-                .map(m -> m.getName())
-                .toList());
-            field.addAll(Stream.of(c_cls.getDeclaredFields())
-                .map(f -> f.getName())
-                .toList());
+            Stream.of(c_cls.getDeclaredMethods()).forEach(m -> method.add(m.getName()));
+            Stream.of(c_cls.getDeclaredMethods()).forEach(f -> field.add(f.getName()));  
 
             for (String f_m : this.fields_methods) {
                 if ((method.contains(f_m) || field.contains(f_m))) {
@@ -73,12 +66,8 @@ public class RecognizingElements {
 
         for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
-            method.addAll(Stream.of(c_cls.getDeclaredMethods())
-                .map(m -> m.getName())
-                .toList());
-            field.addAll(Stream.of(c_cls.getDeclaredFields())
-                .map(f -> f.getName())
-                .toList());
+            Stream.of(c_cls.getDeclaredMethods()).forEach(m -> method.add(m.getName()));
+            Stream.of(c_cls.getDeclaredMethods()).forEach(f -> field.add(f.getName()));  
 
             for (String f_m : this.fields_methods) {
                 if (method.contains(f_m)) {
@@ -97,12 +86,8 @@ public class RecognizingElements {
 
         for (String cls : this.classes) {
             Class<?> c_cls = Class.forName(cls);
-            method.addAll(Stream.of(c_cls.getDeclaredMethods())
-                .map(m -> m.getName())
-                .toList());
-            field.addAll(Stream.of(c_cls.getDeclaredFields())
-                .map(f -> f.getName())
-                .toList());
+            Stream.of(c_cls.getDeclaredMethods()).forEach(m -> method.add(m.getName()));
+            Stream.of(c_cls.getDeclaredMethods()).forEach(f -> field.add(f.getName()));  
 
             for (String f_m : this.fields_methods) {
                 if (method.contains(f_m)) {
