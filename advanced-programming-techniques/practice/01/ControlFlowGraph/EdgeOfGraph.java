@@ -10,4 +10,8 @@ public class EdgeOfGraph {
         this.m = m;
         this.to = to;
     }
+
+    public String toString() {
+        return from.getName() + " ---(" + m.getName() + ")--> " + to.getName();
+    }
 }

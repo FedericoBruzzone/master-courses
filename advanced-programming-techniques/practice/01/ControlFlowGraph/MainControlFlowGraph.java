@@ -2,6 +2,8 @@ import java.util.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
+// javac GraphAnnotation.java ClassA.java ClassB.java EdgeOfGraph.java MainControlFlowGraph.java 
+// java MainControlFlowGraph ClassA ClassB
 public class MainControlFlowGraph {
     
     public static void main(String[] args) throws Exception {
@@ -17,11 +19,17 @@ public class MainControlFlowGraph {
                 if (method.getDeclaredAnnotations() != null) {
                     for (Annotation annotation : method.getDeclaredAnnotations()) {
                         System.out.println("\t\tAnnotation: " + annotation);
-                        System.out.println((GraphAnnotation)annotation.clazz());
+                        GraphAnnotation gaAnnotation = (GraphAnnotation)annotation;
+                        for (Class<?> cls_annotation : gaAnnotation.clazz()) {
+                            edges.add(new EdgeOfGraph(clazz, method, cls_annotation));
+                        }
+                        
                     }
                 }
             }
         }
+
+        for (var e : edges) {System.out.println(e);}
     }
 }
 
