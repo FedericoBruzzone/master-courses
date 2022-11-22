@@ -1,0 +1,305 @@
+\section{Reflection vs Modules and Handles}
+
+\subsection{Modules and Reflection}
+
+\subsubsection{Private and Reflective Access}
+
+\begin{lstlisting}[language=Java]
+package tsp.module.employee;
+import tsp.module.reflection.* ;
+class Employee implements SmartFieldAccess {
+	private String name;
+	private String surname;
+	public Employee(String n, String s) { this.name = n; this.surname = s; }
+	public String toString() {return "Employee: "+this.name+" "+this.surname;}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+package tsp.module.reflection ;
+import java.lang.reflect.*;
+public interface SmartFieldAccess {
+	default public Object instVarAt(String name) throws Exception {
+		Field f = this.getClass().getDeclaredField(name);
+		f.setAccessible(true);
+		if (!Modifier.isStatic(f.getModifiers())) return f.get(this);
+		return null;
+	}
+
+	default public void instVarAtPut(String name, Object value) throws Exception {
+		Field f = this.getClass().getDeclaredField(name);
+		f.setAccessible(true);
+		if (!Modifier.isStatic(f.getModifiers())) f.set(this, value);
+	}
+}
+\end{lstlisting}
+
+\subsubsection{Private and Reflective Access (Cont'd).}
+
+\begin{lstlisting}[language=Java]
+package tsp.module.employee ;
+public class ReflectiveEmployeeMain {
+	public static void main(String[] args) throws Exception {
+		Employee angela = new Employee("Angela", "Runedottir");
+		System.out.println(angela);
+		angela.instVarAtPut("surname", "Odindottir");
+		System.out.println(angela);
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+[16:38]cazzola@hymir:~/tsp>java tsp.module.employee.ReflectiveEmployeeMain
+Employee: Angela Runedottir
+Employee: Angela Odindottir
+\end{lstlisting}
+
+\subsubsection{Modules: Whats, Whys and Hows}
+
+Java 9 introduced the Java Module Platform.
+
+Its goals are:
+
+\begin{itemize}
+	\item Reliable configuration, to replace the brittle, error-prone classpath mechanism in favor of a programming mechanism to explicitly declare dependencies
+	\item Strong encapsulation, to allow a component to declare which of its public types are accessible to other components, and which are not.
+\end{itemize}
+
+A module:
+
+\begin{itemize}
+	\item groups classes, interfaces and packages
+	\item a module-info.java file describes the dependencies between modules
+\end{itemize}
+
+\begin{lstlisting}[language=Java]
+module com.foo.bar {
+	requires org.baz.foo ;
+	exports com.foo.bar.abc;
+}
+\end{lstlisting}
+
+- the module-info.class file is shipped inside a jar file.
+
+\subsubsection{Modules a New Obstacle to Reflection}
+
+\begin{lstlisting}[language=Java]
+module tsp.module.employee {
+	requires tsp.module.reflection ;
+	exports tsp.module.employee ;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+module tsp.module.reflection {
+	exports tsp.module.reflection ;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+> javac tmr/module-info.java tmr/tsp/module/reflection/SmartFieldAccess.java
+> javac --module-path=. tme/module-info.java tme/tsp/module/employee/*.java
+> java --module-path . -m tme/tme.ReflectiveEmployeeMain
+Employee: Angela Runedottir
+Exception in thread "main" java.lang.reflect.InaccessibleObjectException: Unable to
+make field private java.lang.String tme.Employee.surname accessible:
+module tme does not "opens tme" to module tmr
+...
+at tmr/tmr.SmartFieldAccess.instVarAtPut(SmartFieldAccess.java:15)
+at tme/tme.ReflectiveEmployeeMain.main(ReflectiveEmployeeMain.java:12)
+\end{lstlisting}
+
+Where:
+- tmr stands for tsp.module.reflection, and
+- tme stands for tsp.module.employee
+
+\subsubsection{How to Get around Modules' Strong Encapsulation}
+
+Several things can be done:
+
+\begin{itemize}
+	\item To pass -add-opens to the JVM to open the module
+	- Isn’t always possible to pass a flag to the JVM, e.g., with frameworks0/tools that activate their own JVM.
+	\item to open the
+	- tme module to everyone,
+	- tme package to everyone, or
+	- tme package only to tmr
+	\item in the corresponding module-info.java file
+	- These options aren’t always applicable, e.g., in case of a too complex
+project, when the module-info.java file is unavailable, . . .
+\end{itemize}
+
+Let’s see this last option
+
+\subsubsection{Reflection Works Only on Open Modules}
+
+\begin{lstlisting}[language=Java]
+module tsp.module.employee {
+	requires tsp.module.reflection ;
+	exports tsp.module.employee ;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+module tsp.module.reflection {
+	exports tsp.module.reflection ;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+> javac tmr/module-info.java tmr/tsp/module/reflection/SmartFieldAccess.java
+> javac --module-path=. tme/module-info.java tme/tsp/module/employee/*.java
+> java --module-path . -m tme/tme.ReflectiveEmployeeMain
+Employee: Angela Runedottir
+Employee: Angela Odindottir
+\end{lstlisting}
+
+Where:
+- tmr stands for tsp.module.reflection, and
+- tme stands for tsp.module.employee
+
+\subsubsection{Module Graph}
+
+The module system resolves the dependencies among modules by
+
+\begin{itemize}
+	\item locating observable modules to fulfill those dependencies, and then
+	\item resolves the dependencies of these modules, and so forth
+	\item until every dependency of every module is fulfilled.
+\end{itemize}
+
+This transitive-closure computation originates a module graph where each directed edge represents a fulfilled dependency among modules (the nodes).
+
+\begin{lstlisting}[language=Java]
+[23:40]cazzola@hymir:~/tsp>jdeps --module-path=. -m tme -summary -recursive
+tsp.module.employee -> java.base
+tsp.module.employee -> tsp.module.reflection
+tsp.module.reflection -> java.base
+\end{lstlisting}
+
+\subsubsection{Reflecting on Modules}
+
+\begin{lstlisting}[language=Java]
+[23:52]cazzola@hymir:~/tsp> jshell --module-path=. --add-modules=tsp.module.employee
+--add-exports=tsp.module.employee/tsp.module.employee:jshell
+jshell> import tsp.module.reflection.* ;
+jshell> import tsp.module.employee.* ;
+jshell> Module myClassModule = Employee.class.getModule();
+myClassModule ==> module tsp.module.employee
+jshell> myClassModule.isNamed();
+$1 ==> true
+jshell> import java.lang.module.*;
+jshell> ModuleDescriptor descriptor = myClassModule.getDescriptor();
+descriptor ==> module {name:tsp.module.employee, [mandated ... [tsp.module.reflection]]}
+jshell> descriptor.toString();
+$2 ==> "module { name: tsp.module.employee,
+[mandated java.base (@11), tsp.module.reflection],
+exports: [tsp.module.employee],
+opens: [tsp.module.employee to [tsp.module.reflection]] }"
+jshell> ModuleDescriptor d2 = SmartFieldAccess.class.getModule().getDescriptor() ;
+d2 ==> module { name: tsp.module.reflection, [mandated j ...
+[tsp.module.reflection] }
+jshell> d2.toString();
+$3 ==> "module { name: tsp.module.reflection,
+[mandated java.base (@11)], exports: [tsp.module.reflection] }"
+jshell> descriptor.exports();
+$4 ==> [tsp.module.employee]
+jshell> descriptor.packages();
+$5 ==> [tsp.module.employee]
+\end{lstlisting}
+
+\subsubsection{Privates Are Not So Private}
+
+\begin{lstlisting}[language=Java]
+import java.lang.invoke.MethodHandles.*;
+class Employee implements SmartFieldAccess {
+	private final Lookup lookup;
+	public Lookup getEmployeeLookup() {return this.lookup;}
+	private String name; private String surname;
+	public Employee(String n, String s){lookup=MethodHandles.lookup(); name=n; 			surname=s;}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+import java.lang.invoke.*;
+import java.lang.invoke.MethodHandles.*;
+public interface SmartFieldAccess {
+	default public Object instVarAt(Lookup lookup, String name) throws Exception {
+		Class<?> clazz = this.getClass();
+		Field f = clazz.getDeclaredField(name);
+		MethodHandles.Lookup privateLookup = MethodHandles.privateLookupIn(clazz, lookup);
+		VarHandle handle = privateLookup.unreflectVarHandle(f);
+		if (!Modifier.isStatic(f.getModifiers())) return handle.get(this);
+		return null;
+	}
+	default public void instVarAtPut(Lookup lookup, String n, Object v) throws Exception{
+		Class<?> clazz = this.getClass();
+		Field f = clazz.getDeclaredField(n);
+		MethodHandles.Lookup privateLookup = MethodHandles.privateLookupIn(clazz, lookup);
+		VarHandle handle =  privateLookup.unreflectVarHandle(f);
+		if (!Modifier.isStatic(f.getModifiers())) handle.set(this, v);
+	}
+}
+\end{lstlisting}
+
+
+\subsubsection{Privates Are Not So Private (Cont'd)}
+
+\begin{lstlisting}[language=Java]
+package tsp.module.employee ;
+
+public class GlasnotEmployeeMain {
+	public static void main(String[] args) throws Exception {
+		Employee angela = new Employee("Angela", "Runedottir");
+		System.out.println(angela);
+		angela.instVarAtPut(angela.getEmployeeLookup(), "surname", "Odindottir");
+		System.out.println(angela);
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+> javac tmr/module-info.java tmr/tsp/module/reflection/SmartFieldAccess.java
+> javac --module-path=. tme/module-info.java tme/tsp/module/employee/*.java
+> java --module-path . -m tme/tme.GlasnotEmployeeMain
+Employee: Angela Runedottir
+Employee: Angela Odindottir
+\end{lstlisting}
+
+where:
+- tmr stands for tsp.module.reflection, and
+- tme stands for tsp.module.employee
+
+\subsubsection{Variable Handles}
+
+A variable handle is a typed reference to a variable:
+
+\begin{itemize}
+	\item VarHandle class provides read/write access to variables
+	\item VarHandles are immutable and have no visible state
+\end{itemize}
+
+Each VarHandle has:
+
+\begin{itemize}
+	\item a variable type T that corresponds to the type of the variable
+	\item abstracts the safe access to a memory location
+	\item a list of coordinate types CT1. CT2, . . . , CTn
+\end{itemize}
+
+\begin{lstlisting}[language=Java]
+Factory methods to produce/lookup VarHandles:
+MethodHandles.lookup().in(Foo.class).findVarHandle(Foo.class, "i", int.class);
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+MethodHandles.privateLookupIn(Foo.class, MethodHandles.lookup())
+.findVarHandle(Foo.class, "i", int.class);
+\end{lstlisting}
+
+\subsubsection{Access modes}
+\begin{itemize}
+	\item read, e.g., get, getVolatile, ...
+	\item write, e.g., set, setOpaque, ...
+	\item atomic update, compareAndSet, getAndSet, ...
+\end{itemize}
