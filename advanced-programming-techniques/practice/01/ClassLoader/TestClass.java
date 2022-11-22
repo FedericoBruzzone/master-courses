@@ -1,7 +1,14 @@
-public class TestClass {
+import java.lang.reflect.*;
+
+public class TestClass  {
+    String testString = new String("testString");   
+    ClassLoader x;
+
+    public TestClass() throws Exception {
+        x = testString.getClass().getClassLoader();
+    }
+    
     public static void main(String[] args) {
-        String testString = new String("testString");
-        System.out.println(testString);
-        String[] testArrayString = new String[]{"testArrayString"};
-        System.out.println(testArrayString);
+        
+    }
 }

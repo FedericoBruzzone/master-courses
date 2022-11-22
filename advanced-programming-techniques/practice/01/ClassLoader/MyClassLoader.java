@@ -15,26 +15,26 @@ public class MyClassLoader extends ClassLoader {
     }
 
     public MyClassLoader(String path, ClassLoader parent) {
-        super(parent);
+        super(parent); 
         directories = path.split(";");
     }
 
-    @Override public Class<?> loadClass(String name) throws ClassNotFoundException {
-        System.out.println("Loading class: " + "`" + name + "`"); 
+    @Override 
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
         if (!name.startsWith("java")) { 
+            System.out.println("Loading class from MyClassLoader: " + "`" + name + "`"); 
             return findClass(name); 
         }
-
+        System.out.println("Loading class from DefaultClassLoader: " + "`" + name + "`"); 
         return super.loadClass(name);
-
     }
 
     public synchronized Class<?> findClass(String name) throws ClassNotFoundException {
         for ( int i = 0; i < directories.length; i++ ) {
             byte[] buf = getClassData( directories[i], name ) ;
             if (buf != null) return defineClass(name,buf,0,buf.length);
-         }
-         throw new ClassNotFoundException();
+        }
+        throw new ClassNotFoundException();
     }
 
     private byte[] getClassData(String directory, String name) {
@@ -54,6 +54,4 @@ public class MyClassLoader extends ClassLoader {
         } catch (Exception e) { e.printStackTrace(); return null; }
         return bufferClass;
     }
-
-
 }

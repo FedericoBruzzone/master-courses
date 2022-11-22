@@ -5,8 +5,9 @@ public class MainTestClassLoader {
         Class<?> tc = CL1.loadClass("TestClass");
         println("Loaded class `TestClass` via the `CL1` class loader");
         Object testClass = tc.getDeclaredConstructor().newInstance();
-        println(testClass.getClass().getClassLoader());
-        println(Object.class.getClassLoader());
+        // println(testClass.getClass().getClassLoader());
+        // println(Object.class.getClassLoader());
+        System.out.println(int.class.getClassLoader());
     }
 
     private static void println(Object string) {
