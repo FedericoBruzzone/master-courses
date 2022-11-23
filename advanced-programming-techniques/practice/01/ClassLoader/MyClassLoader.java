@@ -39,10 +39,10 @@ public class MyClassLoader extends ClassLoader {
 
     private byte[] getClassData(String directory, String name) {
         String classFile;
-        if (directory != "") {
-            classFile = directory + "/" + name.replace('.', '/') + ".class";
-        } else {
+        if (directory.equals("")) {
             classFile = name.replace('.', '/') + ".class";
+        } else {
+            classFile = directory + "/" + name.replace('.', '/') + ".class";
         }
         
         int classFileSize = (int)(new File(classFile)).length();

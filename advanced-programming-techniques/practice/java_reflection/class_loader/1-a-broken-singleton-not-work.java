@@ -1,5 +1,3 @@
-package class_loader;
-
 import java.lang.reflect.Field;
 import java.io.*;
 
