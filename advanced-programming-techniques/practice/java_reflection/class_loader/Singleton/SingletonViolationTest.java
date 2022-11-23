@@ -2,7 +2,7 @@ import java.lang.reflect.*;
 
 public class SingletonViolationTest {
     public static void main(String[] args) throws Exception {
-        SimpleClassLoader CL1 = new SimpleClassLoader("testclasses;testclasses/testclasses2");
+        SimpleClassLoader CL1 = new SimpleClassLoader("\"\";testclasses");
         Class<?> c1 = CL1.loadClass("Singleton");
         System.out.println("Loaded class «Singleton» via the «CL1» class loader");
         Field flag = c1.getDeclaredField("runOnce");
@@ -16,11 +16,9 @@ public class SingletonViolationTest {
             System.out.println("Let's re-instantiate «Singleton@CL1»\n### runOnce :- "+flag.get(null));
             Object y = c1.getDeclaredConstructor().newInstance();
             throw new RuntimeException("Test Fails!!!");
-        } catch (Exception e) {
-            System.out.println(e.getCause().getMessage());
-        }
+        } catch (Exception e) { System.out.println(e.getCause().getMessage()); }
 
-        SimpleClassLoader CL2 = new SimpleClassLoader("testclasses;testclasses/testclasses2");
+        SimpleClassLoader CL2 = new SimpleClassLoader("\"\";testclasses");
         Class<?> c2 = CL2.loadClass("Singleton");
         System.out.println("Loaded class «Singleton» via the «CL1» class loader");
         Field flag2 = c2.getDeclaredField("runOnce");
@@ -28,7 +26,6 @@ public class SingletonViolationTest {
         System.out.println("Let's instatiate «Singleton@CL1»\n### runOnce :- "+flag2.get(null));
         Object z = c2.getDeclaredConstructor().newInstance();
         System.out.println("### runOnce :- "+flag2.get(null));
-
         // SimpleClassLoader CL2 = new SimpleClassLoader("testclasses");
         // System.out.println("Loaded class «Singleton» via the «CL2» class loader");
         // Class<?> c2 = CL2.loadClass("class_loader.Singleton");
