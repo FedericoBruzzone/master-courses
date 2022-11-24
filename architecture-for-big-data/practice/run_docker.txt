@@ -3,3 +3,5 @@ docker-stacks/all-spark-notebook
 sudo docker build .
 sudo docker ps
 sudo docker run -p 1111:8888
+
+sudo docker run -p 1111:8888 48be495bef10

@@ -7,7 +7,7 @@ class DumpMethods {
             System.out.println(c);
             var m = c.getMethods();
             for (var j = 0; j < m.length; j++) {
-                System.out.println(m[j]);
+                System.out.println(m[j]);     
             }
         }
     }

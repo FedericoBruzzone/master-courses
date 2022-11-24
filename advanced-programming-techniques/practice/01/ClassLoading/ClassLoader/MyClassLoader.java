@@ -1,5 +1,3 @@
-//import java.lang.*;
-//import java.util.*;
 import java.io.*;
 
 public class MyClassLoader extends ClassLoader {
@@ -25,8 +23,9 @@ public class MyClassLoader extends ClassLoader {
             System.out.println("Loading class from MyClassLoader: " + "`" + name + "`"); 
             return findClass(name); 
         }
-        System.out.println("Loading class from DefaultClassLoader: " + "`" + name + "`"); 
-        return super.loadClass(name);
+        // System.out.println("Loading class from DefaultClassLoader: " + "`" + name + "`"); 
+        // return super.loadClass(name);
+        throw new RuntimeException();
     }
 
     public synchronized Class<?> findClass(String name) throws ClassNotFoundException {

@@ -36,11 +36,24 @@ def sum_all(num):
 
 # 2
 print('''%%%%%%%%%%%%%%%%%%  1.2 %%%%%%%%%%%%%%%%%%%%''')
-# ...
+from functools import * 
+import math
+
+def smallest_divisible():
+	l = list(range(2,21))
+	p = l
+	
+	for i in range(len(l)):
+			for j in range(i + 1, len(l)):
+				if p[j]%l[i] == 0:
+					p[j] = p[j] // l[i]
+	return reduce(lambda x,y:x*y, l)
+
 
 # 3
 print('''%%%%%%%%%%%%%%%%%%  1.3  %%%%%%%%%%%%%%%%%%%%''')
-# ...
+def sum_figures(num):
+	return reduce(lambda x,y: x+y, [int(n) for n in str(num)])
 
 # 4
 print('''%%%%%%%%%%%%%%%%%%  1.4  %%%%%%%%%%%%%%%%%%%%''')
