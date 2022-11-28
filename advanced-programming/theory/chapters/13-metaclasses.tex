@@ -1,0 +1,389 @@
+\section{Metaclasses}
+
+How to Silently Extend Classes (Part 3)
+
+\subsection{Metaclasses}
+
+\subsubsection{What’s a Metaclass?}
+
+Metaclasses are a mechanism to gain a high-level of control over how a set of classes works.
+
+\begin{itemize}
+	\item They permit to intercept and augment class creation;
+	\item they provide an API to insert extra-logic at the end of class statement
+	\item they provide a general protocol to manage class objects in a program
+\end{itemize}
+
+Note,
+
+\begin{itemize}
+	\item the added logic does not rebind the class name to a decorator callable, but rather routes creation of the class itself to specialized logic
+	\item metaclasses add code to be run at class creation time and not at instance creation time
+\end{itemize}
+
+\subsubsection{The Metaclass Model}
+
+Classes Are Instances of type
+
+\begin{lstlisting}[language=Python]
+[11:44]cazzola@hymir:~/esercizi-pa>python3
+>>> from circle import *
+>>> type(circle)
+<class ’type’>
+>>> circle.__class__
+<class ’type’>
+>>> c = circle(3)
+>>> type(c)
+<class ’circle.circle’>
+>>> c.__class__
+<class ’circle.circle’>
+>>> type([])
+<class ’list’>
+>>> type(type([]))
+<class ’type’>
+\end{lstlisting}
+
+\textbf{Metaclasses Are Subclasses of type}
+
+\begin{itemize}
+	\item type is a class that generates user-defined classes.
+	\item Metaclasses are subclasses of the type class
+	\item Class objects are instances of the type class, or a subclass thereof
+	\item Instance objects are generated from a class.
+\end{itemize}
+
+\textbf{Class Statement Protocol}
+
+\begin{itemize}
+	\item at the end of class statement, after filling \_\_dict\_\_, python calls
+		class = type(classname, superclasses, attributedict)
+	class = type(classname, superclasses, attributedict)
+	\item type object defines a \_\_call\_\_ operator that calls \_\_new\_\_ (to create class objects) and \_\_init\_\_ (to create instance objects) when type object is called
+\end{itemize}
+
+\subsubsection{The Metaclass Declaring \& Coding}
+
+\textbf{To create a class with a custom metaclass you have just to list the desired metaclass as a keyword argument in the class header.}
+
+\begin{lstlisting}[language=Python]
+class Spam(metaclass=Meta): pass
+\end{lstlisting}
+
+\textbf{Coding Metaclasses}
+\begin{itemize}
+	\item subtype type
+	\item override \_\_new\_\_, \_\_init\_\_ and \_\_call\_\_ operators
+\end{itemize}
+
+\subsubsection{The Metaclass Declaring & Coding (Cont’d)}
+
+\begin{lstlisting}[language=Python]
+class Meta(type):
+	def __new__(cls, classname, supers, classdict):
+		print(f"[__new__] cls :- {cls}\n
+			[__new__] classname :- {classname}\n
+			[__new__] supers :- {supers}\n
+			[__new__] classdict :- {classdict}")
+		print(f"[__new__] dict :- {cls.__dict__}")
+		return type.__new__(cls, classname, supers, classdict)
+	def __init__(cls, classname, supers, classdict):
+		print(f"[__init__] cls :- {cls}\n
+			[__init__] classname :- {classname}\n
+			[__init__] supers :- {supers}\n
+			[__init__] classdict :- {classdict}")
+		print(f"[__init__] dict :- {cls.__dict__}")
+		type.__init__(cls, classname, supers, classdict)
+	def __call__(cls, arg):
+		print(f"[__call__] cls :- {cls}\n
+			[__call__] arg :- {arg}")
+		return type.__call__(cls, arg)
+		
+print("### Making Classes...")
+class Egg: pass
+
+class Spam(Egg, metaclass=Meta):
+	data = 42
+	def __init__(self, string):
+		self.string = string
+	def meth(self, arg):
+		print(f"### [meth] arg :- {arg}\t
+			data :- {self.data}")
+
+print("### Making Instances...")
+X = Spam("Hello World")
+X.meth(42)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[23:01]cazzola@mangog:~>python3 metazero.py
+### Making Classes...
+[__new__] cls :- <class ’__main__.Meta’>
+[__new__] classname :- Spam
+[__new__] supers :- (<class ’__main__.Egg’>,)
+[__new__] classdict :- {’__module__’: ’__main__’,
+’__qualname__’: ’Spam’, ’data’: 42,
+’__init__’: <function Spam.__init__ at 0x...>,
+’meth’: <function Spam.meth at 0x...>}
+[__new__] dict :- {’__module__’: ’__main__’,
+’__new__’: <staticmethod(<function Meta.__new__ at 0x...>)>,
+’__init__’: <function Meta.__init__ at 0x...>,
+’__call__’: <function Meta.__call__ at 0x...>,
+’__doc__’: None}
+[__init__] cls :- <class ’__main__.Spam’>
+[__init__] classname :- Spam
+[__init__] supers :- (<class ’__main__.Egg’>,)
+[__init__] classdict :- {’__module__’: ’__main__’,
+’__qualname__’: ’Spam’, ’data’: 42,
+’__init__’: <function Spam.__init__ at 0x...>,
+’meth’: <function Spam.meth at 0x...>}
+[__init__] dict :- {’__module__’: ’__main__’,
+’data’: 42,
+’__init__’: <function Spam.__init__ at 0x...>,
+’meth’: <function Spam.meth at 0x...>,
+’__doc__’: None}
+### Making Instances...
+[__call__] cls :- <class ’__main__.Spam’>
+[__call__] arg :- Hello World
+### [meth] arg :- 42 data :- 42
+\end{lstlisting}
+
+\subsubsection{Metaclasses vs Superclasses}
+
+\begin{itemize}
+	\item Metaclasses inherit from the type class
+	\item Metaclass declarations are inherited by subclasses
+	\item Metaclass attributes are not inherited by class instances
+\end{itemize}
+
+\begin{lstlisting}[language=Python]
+class MetaOne(type):
+	def __new__(meta, classname, supers, classdict): # Redefine type method
+		print(’In MetaOne.new:’, classname)
+		return type.__new__(meta, classname, supers, classdict)
+	def toast(self):
+		print(’toast’)
+
+class Super(metaclass=MetaOne): # Metaclass inherited by subs too
+	def spam(self): # MetaOne run twice for two classes
+	print(’spam’)
+
+class C(Super): # Superclass: inheritance versus instance
+	def eggs(self): # Classes inherit from superclasses
+		print(’eggs’) # But not from metclasses
+		
+X = C()
+X.eggs() # Defined in C
+X.spam() # Inherited from Super
+X.toast() # Not inherited from metaclass
+\end{lstlisting}
+
+\subsubsection{Metaclass-Based Augmentation}
+
+\begin{lstlisting}[language=Python]
+def eggsfunc(obj): return obj.value * 4
+def hamfunc(obj, value): return value + ’ham’
+
+class Extender(type):
+	def __new__(meta, classname, supers, classdict):
+		classdict[’eggs’] = eggsfunc
+		classdict[’ham’] = hamfunc
+		return type.__new__(meta, classname, supers, classdict)
+
+class Client1(metaclass=Extender):
+	def __init__(self, value): self.value = value
+	def spam(self): return self.value * 2
+
+class Client2(metaclass=Extender): value = ’ni?’
+
+X = Client1(’Ni!’)
+print(X.spam())
+print(X.eggs())
+print(X.ham(’bacon’))
+Y = Client2()
+print(Y.eggs())
+print(Y.ham(’bacon’))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[18:01]cazzola@hymir:~/esercizi-pa/metaclass>python3 extender.py
+Ni!Ni!
+Ni!Ni!Ni!Ni!
+baconham
+ni?ni?ni?ni?
+baconham
+\end{lstlisting}
+
+\subsubsection{Applying Decorators to Methods: The Decorators}
+
+\begin{lstlisting}[language=Python]
+# timer.py
+import time
+def timer(label=’’, trace=True):
+	def onDecorator(func):
+		def onCall(*args, **kargs):
+			start = time.clock()
+			result = func(*args, **kargs)
+			elapsed = time.clock() - start
+			onCall.alltime += elapsed
+			print(’{0}{1}: {2:.5f}, {3:.5f}’.format(
+				label, func.__name__, elapsed, onCall.alltime))
+			return result
+		onCall.alltime = 0
+	return onCall
+return onDecorator
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+# tracer.py
+def tracer(func):
+	calls = 0
+	def onCall(*args, **kwargs):
+		nonlocal calls
+		calls += 1
+		print(’call {0} to {1}’.\
+			format(calls, func.__name__))
+	return func(*args, **kwargs)
+return onCall
+\end{lstlisting}
+
+\subsubsection{Applying Decorators to Methods: The Decorators}
+
+\begin{lstlisting}[language=Python]
+from decorators.tracer import tracer
+class Person:
+	@tracer
+	def __init__(self, name, pay):
+		self.name = name
+		self.pay = pay
+	@tracer
+	def giveRaise(self, percent): # giveRaise = tracer(giverRaise)
+		self.pay *= (1.0 + percent) # onCall remembers giveRaise
+	@tracer
+	def lastName(self): # lastName = tracer(lastName)
+		return self.name.split()[-1]
+
+bob = Person(’Bob Smith’, 50000)
+sue = Person(’Sue Jones’, 100000)
+print(bob.name, sue.name)
+sue.giveRaise(.10) # Runs onCall(sue, .10)
+print(sue.pay)
+print(bob.lastName(), sue.lastName()) # Runs onCall(bob), remembers lastName
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[21:30]cazzola@hymir:~/esercizi-pa/metaclass>python3 Person1.py
+call 1 to __init__
+call 2 to __init__
+Bob Smith Sue Jones
+call 1 to giveRaise
+110000.0
+call 1 to lastName
+call 2 to lastName
+Smith Jones
+\end{lstlisting}
+
+\subsubsection{Applying Decorators to Methods: Through a Metaclass!}
+
+\begin{lstlisting}[language=Python]
+from types import FunctionType
+from decorators.tracer import tracer
+
+class MetaTrace(type):
+	def __new__(meta, classname, supers, classdict):
+		for attr, attrval in classdict.items():
+			if type(attrval) is FunctionType:
+				classdict[attr] = tracer(attrval)
+		return type.__new__(meta, classname, supers, classdict)
+
+class Person(metaclass=MetaTrace):
+	def __init__(self, name, pay):
+		self.name = name
+		self.pay = pay
+	def giveRaise(self, percent):
+		self.pay *= (1.0 + percent)
+	def lastName(self): return self.name.split()[-1]
+
+bob = Person(’Bob Smith’, 50000)
+sue = Person(’Sue Jones’, 100000)
+print(bob.name, sue.name)
+sue.giveRaise(.10)
+print(sue.pay)
+print(bob.lastName(), sue.lastName())
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[21:45]cazzola@hymir:~/esercizi-pa/metaclass>python3 Person2.py
+call 1 to __init__
+call 2 to __init__
+Bob Smith Sue Jones
+call 1 to giveRaise
+110000.0
+call 1 to lastName
+call 2 to lastName
+Smith Jones
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+from types import FunctionType
+from decorators.tracer import tracer
+from decorators.timer import timer
+def decorateAll(decorator):
+	class MetaDecorate(type):
+		def __new__(meta, classname, supers, classdict):
+			for attr, attrval in classdict.items():
+				if type(attrval) is FunctionType:
+					classdict[attr] = decorator(attrval)
+			return
+				type.__new__(meta,classname,supers,classdict)
+		return MetaDecorate
+class Person(metaclass=decorateAll(tracer)):
+...
+print(’--- tracer’)
+bob = Person(’Bob Smith’, 50000)
+sue = Person(’Sue Jones’, 100000)
+print(bob.name, sue.name)
+sue.giveRaise(.10)
+print(sue.pay)
+print(bob.lastName(), sue.lastName())
+class Person(
+metaclass=decorateAll(timer(label=’**’))):
+...
+print(’--- timer’)
+bob = Person(’Bob Smith’, 50000)
+sue = Person(’Sue Jones’, 100000)
+print(bob.name, sue.name)
+sue.giveRaise(.10)
+print(sue.pay)
+print(bob.lastName(), sue.lastName())
+print(’{0:.5f}’.format(Person.__init__.alltime))
+print(’{0:.5f}’.format(Person.giveRaise.alltime))
+print(’{0:.5f}’.format(Person.lastName.alltime))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+[21:47]cazzola@hymir:~/esercizi-pa/metaclass>python3 Person3.py
+--- tracer
+call 1 to __init__
+call 2 to __init__
+Bob Smith Sue Jones
+call 1 to giveRaise
+110000.0
+call 1 to lastName
+call 2 to lastName
+Smith Jones
+--- timer
+**__init__: 0.00000, 0.00000
+**__init__: 0.00000, 0.00000
+Bob Smith Sue Jones
+**giveRaise: 0.00000, 0.00000
+110000.0
+**lastName: 0.00000, 0.00000
+**lastName: 0.00000, 0.00000
+Smith Jones
+0.00000
+0.00000
+0.00000
+\end{lstlisting}
+
+
+
