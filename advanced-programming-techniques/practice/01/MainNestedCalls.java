@@ -48,7 +48,7 @@ class MyProxy extends NestedCalls implements InvocationHandler {
         }
         return r;
     }
-
+    
     public Object invoke(Object proxed, Method method, Object[] args) {
         Object r = null;
         try {

@@ -16,5 +16,4 @@ public class MainTestClassLoader {
     private static void println(Object string) {
         System.out.println(string);
     }
-
 }

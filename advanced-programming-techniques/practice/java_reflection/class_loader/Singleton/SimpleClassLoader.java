@@ -1,5 +1,4 @@
 import java.io.*;
-import java.security.DigestException;
 
 public class SimpleClassLoader extends ClassLoader {
   String[] directories;
