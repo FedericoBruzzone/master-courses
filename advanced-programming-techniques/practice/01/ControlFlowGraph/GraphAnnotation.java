@@ -4,7 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+//@Target(ElementType.METHOD)
 public @interface GraphAnnotation {
     public Class<?>[] clazz();
 }
