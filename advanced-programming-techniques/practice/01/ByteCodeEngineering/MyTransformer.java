@@ -3,8 +3,8 @@ import java.io.IOException;
 
 // javac -cp /usr/share/java/javassist.jar *.java
 // java -cp .:/usr/share/java/javassist.jar MyTransformer
-// jar cf StringBuilder.jar java/lang/StringBuilder.class
-// jar cf SubStringBuilder.jar SubStringBuilder.class
+// jar cf StringBuilder.jar java/lang/StringBuilder.class 
+// It is not useful!!!  --> jar cf SubStringBuilder.jar SubStringBuilder.class
 // java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar MyTestClass
 
 // javac -cp /usr/share/java/javassist.jar *.java
@@ -39,11 +39,11 @@ public class MyTransformer {
               "}\n", subStringBuilder);
 
       subStringBuilder.addMethod(subAppend);
-      //subStringBuilder.setName("StringBuilder");
+      subStringBuilder.setName("StringBuilder");
       subStringBuilder.writeFile();
 
-      // Runtime rt = Runtime.getRuntime();
-      // Process pr = rt.exec("java -jar map.jar time.rel test.txt debug");
+      Runtime rt = Runtime.getRuntime();
+      Process pr = rt.exec("jar cf StringBuilder.jar java/lang/StringBuilder.class");
     } catch (Exception e) {
       e.printStackTrace();
     }
