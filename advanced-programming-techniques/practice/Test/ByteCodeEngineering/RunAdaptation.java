@@ -1,10 +1,10 @@
 //jar -cmvf META-INF/MANIFEST.MF /StringBuilder.jar java/lang/StringBuilder.class
 import javassist.*;
 
-//javac -cp /usr/share/java/javassist.jar *.java
-//java -cp .:/usr/share/java/javassist.jar RunAdaptation
-//jar cf StringBuilder.jar java/lang/StringBuilder.class
-//java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar RunAdaptation
+// javac -cp /usr/share/java/javassist.jar *.java
+// java -cp .:/usr/share/java/javassist.jar RunAdaptation
+// jar cf StringBuilder.jar java/lang/StringBuilder.class
+// java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar RunAdaptation
 
 //javap -c java/lang/StringBuilder.class
 

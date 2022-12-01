@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javassist.*;
 
 public class Adapter implements Translator {
@@ -11,6 +15,7 @@ public class Adapter implements Translator {
         // List<CtMethod> methods = new ArrayList<CtMethod>(Arrays.asList(sb.getDeclaredMethods()));
         // for (var i : methods) { sb.removeMethod(i); }
         
+        //sb.setModifiers(Modifier.clear(sb.getModifiers(), Modifier.FINAL));
         CtClass[] x = new CtClass[]{pool.get("boolean")};
         CtMethod fakeAppend = sb.getDeclaredMethod("append", x);
         fakeAppend.insertAfter("System.out.println(\"APPEND\");\n");
