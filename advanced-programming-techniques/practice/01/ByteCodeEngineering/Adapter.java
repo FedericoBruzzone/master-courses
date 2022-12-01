@@ -1,53 +1,38 @@
+import java.io.IOException;
 import javassist.*;
 
-import java.lang.reflect.*;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Adapter implements Translator {
-    CtClass myStringBuilder;
-    CtClass trueStringBuilder;
-    CtMethod myAppend;
-    CtMethod trueAppend;
-    CtClass[] ctParam;
+    public void start(ClassPool pool) throws NotFoundException, CannotCompileException {
+        System.out.println("\tAdapter: START start method ... ");
 
-    public void start(ClassPool p) throws NotFoundException {
-        myStringBuilder = p.get("MyStringBuilder");
-        trueStringBuilder = p.get("java.lang.StringBuilder");
+        CtClass sb = pool.get("java.lang.StringBuilder");
+        sb.defrost();
+        System.out.println("\t" + sb.getDeclaredMethods().length);
+        // List<CtMethod> methods = new ArrayList<CtMethod>(Arrays.asList(sb.getDeclaredMethods()));
+        // for (var i : methods) { sb.removeMethod(i); }
         
+        CtClass[] x = new CtClass[]{pool.get("boolean")};
+        CtMethod fakeAppend = sb.getDeclaredMethod("append", x);
+        fakeAppend.insertAfter("System.out.println(\"APPEND\");\n");
+
         try {
-            Method m = StringBuilder.class.getDeclaredMethod("append", new Class<?>[]{char[].class});
-            Class<?>[] mParam = m.getParameterTypes();
-            ArrayList<CtClass> al = new ArrayList<CtClass>();
+            sb.writeFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            CtClass tmp;
-            for (Class<?> mp : mParam ){
-                tmp = p.get(mp.getName());
-                al.add(tmp);
-            }
-            ctParam = al.toArray(CtClass[]::new);
+        System.out.println("\t" + sb.getDeclaredMethods().length);
+        System.out.println("\t" + StringBuilder.class.getDeclaredMethods().length);
 
-            trueAppend = trueStringBuilder.getDeclaredMethod("append", ctParam);
-            myAppend = myStringBuilder.getDeclaredMethod("append", ctParam);
-        } catch (Exception e) { e.printStackTrace(); }
+        System.out.println("\tAdapter: STOP start method ... ");
     }
 
     public void onLoad(ClassPool p, String cn) throws NotFoundException, CannotCompileException {
-        // CtClass cls = p.get(cn); 
+        System.out.println("\tAdapter: START onLoad method ... " + cn);
+          
+        CtClass sb = p.get("java.lang.StringBuilder");
+        System.out.println("\t" + sb.getDeclaredMethods().length);
 
-        CtMethod[] methods = trueStringBuilder.getDeclaredMethods();
-        System.out.println(trueStringBuilder.getName());
-        for (int i=0; i < methods.length; i++) {
-            if (methods[i].getName().equals("append") && Arrays.equals(methods[i].getParameterTypes(), ctParam) && !Modifier.isVolatile(methods[i].getModifiers())) {
-                //methods[i] = myAppend;
-                trueStringBuilder.removeMethod(methods[i]);
-                System.out.println("REMOVE");
-                // trueStringBuilder.addMethod(CtNewMethod.copy(myAppend, trueStringBuilder, null));
-                // System.out.println("ADD");
-            }
-        }
-        trueStringBuilder.toClass();
-        System.out.println(trueStringBuilder.getDeclaredMethods().length);
+        System.out.println("\tAdapter: STOP onLoad method ... ");
     }
 }

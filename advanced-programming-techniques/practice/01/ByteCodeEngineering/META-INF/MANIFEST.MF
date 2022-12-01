@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Premain-Class: newes9lab1.DurationCalculatorBCEL
+Boot-Class-Path: bcel-6.5.0.jar 
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+Created-By: 11.0.5 (Oracle Corporation)
