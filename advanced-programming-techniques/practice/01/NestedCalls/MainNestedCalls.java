@@ -1,6 +1,10 @@
 import java.lang.reflect.*;
 import java.lang.reflect.Proxy;
 
+import help.MyProxy;
+
+
+
 interface NestedCallsI {
     public int a();
     public int b(int a);
