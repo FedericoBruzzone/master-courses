@@ -1,11 +1,11 @@
 import javassist.*;
 
 // javac -cp /usr/share/java/javassist.jar *.java
-// java -cp .:/usr/share/java/javassist.jar PatchStreamBuilder
+// java -cp .:/usr/share/java/javassist.jar PatchStringBuilder
 // jar cf StringBuilder.jar java/lang/StringBuilder.class 
 // java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar MyClass
 
-public class PatchStreamBuilder {
+public class PatchStringBuilder {
 	public static void main(String[] args) throws Exception {
 		ClassPool classPool = ClassPool.getDefault();
 		CtClass sb = classPool.get("java.lang.StringBuilder");
