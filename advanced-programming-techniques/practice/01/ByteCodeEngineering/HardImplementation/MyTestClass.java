@@ -6,8 +6,8 @@ public class MyTestClass {
         System.out.println("---------- Main MyStringBuilder ----------");
         //Class<?> cls = Class.forName("java.lang.StringBuilder");
         Class<?> cls = Class.forName("StringBuilder");
-        System.out.println(cls.getClass().getName());
         StringBuilder sb = (StringBuilder)cls.getDeclaredConstructor().newInstance();
+        System.out.println(sb.getClass().getName());
         System.out.println(Modifier.toString(sb.getClass().getModifiers()));
 
         

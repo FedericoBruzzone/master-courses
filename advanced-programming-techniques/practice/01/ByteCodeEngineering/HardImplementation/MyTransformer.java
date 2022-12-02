@@ -47,6 +47,5 @@ public class MyTransformer {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 }
