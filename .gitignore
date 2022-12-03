@@ -11,4 +11,6 @@
 *.ipynb_checkpoints
 
 *.class
+.vscode
+.metadata
 #*.pdf
