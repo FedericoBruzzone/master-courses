@@ -1,0 +1,5 @@
+javac --module-path=. tmr/module-info.java tmr/tsp/module/reflection/SmartFieldAccess.java
+javac --module-path=.:tmr  tme/module-info.java tme/tsp/module/employee/*.java
+java --module-path . -m tsp.module.employee/tsp.module.employee.ReflectiveEmployeeMain
+NO java --module-path . --add-opens tsp.module.employee/tsp.module.employee=tsp.module.reflection -m tsp.module.employee/tsp.module.employee.ReflectiveEmployeeMain
+

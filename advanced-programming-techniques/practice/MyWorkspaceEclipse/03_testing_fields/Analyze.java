@@ -1,4 +1,5 @@
 // javac *.java
+// java Analyze
 
 import java.lang.reflect.*;
 
