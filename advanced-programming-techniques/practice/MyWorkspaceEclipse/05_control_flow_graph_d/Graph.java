@@ -1,11 +1,11 @@
 import java.util.Vector;
 
-class Edge<T, M> {
-	T from;
-	M m;
-	T to;
+class Edge {
+	String from;
+	String m;
+	String to;
 	
-	public Edge(T from, M m, T to) {
+	public Edge(String from, String m, String to) {
 		this.from = from;
 		this.m = m;
 		this.to = to;
@@ -16,22 +16,18 @@ class Edge<T, M> {
 	}
 }
 
-public class Graph<T, M> {
-	Vector<Edge<T, M>> edges;
+public class Graph {
+	static Vector<Edge> edges = new Vector<Edge>();
 	
-	public Graph() {
-		edges = new Vector<Edge<T, M>>();
-	}
-	
-	public void addNode(T from, M m, T to) {
-		Edge<T, M> node = new Edge<T, M>(from, m, to);
-		edges.add(node);
+	public void addEdge(String from, String m, String to) {
+		Edge edge = new Edge(from, m, to);
+		edges.add(edge);
 	}
 	
 	public String toString() {
 		String res = new String();
-		for (Edge<T, M> n : edges) {
-			res += n + "\n";
+		for (Edge e : edges) {
+			res += e + "\n";
 		}
 		return res;
 	}

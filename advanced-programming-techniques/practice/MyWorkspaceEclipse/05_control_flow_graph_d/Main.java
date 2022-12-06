@@ -1,6 +1,10 @@
+// javac *.java
+// jar -m MANIFEST.MF -f Agent.jar -c Agent.class
+// java -javaagent:Agent.jar Main
 
 public class Main {
 	public static void main(String[] args) {
+		System.out.println("-----Main::main-----");
 		A a1 = new A();
 		A a2 = new A();
 		A a3 = new A();
