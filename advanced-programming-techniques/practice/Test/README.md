@@ -61,6 +61,8 @@ java -cp .:/usr/share/java/javassist.jar RunTranslator
 
 # Load time with javassist and premain+ClassFileTransformer
 
+* IMPORTANT: In jvassist.Translator pass only our written class!
+
 ## My Class
 
 * Create a MyTransformer class that implements `java.lang.instrument.ClassFileTransformer`
