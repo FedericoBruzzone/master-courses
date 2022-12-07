@@ -3,7 +3,8 @@ import javassist.*;
 // javac -cp /usr/share/java/javassist.jar *.java
 // java -cp .:/usr/share/java/javassist.jar PatchStringBuilder
 // jar cf StringBuilder.jar java/lang/StringBuilder.class 
-// java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar MyClass
+// NONO java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar MyClass
+// java --patch-module java.base=StringBuilder.jar MyClass
 
 public class PatchStringBuilder {
 	public static void main(String[] args) throws Exception {

@@ -19,10 +19,10 @@ public class MyClassLoader extends ClassLoader {
 
   @Override
   public Class<?> loadClass(String name) throws ClassNotFoundException {
-	if (name.equals("Singleton")) {
-		System.out.println("Loading class from MyClassLoader: " + "`" + name + "`");
-		return new MyClassLoader(";testclasses").findClass("Singleton");
-	}
+    if (name.equals("Singleton")) {
+      System.out.println("Loading class from MyClassLoader: " + "`" + name + "`");
+      return new MyClassLoader(";testclasses").findClass("Singleton");
+    }
     if (!name.startsWith("java")) {
       System.out.println("Loading class from MyClassLoader: " + "`" + name + "`");
       return findClass(name);

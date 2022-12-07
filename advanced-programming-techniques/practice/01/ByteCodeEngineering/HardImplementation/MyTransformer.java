@@ -9,7 +9,7 @@ import java.io.IOException;
 
 // javac -cp /usr/share/java/javassist.jar *.java
 // java -cp .:/usr/share/java/javassist.jar MyTransformer
-// jar cf ModStringBuilder.jar ModStringBuilder.class
+// NO jar cf ModStringBuilder.jar ModStringBuilder.class
 // jar cf StringBuilder.jar StringBuilder.class
 // java -cp .:/usr/share/java/javassist.jar --patch-module java.base=StringBuilder.jar MyTestClass
 

@@ -1,12 +1,6 @@
-package class_loader;
-
 import java.io.*;
 
-class EmptyProgram {
-    public static void main(String[] args) {}
-}
-
-class VerboseClassLoader extends ClassLoader {
+public class VerboseClassLoader extends ClassLoader {
     public VerboseClassLoader(ClassLoader parent) {
         super(parent);
     }
