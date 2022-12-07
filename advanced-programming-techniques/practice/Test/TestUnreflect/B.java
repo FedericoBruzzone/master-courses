@@ -2,11 +2,14 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
 public class B extends A implements Y {
-    public void myUnreflectSpecial() throws Exception, Throwable {
-        MethodHandle mh = MethodHandles.lookup().unreflectSpecial(
-            Class.forName("A").getDeclaredMethod("x"), 
-            getClass());
-        mh.bindTo(this).invokeWithArguments();
+    public Object myUnreflectSpecial() throws Exception, Throwable {
+        return MethodHandles
+                    .lookup()
+                    .unreflectSpecial(
+                        Class.forName("A").getDeclaredMethod("y"), 
+                        getClass())
+                    .bindTo(this)
+                    .invokeWithArguments();
     }
 
     @Override public void y() {
@@ -16,6 +19,5 @@ public class B extends A implements Y {
     public static void main(String[] args) throws Exception, Throwable {
         B b = new B();
         b.myUnreflectSpecial();
-        b.x();
     }
 }
