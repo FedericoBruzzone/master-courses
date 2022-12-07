@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 public class B extends A implements Y {
     public void myUnreflectSpecial() throws Exception, Throwable {
         MethodHandle mh = MethodHandles.lookup().unreflectSpecial(
-            Class.forName("A").getDeclaredMethod("y"), 
+            Class.forName("A").getDeclaredMethod("x"), 
             getClass());
         mh.bindTo(this).invokeWithArguments();
     }
