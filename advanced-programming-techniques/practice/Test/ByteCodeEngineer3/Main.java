@@ -7,5 +7,7 @@ public class Main {
         System.out.println("----- Main::main -----");
         A a = new A();
         a.a();
+        StringBuilder sb = new StringBuilder();
+        sb.append(new char[]{'a','b'});
     }
 }

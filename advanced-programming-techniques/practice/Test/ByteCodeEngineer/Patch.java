@@ -2,7 +2,7 @@ import javassist.*;
 
 // javac -cp /usr/share/java/javassist.jar *.java
 // java -cp .:/usr/share/java/javassist.jar Patch
-// java MyClass
+// java Main
 
 public class Patch {
 	public static void main(String[] args) throws Exception {

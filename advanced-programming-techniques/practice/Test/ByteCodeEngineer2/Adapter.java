@@ -1,10 +1,8 @@
 import javassist.*;
 
 class Adapter implements Translator {
-
-    public void start(ClassPool p) {
-        
-    }
+    
+    public void start(ClassPool p) {}
 
     public void onLoad(ClassPool p, String cn) {
         try {

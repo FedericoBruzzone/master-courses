@@ -1,8 +1,0 @@
-java regex (p.29)
-
-The default security manager permits the use of setAccessible on
-members of classes loaded by the same class loader as the caller. Supplying a cus-
-tom security manager can change this policy. For details on security managers,
-consult the Java documentation. (p.39)
-
-Class componentType = sourceclass.getComponentType(); (p.41)
