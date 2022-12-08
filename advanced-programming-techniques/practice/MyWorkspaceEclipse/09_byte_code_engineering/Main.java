@@ -1,5 +1,4 @@
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 // javac -cp /usr/share/java/javassist.jar *.java
 // java -cp .:/usr/share/java/javassist.jar PatchStringBuilder
