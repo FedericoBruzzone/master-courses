@@ -12,7 +12,7 @@ class Edge {
 	}
 	
 	public String toString() {
-		return from.toString() + " ---" + m.toString() + "--> " + to.toString();
+		return from.toString() + " ---" + m.toString() + "--> " + to.toString() + "\n";
 	}
 }
 

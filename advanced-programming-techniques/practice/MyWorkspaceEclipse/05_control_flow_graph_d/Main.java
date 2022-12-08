@@ -24,5 +24,7 @@ public class Main {
 		b2._y();
 		b3._x();
 		b3._y();
+		
+		System.out.println(Graph.edges);
 	}
 }
