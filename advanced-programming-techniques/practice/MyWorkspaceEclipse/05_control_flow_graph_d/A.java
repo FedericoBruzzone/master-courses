@@ -1,4 +1,3 @@
-
 public class A {
 	@AnnotationGraph({B.class})
 	public void _x() {

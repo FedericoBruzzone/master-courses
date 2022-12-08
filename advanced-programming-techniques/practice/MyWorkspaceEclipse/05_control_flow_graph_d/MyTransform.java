@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
+import java.lang.annotation.*;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -28,12 +29,14 @@ public class MyTransform implements ClassFileTransformer {
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
 			ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 		try {
-			System.out.println("MyTransform::transform " + className);
-			InputStream is = new ByteArrayInputStream(classfileBuffer);
-			DataInputStream dis = new DataInputStream(is);
-			ClassFile cf = new ClassFile(dis);
+			ClassPool cp = ClassPool.getDefault();
+			CtClass c = cp.get(className);
+			for (CtMethod m : c.getDeclaredMethods()) {
+				m.instrument(new CreateGraph());
+			}
 			
-		} catch (IOException e) { e.printStackTrace(); }
+		} catch (NotFoundException e) { e.printStackTrace(); } 
+		  catch (CannotCompileException e) { e.printStackTrace(); }
 		
 //		ClassPool cp = ClassPool.getDefault();
 //		if (className.equals("A")) {
