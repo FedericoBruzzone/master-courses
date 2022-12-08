@@ -19,7 +19,7 @@ class Edge {
 public class Graph {
 	static Vector<Edge> edges = new Vector<Edge>();
 	
-	public static void addEdge(String from, String m, String to) {
+	public void addEdge(String from, String m, String to) {
 		Edge edge = new Edge(from, m, to);
 		edges.add(edge);
 	}

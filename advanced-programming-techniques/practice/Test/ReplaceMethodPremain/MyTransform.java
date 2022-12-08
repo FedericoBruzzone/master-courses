@@ -11,8 +11,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import javassist.bytecode.Bytecode;
-import javassist.bytecode.ClassFile;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
@@ -27,26 +25,21 @@ public class MyTransform implements ClassFileTransformer {
 	@Override
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
 			ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-		try {
-			System.out.println("MyTransform::transform " + className);
-			InputStream is = new ByteArrayInputStream(classfileBuffer);
-			DataInputStream dis = new DataInputStream(is);
-			ClassFile cf = new ClassFile(dis);
-			
-		} catch (IOException e) { e.printStackTrace(); }
+		System.out.println("MyTransform::transform " + className);
 		
-//		ClassPool cp = ClassPool.getDefault();
-//		if (className.equals("A")) {
-//			try {
-//				CtClass a_cls = cp.get(className);
-//				for (CtMethod m : a_cls.getDeclaredMethods()) {
-//					m.instrument(new AddMyLine());
-//				}
-//				return a_cls.toBytecode();
-//			} catch (NotFoundException | CannotCompileException | IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		ClassPool cp = ClassPool.getDefault();
+		if (className.equals("A")) {
+			try {
+				CtClass a_cls = cp.get(className);
+				for (CtMethod m : a_cls.getDeclaredMethods()) {
+					m.instrument(new AddMyLine());
+				}
+				return a_cls.toBytecode();
+			} catch (NotFoundException | CannotCompileException | IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 		return classfileBuffer;
 	}
 }
