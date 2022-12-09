@@ -7,9 +7,20 @@ import java.security.ProtectionDomain;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
 import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
+import javassist.expr.NewExpr;
+
+
+class ModifyBody extends ExprEditor {
+	@Override
+	public void edit(MethodCall e) throws CannotCompileException {
+		e.replace("System.out.println(\"NEWEXPR\"); $_ = $proceed($$);");
+	}
+}
 
 class MyExprEditor extends ExprEditor {
 
@@ -24,6 +35,7 @@ class MyExprEditor extends ExprEditor {
 	@Override
 	public void edit(MethodCall m) throws CannotCompileException {
 			try {
+				System.out.println(m.getMethodName());
 				Object[] annotations = m.getMethod().getAnnotations();
 				for (Object annotation : annotations) {
 					Annotation tmp = (Annotation)annotation;
@@ -48,6 +60,7 @@ public class MyTransform implements ClassFileTransformer {
 				CtClass c = p.get(className);
 				
 				c.instrument(new MyExprEditor());
+				c.instrument(new ModifyBody()); // for fun
 				
 				return c.toBytecode();
 			}

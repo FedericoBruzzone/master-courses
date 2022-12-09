@@ -26,7 +26,6 @@ class AddTimer extends ExprEditor {
 }
 
 public class PatchStringBuilder {
-	
 	public static void main(String[] args) {
 		try {
 			ClassPool cp = ClassPool.getDefault();
@@ -38,14 +37,15 @@ public class PatchStringBuilder {
 			CtClass sbFake = cp.makeClass("FakeStringBuilder", sb);
 			
 			CtMethod sbAppend = CtNewMethod.make("public abstract StringBuilder append(char[] str);", sbFake);
+			CtMethod sbInsert = CtNewMethod.make("public abstract StringBuilder insert(int offset, String str);", sbFake);
+			sbFake.addMethod(sbAppend);
+			sbFake.addMethod(sbInsert);
+			
 			sbAppend.setBody("{ StringBuilder res = super.append($1); return res; }");
 			sbAppend.instrument(new AddTimer());
-			sbFake.addMethod(sbAppend);
 			
-			CtMethod sbInsert = CtNewMethod.make("public abstract StringBuilder insert(int offset, String str);", sbFake);
 			sbInsert.setBody("{ StringBuilder res = super.insert($1, $2); return res; }");
 			sbInsert.instrument(new AddTimer());
-			sbFake.addMethod(sbInsert);
 			
 			sbFake.setModifiers(sbFake.getModifiers() & ~Modifier.ABSTRACT);
 			
