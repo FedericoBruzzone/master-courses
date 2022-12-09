@@ -48,6 +48,7 @@ public class MyTranslator implements javassist.Translator {
 					+ "}", main);
 			main.addMethod(main_m);
 			main.writeFile();
+			
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
