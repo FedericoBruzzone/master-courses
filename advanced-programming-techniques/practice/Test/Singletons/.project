@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>07_nested_calls_ja</name>
+	<name>Singletons</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1670684927167</id>
+			<id>1670241119024</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
