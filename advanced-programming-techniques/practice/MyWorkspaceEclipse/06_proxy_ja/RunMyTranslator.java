@@ -21,6 +21,5 @@ public class RunMyTranslator {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
 	}
 }
