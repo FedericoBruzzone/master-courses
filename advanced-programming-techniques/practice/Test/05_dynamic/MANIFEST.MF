@@ -1,0 +1,3 @@
+Premain-Class: MyAgent
+Class-Path: javassist.jar
+Boot-Strap-Class: MyAgent
