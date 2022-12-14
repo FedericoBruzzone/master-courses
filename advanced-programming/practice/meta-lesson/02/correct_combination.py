@@ -1,4 +1,5 @@
 from create_dict import *
+from itertools import permutations
 
 class CorrectCombination():
   words_dict = dict()
@@ -17,10 +18,24 @@ class CorrectCombination():
           self.words_dict[k].append(word.strip())
     #d_print(self.words_dict)
 
-  def process_input(sentence):
-      pass
-
+  def get_combination(self, *args):
+    sentence = args[0]
+    def process_input(sentence):
+      s = sentence.split()
+      def inner(s, res=[]):
+        if (len(s) == 0): 
+          return res
+        p_words = [j for i in permutations(self.words_dict[s[0]]) for j in i] * len(res) 
+        res = res*len(self.words_dict[s[0]]) 
+        res = list(map(lambda x,y: x + " " + y, res, p_words))
+        return inner(s[1:], res)
+      return inner(s[1:], self.words_dict[s[0]])
+    return [''.join(i) for i in process_input(sentence)]
+   
 if __name__ == "__main__":
+  i = "968 273 788743" # you are stupid
   cc = CorrectCombination()
-  cc.read_and_create("words_test.txt")
+  cc.read_and_create("words.txt")
+  [print(c) for c in cc.get_combination(i)] 
+
 
