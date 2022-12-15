@@ -14,3 +14,4 @@
 .vscode
 .metadata
 #*.pdf
+__pycache__
