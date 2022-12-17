@@ -1,5 +1,5 @@
 from create_dict import *
-from itertools import permutations
+import time
 
 class CorrectCombination():
   words_dict = dict()
@@ -16,26 +16,23 @@ class CorrectCombination():
           self.words_dict[k] = [word.strip()]
         else:
           self.words_dict[k].append(word.strip())
-    #d_print(self.words_dict)
 
-  def get_combination(self, *args):
-    sentence = args[0]
-    def process_input(sentence):
-      s = sentence.split()
-      def inner(s, res=[]):
-        if (len(s) == 0): 
-          return res
-        p_words = self.words_dict[s[0]] * len(res)
-        res = res*len(self.words_dict[s[0]]) 
-        res = list(map(lambda x,y: x + " " + y, res, p_words))
-        return inner(s[1:], res)
-      return inner(s[1:], self.words_dict[s[0]])
-    return [''.join(i) for i in process_input(sentence)]
+  def process_input(self, sentence):
+    s = sentence.split()
+    def inner(s, res=[]):
+      if (len(s) == 0): 
+        return res
+      res = list(map(lambda x,y: x + " " + y, res*len(self.words_dict[s[0]]) , self.words_dict[s[0]] * len(res)))
+      return inner(s[1:], res)
+    print('\n'.join(inner(s[1:], self.words_dict[s[0]])))
    
 if __name__ == "__main__":
-  #i = "968 273 788743" # you are stupid
-  i = "48 26624637 843 476877 63 5388377 66 3224 74663 539 9484 2 3278 222377 3428466279" # 63 967370"
+  i = "48 26624637 843 476877 63 5388377 66 3224 74663 539 9484 2 3278 222377 3428466279"
   cc = CorrectCombination()
   cc.read_and_create("words.txt")
-  [print(c) for c in cc.get_combination(i)] 
+  start = time.time()
+  cc.process_input(i)
+  end = time.time()
+  total_time = end - start
+  print("\n"+ "time: " + str(total_time))
 
