@@ -22,7 +22,7 @@ class CorrectCombination():
     def inner(s, res=[]):
       if (len(s) == 0): 
         return res
-      res = list(map(lambda x,y: x + " " + y, res*len(self.words_dict[s[0]]) , self.words_dict[s[0]] * len(res)))
+      res = list(map(lambda x,y: x + " " + y, res*len(self.words_dict[s[0]]), self.words_dict[s[0]] * len(res)))
       return inner(s[1:], res)
     print('\n'.join(inner(s[1:], self.words_dict[s[0]])))
    
