@@ -25,7 +25,7 @@ public class GenerateNestedCalls {
 					+ "target = (NestedCallsI)Proxy.newProxyInstance(NestedCalls.class.getClassLoader(), NestedCalls.class.getInterfaces(), this);"
 					+ "}", myHandler));
 			myHandler.addMethod(CtNewMethod.make("public String repeat(String str, int times) {"
-					+ "StringBuilder sbz = new StringBuilder(str.length() * times);"
+					+ "StringBuilder sb = new StringBuilder(str.length() * times);"
 					+ "for (int i = 0; i < times; i++) {"
 					+ "sb.append(str);"
 					+ "}"
