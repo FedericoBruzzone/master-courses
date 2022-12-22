@@ -1,19 +1,25 @@
 from Person import Person
-from functools import reduce
+from datetime import date
 
 class Student(Person):
  lectures: dict = dict()
  
- def __init__(self, lectures):
+ def __init__(self, name: str, lastname: str, birthday: str, lectures: dict):
+  super().__init__(name, lastname, birthday)
   self.lectures = lectures
   
- def set_lectures(self, lectures):
-  self.lectures = lectures
-  
- def grade_average(self):
-  return reduce(lambda x,y: x + y, self.lectures.values()) / len(self.lectures)
+ def add_lecture(self, key: str, value: int):
+  self.lectures.update({key, value})
+     
+ def __grade_average(self):
+  return sum(self.lectures.values()) / len(self.lectures)
 
- lectures = property(grade_average, set_lectures, None)
+ grade_average = property(__grade_average, None, None, "There is no lecture")
 
+ def __repr__(self):
+  return super().__repr__() + " " + str(self.lectures)
+ 
 if __name__ == "__main__":
- s = Student({"math": 30, "cs": 25})
+ s = Student("Federico", "Bruzzone", date(2000, 3, 7), {"math": 30, "cs": 25})
+ print(s)
+ print(s.grade_average)
