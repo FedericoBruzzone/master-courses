@@ -21,13 +21,13 @@ class Worker(Person):
  day_salary = property(get_day_salary, set_day_salary, None)
  
  def get_week_salary(self):
-  return self.get_day_salary * self.working_day_a_week
+  return self.get_day_salary() * self.working_day_a_week
  def set_week_salary(self, amount: int):
   self.__update_pay_per_hour(amount / self.working_day_a_week / self.working_hours_a_day)
  week_salary = property(get_week_salary, set_week_salary, None)
 
  def get_month_salary(self):
-  return self.get_week_salary * self.weeks_a_month
+  return self.get_week_salary() * self.weeks_a_month
  def set_month_salary(self, amount):
   return self.__update_pay_per_hour(amount / self.weeks_a_month / self.working_day_a_week / self.working_hours_a_day)
  month_salary = property(get_month_salary, set_month_salary, None)
@@ -39,11 +39,11 @@ class Worker(Person):
  year_salary = property(get_year_salary, set_year_salary, None)
 
  def __repr__(self):
-  return super().__repr__() + " " + str(self.working_hours_a_day)
+  return self.__class__.__name__ + ": " + self.name + " " + self.lastname + " " + self.birthday.isoformat() + " " + str(self.working_hours_a_day)
 
 if __name__ == "__main__":
  w: Worker = Worker("Federico", "Bruzzone", date(2000, 3, 7), 10)
- print(w)
+ print(Worker.__bases__)
  w.set_day_salary(160)
  print(w.pay_per_hour)
  w.set_week_salary(400)
