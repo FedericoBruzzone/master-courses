@@ -1,0 +1,94 @@
+\section{Time}
+
+In both cases, parallel algorithm and distributed algotithm the crucial resource is time.\\
+
+Formal definition:\\
+
+$T(x) = $ number of elementary operations on $x$ ($x$ is the instance)\\
+$t(n) = max\{T(x) \ | \ x \in \sum_{}^{n} \} \ | \  n \ is \ the \ length \ of \ the \ input$
+
+\begin{remark}
+Often we will not be interested in a precise evaulation of $T(n)$, but in its growth rate. We will use $O \ \Omega \ \Theta \ $
+\end{remark}
+
+\begin{definition}
+Be $f,g : \mathbb{N} \rightarrow \mathbb{N}$ two natural function. We can say that:\\
+- $f(n) = O(g(n))$ iff $\exists$ a constant $c > 0$ and $n_0 \in \mathbb{N} \ | \ f(n) \leq c*g(n) \ \forall \ n \geq n_0$\\
+- $f(n) = \Omega(g(n))$ iff $\exists$ a constant $c > 0$ and $n_0 \in \mathbb{N} \ | \ f(n) \geq c*g(n) \ \forall \ n \geq n_0$\\
+- $f(n) = \Theta(g(n))$ iff $\exists$ two constant $c1, c2 > 0$ and $n_0 \in \mathbb{N} \ | \ c1*g(n) \leq \ f(n) \ \leq c2*g(n) \ \forall \ n \geq n_0$\end{definition}
+
+\begin{enumerate}
+ \item $t(n)$ is evaluated in a particular model of computation
+ \item the cost criterion must be chosen: uniform of logarithmic
+\end{enumerate}
+
+We count the primitives that our model of computation gives us.
+
+\textbf{Palindrome}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{$x \in \{0,1\}^*$}
+ \KwResult{$x$ is palindrome}
+ \For{$i=0,j=|x|; \ i<j \ \& \ x_i=x_j; \ i++, j--$}{}
+ \Return{$i \geq j$}
+ \caption{Palindrome}
+\end{algorithm}
+
+This program:
+
+\begin{itemize}
+ \item on RAM has $t(n) == O(n)$
+ \item on DTM (deterministic Turing machine) has $t(n) == O(n^2)$
+\end{itemize}
+
+\textbf{Factorial}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{$x \in \{0,1\}^*$}
+ \KwResult{$n!$}
+ $k \gets 1$\\
+ \For{$i=1; \ i \leq x; \ k=k*i, i++$}{}
+ \Return{$k$}
+ \caption{Factorial}
+\end{algorithm}
+
+This program:\\
+
+\begin{itemize}
+ \item using multiplication as an elementary operation of RAM\\
+$t(\lg{n}) = n$
+ \item on DTM we should write the result in binary is $t(\lg{n}) \geq \lg{n^n} \ = \ n \lg{n}$
+\end{itemize}
+
+\textbf{Uniform cost criterion}\\
+Elementary operations needed one unit time\\
+
+\textbf{Logarithmic cost criterion}\\
+Each elementary operations has a cost that depends on the number of bits of the operands
+
+\textbf{Complexity theory}
+
+$t(n)$ is:\\
+\begin{itemize}
+ \item logarithmic when is $O(\lg{n})$
+ \item polylogarithmic when is $O(\lg^k{n})$
+ \item linear when is $O(n)$
+ \item polynomial when is $O(n^k) \ \forall k>0$ 
+ \item exponential when is NOT $O(n^k) \ \forall k>0$ 
+\end{itemize}
+
+\textbf{Efficiency concept}
+
+\begin{definition}
+A problem is efficienty solved in time if and only if is solved in a DTM in polynomial time.
+\end{definition}
+
+$P$ = decision problem class solved in polynomial time
+$FP$ = general problem class solved in polynomial time
+$NP$ = decision problem class solved in polynomial time on nDTM (non-deterministic Turing machine)
+
+\begin{osservation}
+
+begin{osservation}
