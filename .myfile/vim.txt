@@ -1,5 +1,8 @@
 Vim command
 
+==== Comments ===
+Edit mode and press ++
+
 ==== Switch Between Current Tab =====
 Ctrl-l
 Ctrl-h
