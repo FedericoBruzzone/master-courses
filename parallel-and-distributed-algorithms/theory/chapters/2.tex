@@ -85,10 +85,15 @@ $t(n)$ is:\\
 A problem is efficienty solved in time if and only if is solved in a DTM in polynomial time.
 \end{definition}
 
-$P$ = decision problem class solved in polynomial time
-$FP$ = general problem class solved in polynomial time
+$P$ = decision problem class solved in polynomial time\\
+$FP$ = general problem class solved in polynomial time\\
 $NP$ = decision problem class solved in polynomial time on nDTM (non-deterministic Turing machine)
 
-\begin{osservation}
+\begin{remark}
+ - the asymptotic evaluation of times can hide constants that make the difference in practice\\
+  i.e., sometimes we prefer quick-sort ($O(n^2)$) over merge-sort ($O(n\lg{n})$)\\
+ - the degree of the polynomial must be low\\
+  i.e., $n^1000$ on small instance is worse than exponential algorithms\\
+\end{remark}
 
-begin{osservation}
+\section{Parallel Algorithms}
