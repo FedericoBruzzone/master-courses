@@ -1,0 +1,102 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[ruled,vlined,noend]{algorithm2e}
+
+% ===== Graph =====
+\usepackage{tikz}
+% ===== multicol =====
+\usepackage{blindtext}
+\usepackage{multicol}
+% ===============
+
+\mathtoolsset{showonlyrefs}  
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=black,
+}
+
+\newcommand{\pluseq}{\mathrel{{+}{=}}}
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{corollary}{Corollario}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Osservazione}
+\newtheorem{definition}{Definizione}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\title{Parallel and Distributed Algorithms.tex}
+\author{Federico Bruzzone}
+\makeindex
+\begin{document}
+\maketitle
+\newpage
+% \setlength{\parskip}{0.15em}
+\tableofcontents
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+\newpage
+
+
+\input{chapters/1-introduction.tex}
+%\input{chapters/1-apx_classi_greedy.tex}
+%\input{chapters/2-apx_pricing.tex}
+%\input{chapters/3-probability.tex}
+%\input{chapters/4-teo.tex}
+%\input{chapters/5-str.tex}
+
+\section{Test Graph}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}] 
+\node[main] (1) {$x_1$}; 
+
+\node[main] (2) [above right of=1] {$x_2$};
+\node[main] (3) [below right of=1] {$x_3$}; 
+\node[main] (4) [above right of=3] {$x_4$};
+\node[main] (5) [above right of=4] {$x_5$}; 
+\node[main] (6) [below right of=4] {$x_6$};
+
+\draw (2) -- (4);
+\draw[->] (1) -- (2);
+\draw[->] (1) -- (3);
+
+\draw (1) to (5);
+\draw (1) to [out=135,in=90,looseness=1.5] (5);
+
+\draw (1) to [out=180,in=270,looseness=5] (1);
+
+\draw[->] (6) -- node[midway, above right, sloped, pos=1] {+1} (4);
+
+\end{tikzpicture} 
+
+
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}] 
+\node[main] (1) {$x_1$}; 
+\node[main] (2) [above right of=1] {$x_2$}; 
+\node[main] (3) [below right of=1] {$x_3$}; 
+\node[main] (4) [above right of=3] {$x_4$}; 
+\node[main] (5) [above right of=4] {$x_5$}; 
+\node[main] (6) [below right of=4] {$x_6$}; 
+\draw[->] (1) -- (2); 
+\draw[->] (1) -- (3); 
+\draw (1) to [out=135,in=90,looseness=1.5] (5); 
+\draw (1) to [out=180,in=270,looseness=5] (1); 
+\draw (2) -- (4); 
+\draw (3) -- (4); 
+\draw (5) -- (4); 
+\draw[->] (5) to [out=315, in=315, looseness=2.5] (3); 
+\draw[->] (6) -- node[midway, above right, sloped, pos=1] {+1} (4); 
+\end{tikzpicture} 
+
+\end{document}

@@ -1,0 +1,667 @@
+\section{Algoritmi di approssimazione}
+In questa parte si introdurranno gli algoritmi di approssimazione, 
+dopo aver accennato ad alcuni concetti preliminari legati alla complessità.
+Si definiranno in particolare classi di problemi e alcune 
+tecniche note nella risoluzione di problemi di ottimizzazione.
+
+\subsection{Notazioni}
+
+\paragraph{Insiemi numerici come interi}
+Si indicheranno alcuni insiemi numerici con un singolo intero, 
+es $$k = \{0, 1, \dots, k-1\}$$
+
+\paragraph{Insieme delle funzioni} L'insieme delle funzioni che hanno come dominio $A$ e codominio $B$ si indica come segue: 
+$$B^A = \{ f | f : A \rightarrow B\}$$
+
+\paragraph{Insieme delle parti} L'insieme dei sottoinsiemi di $A$ si indica con $2^A = P(A)$.
+
+\paragraph{Alfabeto} Fissato un alfabeto $\Sigma$, indichiamo con $\Sigma^*$ l'insieme delle stringhe ottenute da 
+$\Sigma$.
+
+\paragraph{Esempio}
+La notazione $2^{2^*}$ indica l'insieme dei linguaggi binari.
+
+\subsection{Classi di complessità}
+Partiamo dalla definizione di algoritmo, per poi arrivare a definire la 
+complessità algoritmica e strutturale.
+\paragraph{Algoritmo}
+Un algoritmo per un problema $\Pi$ è una macchina di Turing, che verrà indicata con $A$, che opera come segue:
+$$x \in I_{\Pi} \longrightarrow A \longrightarrow y \in O_{\Pi}\;\;t.c.\;\;y \in Sol_{\Pi}(x)$$
+$$Sol_{\Pi}: I_\Pi \longrightarrow (2^{O_\Pi} \setminus \{\emptyset\})$$
+La funzione associa ad un input l'insieme dei suoi output corretti.
+
+\begin{remark}
+    Gli input di un problema devono essere codificati in qualche modo. 
+    Ad esempio, considerando una macchina di Turing, gli input sono 
+    pensati come stringhe binarie. 
+    Esistono molti modi di codificare per esempio due interi, si potrebbe pensare di utilizzare la coppia di Cantor, oppure di raddoppiare i bit.
+    La complessità di un algoritmo non varia se le codifiche sono 
+    polinomialmente contenute le une nelle altre. Ovvero, una codifica esponenziale cambierebbe la complessità rispetto a una codifica polinomiale, 
+    ma nel nostro caso non succederà.
+\end{remark}
+
+\subsubsection{Complessità algoritmica}
+La complessità algoritmica è lo studio del dispendio di risorse di 
+un algoritmo. Sostanzialmente ci si sta chiedendo come un algoritmo risolve un certo problema.
+
+Una delle risorse considerabili è il tempo: $$T_A : I_\Pi \rightarrow \mathbb{N}$$
+Alternativamente possiamo considerare questa funzione, che ragione per taglia piuttosto 
+che per singolo input: 
+$$t_A : \mathbb{N} \rightarrow \mathbb{N}$$ dove il dominio è 
+la lunghezza di input, in quel caso si avrà che 
+$$t_A(n) : \max\{ T_A(x),\; x \in I_{\Pi},\; |x| = n\}$$
+
+Si possono considerare limiti alla complessità algoritmica, un upper bound si ottiene 
+esibendo una soluzione con quella complessità, per esempio, trovo una soluzione quadratica 
+al problema dell'ordinamento. Posso anche trovare un lower bound, per esempio, 
+dimostro che ordinare $n$ valori richiede almeno $O(n \log n)$ operazioni.
+
+\subsubsection{Complessità strutturale}
+Si definiscono ora due classi di problemi, \emph{P} e \emph{NP}, per 
+poi introdurre i concetti di \emph{riducibilità polinomiale} e di \emph{NP-completezza}.
+
+\paragraph{Classe P}
+La classe \emph{P} corrisponde ai problemi decisionali 
+per cui esiste un algoritmo che opera
+in tempo polinomiale, ovvero: 
+$$P = \{\Pi\;|\;\Pi\;decisionale, \; \exists\;A\;per\;\Pi,\;t.c.\;t_a(n)\;=\;O(Polinomio)\}$$
+
+\paragraph{Classe NP}
+La classe \emph{NP} corrisponde ai problemi decisionali 
+per cui esiste un algoritmo che opera
+in tempo polinomiale su una macchina non deterministica, ovvero: 
+\begin{equation}
+    \begin{aligned}
+        \mathit{NP} = \{\Pi\;|\;\Pi\;decisionale, \; \exists\;A\;per\;\Pi,\; t.c.\;t_a(n)\;=\;O(Polinomio)\;
+        \\su\;una\;macchina\;non\;deterministica\}
+    \end{aligned}
+\end{equation}
+
+\begin{remark}
+    Un problema è decisionale se dato un input da un output binario.
+\end{remark}
+
+\paragraph{Riducibilità polinomiale}
+Un problema $\Pi_1$ si dice riducibile polinomialmente ad un problema $\Pi_2$ se esiste 
+un mapping tra input del primo e del secondo problema che rispetta le seguenti proprietà:
+$$\Pi_1 \leqslant _p \Pi_2 \;sse\; \exists f : 2^* \rightarrow 2^*\; t.c$$
+\begin{enumerate}
+    \item $f$ è calcolabile in tempo polinomiale
+    \item $\forall x \in I_{\Pi1},\;f(x) \in I_{\Pi2},\; Sol_{\Pi1}(x) = Sol_{\Pi2}(f(x))$ 
+\end{enumerate}
+
+\paragraph{NP completezza}
+Un problema $\Pi$ è NP completo sse $\forall\;\Pi^\prime \in NP,\; \Pi^\prime \leqslant _p \Pi, \; \Pi \in NP$.
+Ovvero se ogni problema in NP è riducibile polinomialmente al problema che si sta 
+considerando.
+
+\begin{theorem}
+    SAT è NP completo.
+\end{theorem}
+\begin{corollary}
+    Se $\Pi_1 \leqslant _p \Pi_2$ e $\Pi_1$ è NP completo, allora $\Pi_2$ è NP completo.
+\end{corollary}
+\begin{proof}
+    $\Pi^\prime \in NP, \Pi^\prime \leqslant _p \Pi_1 \leqslant _p \Pi_2$, quindi $\Pi_2$ è NP completo.
+\end{proof}
+\begin{remark}
+    Se trovassi un problema $\Pi$ NP completo t.c, $\Pi^\prime \leqslant _p \Pi$, 
+    allora \emph{P=NP}.
+\end{remark}
+
+\subsection{Problemi di ottimizzazione}
+Nella definizione di un problema di ottimizzazione bisogna tenere conto dei 
+seguenti parametri:
+\begin{enumerate}
+    \item Insieme di input $I_\Pi \subseteq 2^*$;
+    \item Insieme di output $O_\Pi \subseteq 2^*$;
+    \item $F_\Pi : I_\Pi \rightarrow 2^{O_\Pi} \setminus \{\emptyset\}$, $F_\Pi(x)$ indica 
+    le soluzioni accettabili per l'input $x$;
+    \item $C_\Pi : I_\Pi \times O_\Pi \rightarrow \mathbb{Q}^{>0}$, funzione obiettivo, 
+    con $C_\Pi(x,y)$ si indica il valore della funzione obiettivo per l'input \emph{x}, con soluzione $y \in O_\Pi$;
+    \item $t_\Pi \in \{min, \;max\}$, ovvero il criterio del problema.
+\end{enumerate}
+L'insieme delle soluzioni per $x$ si può definire come:
+$$Sol(x) = \{y^* \in O_\Pi | y^* \in F_\Pi, \forall y^\prime \in F_\Pi, c(x, y^*) \leqslant (\geq ) c(x, y^\prime)\}$$
+Ovvero l'insieme delle $y$ possibili per quella fissata $x$, tale che minimizzano o massimizzano la funzione $C_\Pi$.
+
+\paragraph{Problema di decisione associato}
+Dato un problema di ottimizzazione $\Pi$ esiste un problema di decisione associato $\hat{\Pi}$.
+\\L'idea è quella di considerare un input del problema originale e un costo alla soluzione, e rispondere
+in base all'esistenza di una soluzione con quel costo.\\
+In particolare: $$I_{\hat{\Pi}} = I_\Pi \times \mathbb{Q}^{>0}$$ 
+$$(x, \theta) = C_\Pi(x, y^*(x)) \leqslant (\geq ) \theta$$
+
+Ovvero, rispondo sì se e solo se il costo della soluzione ottima è minore, 
+o maggiore, di $\theta$.
+Pensando al problema MaxSat, che massimizza il numero di clausole risolte. 
+Posso considerare il problema di decisione associato, che preso in input 
+una CNF e un intero, risponde si, se esiste un assegnamento che soddisfa quel
+numero di clausole.
+
+Se avessi un algoritmo per il problema di ottimizzazione, avrei anche quello 
+di decisione, non vale il contrario, perché dovrei iterare tutti gli interi
+per capire il bound del problema di ottimizzazione.
+
+\subsubsection{Classi di ottimizzazione}
+Data una definizione di problema di ottimizzazione e individuato il problema di decisione 
+associato, si passa ora alla definizione delle classi di problemi di ottimizzazione, \emph{PO}
+e \emph{NPO}.
+
+\paragraph{PO}
+La classe PO equivale, nel mondo dei problemi di ottimizzazione, alla classe P,
+più formalmente:
+$$PO = \{ \Pi\;|\;\Pi\;di\;ottimizzazione\;e\;polinomiale\}$$
+
+\paragraph{NPO}
+Fanno parte della classe NPO quei problemi di ottimizzazione non risolvibili 
+in tempo polinomiale, o meglio:
+\begin{enumerate}
+    \item $I_\Pi, O_\Pi \in P$
+    \item Esiste un polinomio \emph{Q} tale che:
+        \begin{itemize}
+            \item $\forall x \in I_\Pi, \forall y \in F_\Pi, |y| \leq Q(|x|)$
+            \item $\forall x \in I_\Pi, \forall y \in 2^*, se |y| \leq Q(|x|)$ decidere
+            se $t \in F_\Pi$ è polinomiale
+        \end{itemize}
+    \item $c_\pi$ è calcolabile in tempo polinomiale
+\end{enumerate}
+L'idea consiste poi nel generare tutte le soluzioni ammissibili, su una macchina 
+non deterministica.
+La valutazione delle soluzioni avviene poi in tempo polinomiale, per i vincoli espressi
+sopra.
+
+\begin{theorem}
+    $PO \subseteq NPO$
+\end{theorem}
+\begin{theorem}
+    Se $\Pi \in \mathit{PO}, \hat{\Pi} \in P$, 
+    se $\Pi \in \mathit{NPO}, \hat{\Pi} \in \mathit{NP}$ 
+\end{theorem}
+\begin{proof}
+    Dato un problema $\Pi \in P, \exists A$ polinomiale, tale che
+    $$x \in I_\Pi \longrightarrow A \longrightarrow y^*(x)$$
+    Dato il problema di decisione associato, esiste $\hat{A}$ tale che:
+    $$(x, \theta) \in I_\Pi \times \mathbb{Q}^{>0} \longrightarrow \hat{A} \longrightarrow yes/no$$
+    L'output sarà yes sse $c^*(x) \geq (\leq) \theta$, con $c^*(x) = c_\Pi(x, y^*(x))$.\\
+    
+    L'algoritmo $\hat{A}$ sarà polinomiale, infatti, basta applicare \emph{A} ad \emph{x} 
+    per individuare $y^*(x)$ per poi confrontarlo con $\theta$. 
+
+    Similmente, nel caso in cui il problema appartenga a \emph{NP}, sia $A$ che $\hat{A}$ saranno non
+    deterministiche.
+\end{proof}
+
+\paragraph{NPO completezza}
+Un problema si dice NPO completo sse il problema di decisione associato è NP completo.\\
+$$\mathit{NPOcomp} = \{\Pi \in \mathit{NPO} | \hat{\Pi} \in \mathit{NP}\}$$
+
+\begin{theorem}
+    Se $\Pi \in \mathit{NPOcomp}$, $\Pi \notin PO$, a meno che $P=NP$
+\end{theorem}
+\begin{proof}
+    Supponiamo di avere $\Pi \in \mathit{NPOcomp}$ tale che $\Pi \in PO$.\\
+    Allora avremmo che per la prima affermazione $\hat{\Pi} \in \mathit{NPcomp}$ e per la seconda, 
+    $\hat{\Pi} \in P$, assurdo.
+\end{proof}
+
+\paragraph{Rapporto di approssimazione}
+Dato $\Pi$ problema di ottimizzazione e siano $x \in I_\Pi, y \in F_\Pi(x)$ definiamo
+rapporto di approssimazione:
+$$R_\Pi(x, y) = \max\bigg\{\frac{c(x, y)}{c^*(x)}, \frac{c^*(x)}{c(x, y)}\bigg\}\geq 1$$
+In un problema di massimo dominerà il secondo termine, mentre in uno di minimo il primo, 
+si può perciò esprimere il rapporto senza dipendere dal tipo di problema.
+
+\paragraph{APX}
+I problemi in APX hanno rapporto di approssimazione limitato da una certa quantità, 
+formalmente: 
+\begin{equation}
+    \begin{aligned}
+        \mathit{APX} = \{\Pi | \Pi \mathit{\;di\;ottimizzazione\;t.c.\;}
+\exists \rho \geq 1, A, \\\mathit{t.c\;} x\rightarrow A \rightarrow y(x)\;\mathit{con}\;R_\Pi(x, y) \leq \rho\}
+    \end{aligned}
+\end{equation}
+La definizione di classe APX permette una stratificazione per $\rho$, vale che APX 
+con valore 1 equivale alla classe PO.
+
+\paragraph{PTAS}
+I problemi in PTAS hanno rapporto di approssimazione limitato da una certa quantità,
+che si può decidere in modo arbitrario, formalmente: 
+\begin{equation}
+    \begin{aligned}
+        \mathit{PTAS} = \{\Pi | \Pi \mathit{\;di\;ottimizzazione\;t.c.\;}\exists A, \\
+\mathit{t.c\;} (x, r) \in I_\Pi \times \mathbb{Q}^{>1} \rightarrow A \rightarrow y \\
+y \in F_\Pi, R_\Pi(x, y) \leq r, \\\mathit{polinomiale\;in\;} |x|\}
+    \end{aligned}
+\end{equation}
+Si fa notare che $r$ può essere molto vicino ad 1, ma il tempo polinomiale
+potrebbe aumentare esponenzialmente.
+
+\subsubsection{BiMaxMatching}
+Si presenta ora un problema della classe PO, ovvero un problema di ottimizzazione
+per cui esiste un algoritmo esatto che opera in tempo polinomiale.
+
+\emph{Input}: grafo non orientato $G = (V,E)$\\
+\emph{Output}: matching $M \subseteq E$ tale che $\forall x\;\exists!\;xy \in M$\\
+\emph{Costo}: $|M|$\\
+\emph{Tipo}: $\max$
+
+A seguire l'algoritmo esatto polinomiale per i grafi bipartiti, esiste anche 
+per grafi generici.
+
+\paragraph{Cammino aumentante per M}
+Nel grafo in cui si sta cercando il matching esistono due tipi di vertici:
+\begin{enumerate}
+    \item Occupati: incide un lato di $M$
+    \item Liberi: non usati nel matching
+\end{enumerate}
+Un cammino aumentante è un cammino semplice che:
+\begin{enumerate}
+    \item Parte e arriva su un vertice libero
+    \item Alterna lati che appartengono a $M$ e ad $E\setminus M$
+\end{enumerate}
+
+\begin{theorem}
+    Se $\exists$ un cammino aumentante per $M$, $M$ non è massimo.
+\end{theorem}
+\begin{proof}
+    Individuato un cammino aumentante, ci saranno lati che appartengono al matching, $X$ 
+    e lati che non ci appartengono, $Y$. Questi ultimi sono in quantità maggiore per la definizione
+    di cammino aumentante. Posso quindi rimuovere da $M$ i lati in $X$ e aggiungere quelli in $Y$.
+\end{proof}
+\begin{theorem}
+    Se M non è massimo, esiste un cammino aumentante.
+\end{theorem}
+\begin{proof}
+    Se $M$ non è massimo significa che $\exists M^\prime, |M^\prime| \geq |M|$.\\
+    Sia $X = M^\prime \Delta M = (M^\prime \setminus M) \cup (M \setminus M^\prime)$
+
+    Si osserva che, su ogni vertice incidono al massimo due lati di $X$, poichè 
+    nei due matching c'è al massimo un lato che indice su ogni vertice.
+
+    Rappresentando graficamente $X$ si noterebbero solo cammini cicli o nodi singoli, visto che
+    ogni nodo ha grado 0,1 oppure 2.
+
+    Considerando un ciclo in $X$ si nota che: 
+    \begin{itemize}
+        \item due lati consecutivi fanno parte di matching 
+        differenti, altrimenti avrei più lati incidenti su uno stesso vertice per matching
+        \item i cicli hanno lunghezza pari
+    \end{itemize}
+    Si nota poi che: $$|M^\prime| \geq |M| \implies (M^\prime \setminus M) \geq (M \setminus M^\prime)$$ 
+    quindi, dato che i cicli in $X$ hanno in egual quantità lati di $M^\prime$ e $M$, deve 
+    esitere un cammino. Tale cammino avrà per forza più lati in $M^\prime$ che $M$, inoltre
+    i lati si alternano tra i due matching e iniziano e finiscono con 
+    lati che non appartengono a $M$, quindi è un cammino aumentante per $M$.
+\end{proof}
+\begin{theorem}
+    Siano $G = (V,E)$ un grafo bipartito e sia $M \subseteq E$ un suo matching, sono 
+    equivalenti:
+    \begin{enumerate}
+        \item M è massimo
+        \item Non esiste un cammino aumentante per M
+    \end{enumerate}
+\end{theorem}
+
+\paragraph{Algoritmo di risoluzione}
+L'algoritmo di risoluzione è abbastanza semplice e si basa sulla 
+ricerca di un cammino aumentante.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$G=(V,E)$}
+    \KwResult{Matching $M$ per $G$}
+     $M \gets \emptyset$\\
+     \While{$\Pi = \mathit{findAugmenting(G)}$}{
+        $M.update(\Pi)$
+     }
+     \Return{M}
+     \caption{BiMaxMatching}
+\end{algorithm}
+Siano $v_1$ e $v_2$ le parti destra e sinistra rispettivamente di un grafo bipartito.\\
+Un'idea per sviluppare la funzione di cammino aumentante su grafi bipartiti è quella
+di considerare solo archi che non appartengono a $M$ mentre si va da $v_1$ a $v_2$ e 
+solo quelli che appartengono a $M$ nella direzione opposta.
+Se trovo un cammino del genere aggiorno $M$.
+\begin{remark}
+    Il problema può anche essere risolto con una rete di flusso, aggiungendo un nodo
+    sorgente collegato alla partizione sinistra dei nodi e un nodo pozzo alla partizione
+    destra. Si applica poi uno dei tanti algoritmi per il flusso.
+\end{remark}
+\begin{remark}
+    Una variante del problema è quella del perfect matching, che capita quando 
+    la cardinalità di $v_1$ e $v_2$ equivale a $\frac{n}{2}$. Successivamente si 
+    verifica se $M = \mathit{BiMaxMatching}(G)$ ha cardinalità $\frac{n}{2}$.
+\end{remark}
+
+\subsection{Tecniche greedy}
+Nella sezione a seguire si presentano problemi di ottimizzazione per cui 
+tecniche greedy funzionano abbastanza bene. 
+I problemi affrontati sono quelli di \emph{Load Balancing}, \emph{Center Selection} e \emph{Set Cover}.
+
+\subsubsection{Load balancing}
+\label{lb}
+Il problema di Load Balancing può essere visto come il compito
+di assegnare a macchine dei lavori da compiere, che richiedono del tempo, 
+in modo da minimizzare il tempo totale.
+
+\emph{Input}: $t_0, \dots, t_n \in \mathbb{N}^{>0}$ task, $m \in \mathbb{N}^{>0}$ macchine\\ 
+\emph{Output}: $\alpha : n \rightarrow m$ \\
+\emph{Costo}: $L = \max_{i \in n}(L_i)$, $L_i = \sum_{j \in \alpha^{-1}(i)}t_j$ \\
+\emph{Tipo}: $\min$
+
+\begin{theorem}
+    Load Balancing è NPO completo
+\end{theorem}
+Bisogna perciò trovare un modo di approssimare una soluzione.
+\paragraph{Greedy balance}
+Il primo approccio alla risoluzione del problema è quello di assegnare la prossima
+task alla macchina più scarica in questo momento.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$M$ numero di macchine, $t_0, \dots, t_n$ task}
+    \KwResult{Assegnamento delle task alle macchine}
+     $L_i \gets 0\;\forall i \in M$\\
+     $\alpha \gets \emptyset$\\
+     \For{$j = 0, \dots, n$}{
+         $\hat{i} = \min(L_i)$\\
+         $\alpha(j) = \hat{i}$\\
+         $L_{\hat{i}} \pluseq t_j$
+     }
+     \Return{$\alpha$}
+     \caption{GreedyBalance}
+\end{algorithm}
+Il tempo è polinomiale, si ottiene una complessità $O(nm)$, implementando 
+la ricerca del minimo con coda di priorità si ottiene $O(n\log(m))$.
+\begin{theorem}
+    Greedy balance è 2-approssimante per load balancing, ovvero la soluzione
+    individuata è al massimo il doppio di quella ottima.
+\end{theorem}
+\begin{proof}
+    Sia $L^*$ il costo della soluzione ottima, il suo costo non è minore
+    della somma delle task diviso il numero di macchine:
+    $$L^* \geq \frac{1}{m}\sum_{i \in n} t_i$$
+    Infatti, sommando i carichi, si ottiene la somma dei task:
+    $$\sum_{i \in m} L_i^* = \sum_{i \in n} t_i$$
+    $$\frac{1}{m}\sum_{i \in m} L_i^* = \frac{1}{m}\sum_{i \in n} t_i 
+    \implies \exists L_i^* \geq \frac{1}{m}\sum_{i \in n} t_i 
+    \implies L^* \geq \frac{1}{m}\sum_{i \in n} t_i$$
+    
+    Si osserva poi che:
+    $$L^* \geq \max_{i \in n}(t_i)$$
+
+    Sia ora $L$ la soluzione individuata da Greedy Balance, e $\hat{i}$
+    la macchina con carico massimo $L_{\hat{i}} = L$.\\
+    Sia $\hat{j}$ l'ultimo task assegnato a $\hat{i}$. Il carico 
+    che la macchina aveva prima dell'ultimo task era:
+    $$L_{\hat{i}}^\prime = L_{\hat{i}} - t_{\hat{j}}$$
+    La scelta greedy dell'algoritmo implica che:
+        $$L_{\hat{i}} - t_{\hat{j}} \leq L_{i}^\prime \forall i \implies L_{\hat{i}} - t_{\hat{j}} \leq L_{i} \forall i$$
+    Dove $L_i^\prime$ indica il carico della macchina i prima di assegnare $\hat{j}$. 
+    Ottengo $m$ disequazioni che posso sommare tra loro:
+    \begin{equation}
+        \begin{aligned}
+            m(L_{\hat{i}} - t_{\hat{j}}) &\leq \sum_{i \in m}L_{i} =  \sum_{i \in n}t_{i} && \text{divido per m}\\
+            L_{\hat{i}} - t_{\hat{j}} &\leq \frac{1}{m}\sum_{i \in n}t_{i} \leq L^* && \text{dall'osservazione iniziale}\\
+            L &= L_{\hat{i}} = (L_{\hat{i}} - t_{\hat{j}}) + t_{\hat{j}}  && \text{uso la riga sopra e la seconda osservazione}\\
+            L &\leq L^* + L^* \leq 2L^*
+        \end{aligned}
+    \end{equation}
+
+\end{proof}
+\begin{corollary}
+    Load balancing appartiene a APX    
+\end{corollary}
+\begin{theorem}
+    $\forall \epsilon > 0$ esiste un input su cui Greedy Balance produce una soluzione 
+    $L$ t.c. $$L-\epsilon \leq \frac{L}{L^*}\leq2$$
+\end{theorem}
+\begin{proof}
+    Si considerano $m > \frac{1}{\epsilon}$ macchine e $n = m(m-1) + 1$ task.\\
+    Tutti i task ad eccezione dell'ultimo hanno lunghezza 1, mentre l'ultimo ha lunghezza $m$.
+
+    L'assegnamento di Greedy Balance assegna tutte le task grandi 1 a tutte le macchine, 
+    infine si assegna l'ultima task lunga $m$ a una macchina causale, visto che sono 
+    tutte piene allo stesso modo. Il tempo totale è $L = 2m-1$.
+
+    Esiste però un assegnamento migliore, ovvero, alla prima macchina si assegna la task lunga $m$, 
+    mentre alle altre tutte quelle lunghe 1 in modo uniforme. In questo caso si ottiene
+    $L^* = m$.
+    $$\frac{L}{L^*} = \frac{2m-1}{2} = 2 - \frac{1}{m} \geq 2-\epsilon$$
+\end{proof}
+
+\paragraph{Sorted Balance}
+L'algoritmo dapprima ordina i task in ordine inverso di lunghezza e poi effettua la scelta 
+greedy vista in precendeza.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$M$ numero di macchine, $t_0, \dots, t_n$ task}
+    \KwResult{Assegnamento delle task alle macchine}
+    $tasks \gets rev(sorted(t_i, \dots t_n))$\\
+    \Return{$GreedyBalance(M, tasks)$}
+     \caption{SortedBalance}
+\end{algorithm}
+
+\begin{theorem}
+    Sorted Balance fornisce una $\frac{3}{2}\textit{-approssimazione}$  a Load Balancing
+\end{theorem}
+\begin{proof}
+    Se $N\leq M$ l'algoritmo trova la soluzione ottima, si considera quindi il caso di 
+    avere più task che macchine.
+    
+    Si osserva che: $$L^* \geq 2t_m$$ questo vale poichè dei primi $m+1$ task
+    almeno $2$ sono assegnati ad una stessa macchina (principio delle camicie e dei 
+    cassetti) e quei due task sono $\geq t_m$ (task ordinati in ordine decrescente).
+    
+    Sia poi $\hat{i}$ la macchina tale che $L_{\hat{i}} = L$ e sia 
+    $\hat{j}$ l'ultimo task assegnato alla macchina $\hat{i}$\footnote{La macchina ha almeno $2$ task, 
+    altrimenti abbiamo trovato la soluzione ottima}.
+    Si osserva che: 
+    \begin{equation}
+        \begin{aligned}        
+            \hat{j} &\geq m\\
+            t_{\hat{j}} &\leq t_m  \leq \frac{1}{2}L^* && \text{dall'osservazione iniziale}\\
+            L &= L_{\hat{i}} = (L_{\hat{i}} - t_{\hat{j}}) + t_{\hat{j}} && \text{vale la dimostrazione precedente}\\
+            L &\leq L^* + \frac{1}{2}L^* \leq \frac{3}{2}L^*
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{remark}
+    In realtà Sorted Balance è $\frac{4}{3}\textit{-approssimante}$
+\end{remark}
+\begin{remark}
+    Load Balancing $\in$ PTAS
+\end{remark}
+
+\subsubsection{Center selection}
+Il problema della selezione dei centri può essere visto come il compito 
+di eleggere alcune città come centri in un insieme di città. 
+\\L'obiettivo è quello di minimizzare la distanza della città più sfortunata
+dal proprio centro. Si sta lavorando in uno spazio metrico.
+
+\emph{Input}: $S \subseteq \Omega$ dove $(\Omega, d)$ è uno spazio metrico, $K$ centri da selezionare\\
+\emph{Output}: $C \subseteq S$, $|C| \leq K$, $C : S \longrightarrow C$ funzione che manda 
+un punto in S nel centro che minimizza la distanza da esso\\
+\emph{Costo}: $\rho(C) = \max_{s \in S}d(s,C(s))$ \\
+\emph{Tipo}: $\min$
+
+\begin{definition}
+
+    Uno spazio si dice metrico se esiste il concetto di distanza in esso.
+    Una funzione di distanza è: 
+    $$d : \Omega \times \Omega \longrightarrow \mathbb{R} $$
+    E rispetta le seguenti proprietà
+    \begin{itemize}
+        \item $d(x,y) \geq 0 $, $d(x,y) = 0 \implies x = y$
+        \item $d(x,y) = d(y,x)$
+        \item $d(x,y) \leq d(x,z) + d(z,y)$
+    \end{itemize}
+\end{definition}
+
+\paragraph{Center selection plus}
+L'algoritmo che segue ha un input aggiuntivo $r$, idealmente dovrebbe equivalere a 
+$\rho^*$, ovvero la soluzione ottima.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$S \subseteq \Omega$, $K \in \mathbb{N}^{>0}$, $r \in \mathbb{R}^{>0}$}
+    \KwResult{Selezione dei centri}
+    $C \gets \emptyset$\\
+    \While{$S \neq \emptyset$}{
+        $\bar{s} = \mathit{random}(S)$\\
+        $C.add(\bar{s})$\\
+        \ForAll{$e \in S$}{
+            \If{$d(e, \bar{s}) \leq 2r$}{
+                $S.pop(e)$
+            }
+        }
+    }
+    \Return{$(|C| \leq K)?\;C\;:\;\mathit{impossible}$}
+     \caption{CenterSelectionPlus}
+\end{algorithm}
+
+
+\begin{theorem}
+    Considerando l'algoritmo proposto, valgono:
+    \begin{enumerate}
+        \item se l'algoritmo emette un $C$, l'approssimazione è $\leq \frac{2r}{\rho^*}$
+        \item se $r \geq \rho^*$, l'algoritmo emette un output
+        \item se il risultato è impossibile, allora $r < \rho^*$
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    Partendo dal punto 1, si osserva che: $\forall s \in S$, la cancellazione
+    di $s$ implica che la sua distanza da uno dei centri fosse $\leq 2r$, segue che, 
+    ogni punto è al massimo distante $2r$ da un centro.
+    \begin{equation}
+        \begin{aligned}
+            \rho(C) \leq 2r && \text{per il discorso precedente}\\
+            \frac{\rho(C)}{\rho^*(C)} \leq 2r && \text{rapporto di approssimazione}
+        \end{aligned}
+    \end{equation}
+    Per il punto 2, si considera un elemento $\bar{s}$ appena aggiunto a $C$.
+    Nella soluzione ottima, esso si rivolge a qualche centro $C^*(\bar{s})$.
+    Si considerano ora i punti che si riferiscono a quel centro: 
+    \begin{equation}
+        \begin{aligned}
+            X &= \{ s \in S | C^*(\bar{s}) = C^*(s)\}\\
+            \forall s \in X
+            d(s, \bar{s}) &\leq d(s, C^*(s)) + d(C^*(s), \bar{s}) && \text{triangolare}\\
+            &\leq d(s, C^*(s)) + d(C^*(\bar{s}), \bar{s})\\
+            &\leq \rho^* + \rho^* = 2 \rho^* \leq 2r
+        \end{aligned}
+    \end{equation}
+    Questo implica che dopo aver inserito $\bar{s}$ tutti i punti in $X$ sono eliminati.\\
+    Visto che $|C^*| \leq K$, dopo $K$ iterazioni l'insieme $S$ sarà vuoto.  
+
+    Il punto 3 segue dalla dimostrazione del punto 2, $a \implies b, !a \implies !b$
+\end{proof}
+\begin{remark}
+    La dimostrazione fornisce un'idea per l'algoritmo, si potrebbe sfruttare una 
+    ricerca binaria su $r$.
+\end{remark}
+
+\paragraph{Greedy Center Selection}
+L'idea dell'algoritmo è prendere un punto causale, e di volta in volta 
+aggiungere a $C$ il punto piu sfortunato, ovvero quello con distanza dai centri massima.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$S \subseteq \Omega$, $K \in \mathbb{N}^{>0}$}
+    \KwResult{Selezione dei centri}
+
+    \If{$|S| \leq K$}{\Return{S}}
+    $s = \mathit{random}(S)$\\
+    $C = \{s\}$\\
+    \While{$|C| < K$}{
+        $\bar{s} = \max_{d(s, C )}(S)$\\
+        $C.add(\bar{s})$\\
+    }
+    \Return{$(|C| \leq K)?\;C\;:\;\mathit{impossible}$}
+     \caption{GreedyCenterSelection}
+\end{algorithm}
+
+\begin{theorem}
+    Greedy Center Selection è 2 approssimante per Center Selection
+\end{theorem}
+\begin{proof}
+    Supponiamo esista un input $(S,K)$ tale che $\rho(c) > 2\rho^*$.
+    Questo implica che $\exists \hat{s} \in S$ tale che $d(\hat{s}, C) > 2\rho^*$ 
+
+    Nelle prime $K$ iterazioni dell'algoritmo:
+    \begin{equation}
+        \begin{aligned}
+            \bar{s}_1, \dots, \bar{s}_k && \text{centri aggiunti}\\
+            \bar{C}_1, \dots, \bar{C}_k && \text{centri prima di aggiungere } s_i\\
+        \end{aligned}
+    \end{equation}
+    Considerando la distanza del centro $s_i$:
+    \begin{equation}
+        \begin{aligned}
+            d(\bar{s}_i,\bar{C}_i)&\geq d(\hat{s},\bar{C}_i) && \text{per massimizzazione}\\
+            d(\hat{s},\bar{C}_i) &\geq d(\hat{s}, C) \geq 2\rho^* && \text{poichè espando C e per ipotesi}
+        \end{aligned}
+    \end{equation}
+    Questo caso coincide con le prime $k$ iterazioni di Center Selection Plus con $r = \rho^*$.
+    Ma quindi avrei $S \neq \emptyset$, quindi output impossibile e $r < \rho^*$
+\end{proof}
+
+\begin{theorem}
+    Non esiste $\Pi \in P$ $\alpha \textit{-approssimante}$  per Center Selection con $\alpha < 2$
+\end{theorem}
+\begin{proof}
+    Riduco a Dominating set che appartiene ad NP. Il problema 
+    individua un insieme di nodi in un grafo tale che, ogni nodo
+    o fa parte di tale insieme, o è vicino di un nodo che ne fa parte.
+
+    Per tale problema:\\
+    \emph{Input}: $G=(V,E)$, $K \in \mathbb{N}^{>0}$\\
+    \emph{Output}: $\exists D \subseteq V $ tale che $|D| \leq K$
+    tale che $\forall x \in V\setminus D, \exists y \in D, xy \in E$
+
+    Considerando l'input di Dominating Set, i vertici costituiscono i punti 
+    di Center Selection.
+    Il mapping per le distanze avviene come segue:\\
+    \[ 
+        d(x,y) = 
+        \begin{cases}
+        0 & \mathit{se}\;x=y \\
+        1 & \mathit{se}\;xy \in E \\
+        2 & \mathit{se}\;xy \notin E
+     \end{cases}
+    \]
+    La distanza così definita è simmetrica e rispetta la disuguaglianza triangolare:
+    \begin{equation}
+        \begin{aligned}
+            x, y, z \in S\\
+            d(x,y) \leq d(x,z) + d(z,y) && \text{le distanze sono 1,2, o 3}\\
+            1,2 \leq 2,3,4  && \text{1 oppure 2 minore di 2, 3 o 4}
+        \end{aligned}
+    \end{equation}
+
+    Definita la distanza, supponiamo ora di conoscere $\rho^*(S,K)$ che vale $1$ oppure $2$.
+    Se $\rho^*(S,K) = 1$, allora:
+            $$\exists C \subseteq S, |C| \leq K,\;t.c.,\; 
+            \forall x \in S\setminus C, \exists c \in C, d(x,y) = 1$$
+    Ovvero, se esiste un $C$ tale che ogni elemento al di fuori dei centri ha distanza 
+    1 da uno dei punti in $C$. Se due punti $x,y$ hanno distanza 
+    1, $xy \in E$.\\
+    In breve, $\rho^*(S,K) = 1$ sse esiste una soluzione per Dominating Set.
+
+    Per assurdo supponiamo esista un algoritmo $\Pi$ che $\alpha$-approssima 
+    Center Selection con $\alpha < 2$.
+    $$(G,K)\longrightarrow(S,K)\longrightarrow \Pi \longrightarrow \rho(S,K)$$
+    La soluzione individuata da $\Pi$ sarà:
+    $$\rho^*(S,K) \leq \rho(S,K) < 2\rho^*(S,K)$$
+    Esistono due casi:
+    \begin{itemize}
+        \item $\rho^*(S,K) = 1$, allora $1\leq \rho(S,K) < 2$, ovvero esiste una soluzione 
+        per Dominating Set
+        \item $\rho^*(S,K) = 2$, allora $2\leq \rho(S,K) < 4$, quindi non esiste una soluzione 
+        per Dominating Set
+    \end{itemize}
+    Questo significa che, se quell'algoritmo $\Pi$ esisitesse, riuscirei a decidere, 
+    guardando il risultato $\rho(S,K)$, Dominating Set, il tutto in tempo polinomiale, assurdo.
+\end{proof}

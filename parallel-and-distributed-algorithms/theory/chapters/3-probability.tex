@@ -1,0 +1,527 @@
+\section{Algoritmi probabilistici}
+In questa sezione si vedono approcci probabilistici a problemi di ottimizzazione, 
+in particolare si vedranno tre scenari, il primo in cui si individua la soluzione ottima
+con una certa probabilità, un secondo caso in cui con probabilità stimabile si individua una 
+soluzione che non si discosta troppo da quella ottima e infine un'ultimo scenario in cui 
+si sfruttano concetti probabilistici per comporre un algoritmo completamente deterministico.
+
+\subsection{Problemi di decisione}
+Per quanto riguarda i problemi di decisione, esistono sostanzialmente due categorie
+di algoritmi probabilistici.
+
+\paragraph{Algoritmi Monte-Carlo}
+Algoritmi che sono caratterizzati da un tempo fissato, e una 
+correttezza probabilistica della soluzione.\\
+Essi possono essere:
+\begin{itemize}
+    \item \emph{One-sided}: possono sbagliare solo in un verso 
+    \item \emph{Two-sided}: possono sbagliare in entrambe le risposte
+\end{itemize}
+
+\paragraph{Algoritmi Las Vegas}
+Algoritmi per cui la soluzione individuata è corretta, ma per cui il tempo è 
+probabilistico.
+
+\begin{remark}
+    Un algoritmo Monte-Carlo può diventare quasi Las Vegas, se si esegue per molte volte, 
+    e si prende la soluzione più probabile. Si abbassa la probabilità di errore della decisione, 
+    ma impiega più tempo.
+\end{remark}
+
+\subsection{Problemi di ottimizzazione}
+Approcciare in maniera probabilistica un problema di ottimizzazione, può significare 
+individuare con una certa probabilità la soluzione ottima, 
+oppure individuare probabilisticamente una soluzione che è abbastanza buona.
+\subsubsection{Min cut globale}
+Il problema di min cut globale cerca di individuare un taglio in un grafo, 
+in modo da minimizzare il numero di archi che incidono sulle due partizioni create.
+
+Formalmente:\\
+\emph{Input}: $G=(V,E)$\\
+\emph{Output}: $V = V_1 \cup V_2, V_1 \neq \emptyset, V_2 \neq \emptyset$\\
+\emph{Costo}: $|\{xy \in E, x \in V_1, y \in V_2\}|$\\
+\emph{Tipo}: min
+
+\begin{lemma}
+    Se esiste un vertice di grado d, esiste un taglio minimo $E^*$ con $|E^*| \leq d$.
+\end{lemma}
+\begin{proof}
+    Basta considerare come uno dei due insiemi il singolo vertice di grado d.
+\end{proof}
+
+\paragraph{Contrazione}
+Operazione che consiste nell'eliminare un particolare arco e unire le due estremità in un unico nodo.
+Nel caso si un multigrafo, si cancellano tutti gli archi paralleli a quello che si sta considerando.
+L'operazione sarà indicata con $G \downarrow e$. Due nodi che vengono contratti formano un nuovo 
+nodo, che li contiene.
+
+\paragraph{Algoritmo di Karger}
+L'algoritmo sceglie a caso tra gli archi e contrae.
+Restituisce i due nodi finali.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$G=(V,E)$}
+    \KwResult{Taglio per il grafo}
+    \While{$|G.V| > 2$}{
+        $e \gets \mathit{random(E)}$\\
+        $G \gets G \downarrow e$
+    }
+     \Return{$V_1,V_2$}
+     \caption{Karger}
+\end{algorithm}
+
+Durante l'esecuzione dell'algoritmo si può pensare al grafo come: $G = G_0, G_1, \dots$
+
+\begin{remark}
+    \label{osskarg}
+    Sia ora $E_{S^*}$ un taglio ottimo e $k^* = |E_{S^*}|$.\\
+    Si osserva che: 
+    \begin{enumerate}
+        \item $G_i$ ha $n-i+1$ vertici e numero di lati $\leq m-i +1$ 
+        \item Ogni taglio di $G_i$ corrisponde a un taglio di $G$
+        \item Il grado minimo di un vertice in $G_i$ è sempre $\geq k^*$, se così non fosse, 
+        $G_i$ avrebbe un taglio $< k^*$, quindi anche $G$, per il punto 2
+        \item Il punto 1 e 3 fanno in modo che il numero di lati sia $\geq \frac{(n-i+1)k^*}{2}$
+    \end{enumerate}    
+\end{remark}
+
+\begin{lemma}
+    \label{lkarg}
+    Vale che:
+    $$m-i+1 \geq \frac{k^*(n-i+1)}{2}$$
+\end{lemma}
+\begin{proof}
+    Mettendo insieme le osservazioni fatte in precedenza, si ottiene che:
+    \begin{equation}
+        \begin{aligned}
+            2(m - i + 1 ) \geq 2 * \mathit{lati\;di\;G_i} &= \sum_{v \in V_i} d_{G_i}(v) && \text{Per osservazione 1}\\
+            &\geq \sum_{v \in V_i} k^* && \text{Per osservazione 3}\\
+            &\geq k^*(n-i+1) && \text{Per osservazione 1}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+Sia $E_i$ l'evento che indica che all'iesima iterazione dell'algoritmo di Karger non contraggo nessun lato 
+di $E_s^*$.
+
+\begin{lemma}
+    Vale che,per ogni $i$: $$P(E_i | E_1, \dots, E_{i-1}) \geq \frac{n-i-1}{n-1+1}$$
+\end{lemma}
+\begin{proof}
+    \begin{equation}
+        \begin{aligned}
+            P(E_i | E_1, \dots, E_{i-1}) &= 1- P(\bar{E_i} | E_1, \dots, E_{i-1})\\
+            &= 1 - \frac{k^*}{\mathit{\#\;lati\;G_i}}\\
+            &\geq 1 - \frac{2k^*}{(n-i+1)k^*} && \text{Vale per oss. \ref{osskarg} punto 4}\\
+            &\geq 1 - \frac{2k^*}{k^*(n-i+1)} \\
+            &= \frac{n-i+1-2}{n-i+1} = \frac{n-i-1}{n-i+1}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    L'algoritmo di Karger trova l'ottimo con probabilità $\geq \frac{1}{\binom{n}{2}}$
+\end{theorem}
+\begin{proof}
+    Trovare una soluzione ottima coincide con la probabilità:
+    $$P[E_1 \cap E_2 \cap, \dots, \cap, E_{n-2}]$$
+    Sviluppando si ottiene 
+    \begin{equation}
+        \begin{aligned}
+            P[E_1 \cap E_2 \cap, \dots, \cap, E_{n-2}] &= P[E_1]\cdot P[E_2 | E_1]\cdot P[E_3 | E_1,E_2] \dots\\
+            &\geq \frac{n-1-1}{n-1+1} \dots \frac{n - (n-2)-1}{n - (n-2)+1} = \frac{\prod_{i=1}^{n-2}i}{\prod_{i=3}^{n}i}\\
+            &= \frac{1 \cdot 2}{n(n-1)} = \frac{2}{n(n-1)} = \frac{1}{\binom{n}{2}}
+        \end{aligned}
+    \end{equation}
+
+\end{proof}
+\begin{corollary}
+    L'esecuzione dell'algoritmo di Karger $\binom{n}{2}\ln n$ volte e prendendo il taglio minimo, 
+    l'ottimo di ottiene con probabilità $\geq 1 - \frac{1}{n}$
+\end{corollary}
+\begin{proof}
+    Ad ogni iterazioe non troviamo l'ottimo con probabilità $\leq 1 - \frac{1}{\binom{n}{2}}$
+
+    La probabilità di non trovarlo in nessuna esecuzione è 
+    $$\leq (1 - \frac{1}{\binom{n}{2}}) ^{\binom{n}{2}\ln n} \leq (\frac{1}{e})^{ln n} = \frac{1}{e ^{\ln n}} = \frac{1}{n}$$
+\end{proof}
+\begin{remark}
+    L'esecuzione dell'algoritmo costa $O(n\log n)$ con un MFset, quindi per ottenere quella probabilità 
+    la complessità finale è $O(n^3 \log n)$.
+\end{remark}
+
+\subsubsection{Set Cover probabilitstico}
+Il problema è equivalente a quello presentato a sezione \ref{msetcover}, cambia
+l'approccio seguito.
+
+Formalmente: \\
+\emph{Input}: $s_1, \dots, s_m$, $\bigcup_{i=1}^m s_i = U$, $|U| = n$\\
+\emph{Output}: $C = \{s_1, \dots, s_n\}$, tali che, $\bigcup_{s_i \in C} s_i = U$\\
+\emph{Costo}: $w = \sum_{s_i \in C} w_i$\\
+\emph{Tipo}: min
+
+\paragraph{Trasformazione programmazione lineare}
+Per affrontare il problema si passa a una formulazione in programmazione lineare, $\Pi_{LP}$.
+Si aggiunge una variabile per ogni insieme.
+$$x_1, \dots, x_m \;0 \leq x_i\leq 1$$
+La funzione da minimizzare equivale a:
+$$w_1 x_1 +, \dots, w_m x_m $$
+Tutto l'universo deve essere coperto, quindi:
+$$\sum_{j, i\in s_j} x_j \geq 1, \; \forall i \in U$$
+
+Sia ora $x^*$ soluzione ottima della versione intera $\Pi_{LP}$, con valore 
+$v^*$.
+
+Se si considera il dominio reale, esisterà una soluzione $\hat{x}, \hat{v}$, 
+tale che $$\hat{v}\leq v^*$$
+
+Si formula ora un algoritmo per Set Cover, dove si trova una soluzione 
+per la riformulazione in programmazione lineare reale e poi si considera il valore della
+variabile $\hat{x_i}$ come probabilità di scelta. 
+Si immagina di iterare il processo $\lceil k + \ln n \rceil$ volte.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$S_i, w_i, i \in \{1,\dots, m \}$}
+    \KwResult{Indici degli insiemi da coprire}
+    $\hat{I} \gets \mathit{solve} \; \Pi_{LP}$ \\
+    $I \gets \emptyset$\\
+    \For{$i = 1, \dots, m$}{
+        $P_i \gets 1 - (1-\hat{x_1})^{\lceil k + \ln n \rceil}$\\
+        \If{$\mathit{random()} < P_i$}{
+            $I \gets I \cup i$
+        }
+    }
+    \Return{$I$}
+     \caption{SetCoverProbabilistico}
+\end{algorithm}
+Nel codice $P_i$ è la probabilità di inserire un elemento, ovvero 1 meno la 
+probabilità di non inserirlo $\lceil k + \ln n \rceil$ volte.
+
+
+
+Per l'analisi dell'algoritmo servono alcuni concetti preliminari.
+
+\paragraph{Disuguaglianza di Boole}
+Vale che la probabilità dell'unione di eventi è al più la somma delle probabilità singole.
+$$P[A_1 \cup \dots, \cup A_n] \leq \sum_{i =1}^{n}P[A_i]$$
+\begin{proof}
+    Si prova per induzione.
+    
+    Per $n=1$ è banale.\\
+    Per $n+1$ vale che:
+    \begin{equation}
+        \begin{aligned}
+            P[A_1 \cup \dots, \cup A_{n+1}] = P[(A_1 \cup \dots, A_n)\cup A_{n+1}]\\
+            P[A_1 \cup \dots, \cup A_n] + P[a_{n+1}] - P[A_1 \cup \dots, \cup A_n] \cap P[a_{n+1}]\\
+            \leq \sum_{i =1}^{n}P[A_i] + P[A_{n+1}] = \sum_{i =1}^{n+1}P[A_i]
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\paragraph{Disuguaglianza di Markov}
+Se $X$ è una variabile aleatoria non negativa con media finita, e sia $\alpha > 0$, vale:
+$$P[X > \alpha] \leq \frac{E[X]}{\alpha}$$
+\begin{proof}
+    Sia $I$ una nuova variabile aleatoria che indica l'evento $X \geq \alpha$.
+    \[
+        I_{X \geq \alpha} = 
+        \begin{cases}
+            1 \; \mathit{se}\; X \geq \alpha\\
+            0 \; \mathit{altrimenti}
+        \end{cases}\]
+    Inoltre
+    \[
+        \alpha I_{X \geq \alpha} = 
+        \begin{cases}
+            \alpha \; \mathit{se}\; X \geq \alpha\\
+            0 \; \mathit{altrimenti}
+        \end{cases}\]
+    Vale che
+    \begin{equation}
+        \begin{aligned}
+            \alpha I_{X \geq \alpha} &\leq X && \text{X è sempre maggiore di zero}\\
+             E[\alpha I_{X \geq \alpha}] &\leq E[X] && \text{monotonia valore atteso}\\
+             \alpha E[ I_{X \geq \alpha}] &\leq E[X] && \text{linearità valore atteso}\\
+             \alpha (1\cdot P[X\geq \alpha] + 0\cdot P[X< \alpha]) &\leq E[X] && \text{definizione di I}\\
+             \alpha P[X\geq \alpha]\leq E[X] \implies \frac{E[X]}{\alpha} &\geq P[X\geq \alpha]
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{theorem}
+    \label{setth}
+    L'algoritmo proposto produce una soluzione ammissibile con probabilità $\geq 1 - e^{-k}$.
+\end{theorem}
+\begin{proof}
+    Sia $$\hat{v} = \sum_{i = 1}^{m} v_i\hat{x_i} \leq v^*$$
+    Vale che : 
+    \begin{equation}
+        \begin{aligned}
+            P[\mathit{soluzione \; ammissibile}] = 1 - P[\mathit{soluzione\;errata}] \\
+            \geq 1 - \sum_{u \in U} P[\mathit{u \; non \; coperto}] = 1 - \sum_{u \in U} \prod_{i,u\in S_i}P[i \notin I]&& \text{Per union bound}\\
+            = 1 - \sum_{u \in U} \prod_{i,u\in S_i}(1 - \hat{x_i})^{k+\ln n}\geq
+            1 - \sum_{u \in U} \prod_{i,u\in S_i}e^{-(k+\ln n)}\\
+            = 1 - \sum_{u \in U}e^{-(k+\ln n)\sum_{i,u\in S_i}\hat{x_i}} \geq 
+            1 - \sum_{u \in U}e^{-(k+\ln n)}\\
+            = 1 - \sum_{u \in U}e^{-k}\cdot e^{-\ln n} = 1 - \frac{1}{n}\sum_{u \in U}e^{-k}\\
+            = 1 - \frac{e^{-k}}{n} \cdot n = 1 - e^{-k}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    \label{setth2}
+    Per ogni $\alpha > 0$, sia $R$ il fattore di approssimazione dell'algoritmo.
+    $$P[R \geq \alpha(k + \ln n)] \leq \frac{1}{\alpha}$$
+    Ovvero è poco probabile avere un fattore di approssimazione brutto.
+\end{theorem}
+\begin{proof}
+    La probabilità che $S_i$ venga scelto è $\leq (k + \ln n)\hat{x_i}$, per lo union bound, 
+    
+    Il valore atteso del costo equivale a:
+    \begin{equation}
+        \begin{aligned}
+            E[v] = \sum_i w_i P[S_i\;\mathit{sia \;scelto}] \leq \sum_i w_i(k + \ln n)\hat{x_i}\\
+            = \hat{v}(k + \ln n) \leq v^*(k + \ln n)
+        \end{aligned}
+    \end{equation}
+    Ragionando sul rapporto di approssimazione
+    \begin{equation}
+        \begin{aligned}
+            P[\frac{v}{v^*}\geq \alpha(k +\ln n)] &\leq \frac{E[\frac{v}{v^*}]}{\alpha(k + \ln n)} && \text{Per disuguaglianza di Markov}\\
+            = \frac{E[v]}{\alpha v^* (k + \ln n)} &\leq \frac{v^* (k + \ln n)}{\alpha v^* (k + \ln n)} = \frac{1}{\alpha}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{corollary}
+    \label{setcr}
+    Fissando il parametro $k = 3$:
+    \begin{enumerate}
+        \item il teorema \ref{setth} dice che la probabilità di ottenere una soluzione ammissibile
+        $\geq 1-e^{-k} = 95\%$
+        \item il teorema \ref{setth2} invece, dice che, fissando ad esempio $\alpha=2$, con R fattore di 
+        approssimazione,  $P[R \geq 2(3 + \ln n)] \leq \frac{1}{2}$, quindi la probabilità di ottenere un fattore
+        di approssimazione peggiore di $2(3 + \ln n)$ è inferiore a $\frac{1}{2}$
+    \end{enumerate}
+\end{corollary}
+
+\begin{corollary}
+    Con $k = 3$ c'è almeno il $45\%$ di probabilità che l'algoritmo emetta una 
+    soluzione ammissibile con fattore di approssimazione al più $2(3+\ln n)$
+\end{corollary}
+\begin{proof}
+    Considerando i due punti del corollario \ref{setcr} appena scritto come eventi indipendenti, 
+    si calcola ora la probabilità che si verifichino insieme, che sarebbe quello che si vuole 
+    ottenere dall'algoritmo.
+    \begin{equation}
+        \begin{aligned}
+            P[E_1 \wedge E_2] &= 1 - P[\bar{E_1} \lor \bar{E_2}]\\
+            &\leq 1 - (P[\bar{E_1}] + P[\bar{E_2}]) && \text{Per union bound}\\
+            &\leq 1 - (0.05 + 0.5) && \text{Per il corollario \ref{setcr}}\\
+            &= 1 - 0.55 = 0.45
+        \end{aligned}
+    \end{equation}    
+\end{proof}
+
+\subsubsection{MaxEkSat}
+\label{eksat}
+Questa riformulazione del problema aggiunge un costraint per quanto riguarda il numero di 
+variabili per ogni condizione di sat.
+
+Formalmente:
+\emph{Input}: Formula CNF con $t$ clausole, ognuna di $k$ letterali, ogni variabile al massimo una volta
+per clausola\\
+\emph{Output}: Assegnamento che rende vera la CNF\\
+\emph{Funzione obiettivo}: Numero di clausole risolte\\
+\emph{Tipo}: max
+
+\begin{remark}
+    Il problema è NP completo per ogni $k \geq 3$
+\end{remark}
+\begin{theorem}
+    Un assegnamento casuale delle variabili, porta ad una soluzione che 
+    soddisfa in valore atteso $\geq \frac{2^k-1}{2^k}t$ clausole, ovvero, 
+    sia $T$ la variabile aleatoria che rappresenta il numero di clausole soddisfatte: 
+    $$E[T] =\frac{2^k-1}{2^k}t$$
+\end{theorem}
+\begin{proof}
+    Siano $x_1, \dots, x_m$ le variabili che compaiono nella formula e 
+    $c_1, \dots ,c_t$ le clausole.
+
+    Si definiscono poi delle variabili aleatorie:
+    \begin{enumerate}
+        \item $X_1, \dots, X_m\thicksim\mathit{Unif}(\{0,1\}) $,dove $X_i$ è il valore assegnato a $x_i$
+        \item $C_1, \dots, C_t$ ognuna delle quali vale 1 sse la clausola $c_i$ è soddisfatta
+        \item $T$ numero di clausole soffisfatte, $T = \sum_{i = 1}^{t} C_i$
+    \end{enumerate} 
+    Si calcola ora il valore atteso di $T$.
+    
+    Vale che:
+    \begin{equation}
+        \begin{aligned}
+            E[T] = \sum_E E[T|E]\cdot P[E] \\
+            = \sum_{b_1 \in 2 } \dots \sum_{b_n \in 2 } P[X_1 = b_1, \dots, X_n = b_n]\\
+            E[T|X_1 = b_1, \dots, X_n = b_n]\\
+            = \sum_{b_1 \in 2 } \dots \sum_{b_n \in 2 } P[X_1 = b_1] \dots P[X_n = b_n]&& \text{var indipendenti}\\
+            E[C_1 + \dots + C_t | X_1 = b_1, \dots, X_n = b_n] && \text{definizione di T}\\
+            = \frac{1}{2^n}\sum_{b_1 \in 2 } \dots \sum_{b_n \in 2 } \sum_{i=1}^{t} E[C_i | X_1 = b_1, \dots, X_n = b_n]&& \text{valore di X, linearità v.a.}\\
+        \end{aligned}
+    \end{equation}
+    Ora si nota che quel valore atteso finale, vale 0 oppure 1, in base al soddisfacimento o meno della clausola $C_i$.
+    Ogni clausola è composta da $k$ variabili in disgiunzione, quindi, esiste un solo assegnamento delle $k$ che la rende falsa.
+
+    Visto che si hanno $n$ variabili totali, esistono esattamente $2^{n-k}$ assegnamenti che rendono falsa la clausola, ovvero, 
+    si individua un assegnamento delle $k$ variabili che rendono falsa la clausola $C_i$ e si considerano tutti i possibili assegnamenti 
+    delle restanti $(n-k)$ variabili.
+    
+    Vale quindi che gli assegnamenti che rendono vera la clausola $C_i$ sono $2^n - 2^{n-k}$, ovvero il totale delle combinazioni 
+    meno quelle che la rendono falsa.
+
+    Proseguendo con l'equazione quindi, sostituendo quella sommatoria con quanto appena discusso:
+    \begin{equation}
+        \begin{aligned}
+            = \frac{1}{2^n}\sum_{b_1 \in 2 } \dots \sum_{b_n \in 2 } \sum_{i=1}^{t} E[C_i | X_1 = b_1, \dots, X_n = b_n] \\
+            = \frac{1}{2^n}t(2^n - 2^{n-k}) = \frac{t(2^n - 2^{n-k})}{2^n}\\
+            =  \frac{t(2^n - 2^{n-k})}{2^n} * \frac{2^{k-n}}{2^{k-n}} = t\frac{2^k -1}{2^k}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{theorem}
+    \label{maxth}
+    Dato un input per MaxEkSat con $n$ variabili, e $t$ clausole.
+    \begin{equation}
+        \begin{aligned}
+            \forall j = 0, \dots, n,\;\exists b_1, \dots, b_j \in 2, t.c\\
+            E[T|X_1 = b_1, \dots, X_j = b_j] \geq  t\frac{2^k -1}{2^k}
+        \end{aligned}
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    Si dimostra per induzione per $j$.\\
+    $j = 0$, dimostrato dal teorema precendente.
+    
+    Passo induttivo:
+    \begin{equation}
+        \begin{aligned}
+            E[T|X_1 = b_1, \dots, X_j = b_j] = \\
+            E[T|X_1 = b_1, \dots, X_j = b_j, X_{j+1} = 0]\cdot P[x_{j+1} = 0]\\
+            +\;E[T|X_1 = b_1, \dots, X_j = b_j, X_{j+1} = 1]\cdot P[x_{j+1} = 1] &&\text{Eventi disgiunti}\\
+            = \frac{1}{2}\cdot E[T|X_1 = b_1, \dots, X_j = b_j, X_{j+1} = 0]\\
+            + \; \frac{1}{2}\cdot E[T|X_1 = b_1, \dots, X_j = b_j, X_{j+1} = 1]
+        \end{aligned}
+    \end{equation}
+    Per ipotesi induttiva, la media dei due valori attesi è almeno $t\frac{2^k -1}{2^k}$, 
+    questo implica che uno dei due valori attesi è maggiore di quella quantitità, ovvero, 
+    per qualche $b \in 2$:
+    $$E[T|X_1 = b_1, \dots, X_j = b_j, X_{j+1} = b] \geq t\frac{2^k -1}{2^k}$$
+\end{proof}
+\begin{remark}
+    La dimostrazione appena scritta suggerisce un approccio da seguire per l'algoritmo finale, 
+    si deciderà iterativamente quale valore assegnare alla variabile $j$ in base al valore atteso di 
+    $T$.
+\end{remark}
+
+\paragraph{MaxEkSat derandomizzato}
+Seguendo le proprietà osservate in precedenza si formula il seguente algoritmo.
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{$C_1 \wedge \dots \wedge C_t$, ognuna con $k$ letterali $\in x_1, \dots, x_n$}
+    \KwResult{Assegnamento di variabili}
+    $D \gets \emptyset$\\
+    \For{$i = 1,\dots, n$}{
+        $\Delta_0 \gets 0$\\
+        $\Delta_1 \gets 0$\\
+        $\Delta D_0 \gets \emptyset$\\
+        $\Delta D_1 \gets \emptyset$\\
+        \For{$j = 1, \dots, t$}{
+            \If{$j \in D \lor x_i \notin C_j$}{
+                $\mathit{continue}$
+            }
+            $h \gets |x_k \in C_j, k > i|$\\
+            \If{$x_i$ positiva in $C_j$}{
+                $\Delta_0 \gets \Delta_0 - \frac{1}{2^h}$\\
+                $\Delta_1 \gets \Delta_1 + \frac{1}{2^h}$\\
+                $\Delta D_1 \gets \Delta D_1 \cup \{j\} $\\
+            }
+            \Else{
+                $\Delta_0 \gets \Delta_0 + \frac{1}{2^h}$\\
+                $\Delta_1 \gets \Delta_1 - \frac{1}{2^h}$\\
+                $\Delta D_0 \gets \Delta D_0 \cup \{j\} $\\    
+            }
+        }
+        $b = (\Delta_0 \leq \Delta_1)$\\
+        $X_i = b$\\
+        $D \gets D \cup \Delta D_b$
+    }
+    \Return{$\mathit{Assegnamento}$}
+    \caption{MaxEkSat Derandomizzato}
+\end{algorithm}
+
+L'algoritmo implementa quanto osservato nel teorema precedente.
+In particolare si cerca di mantenere al passo $i$ vera questa proprietà
+$$E[T|X_1 = b_1, \dots, X_{i-1} = b_{i-1}] \geq t\frac{2^k -1}{2^k}$$
+Il valore atteso si può scomporre
+\begin{equation}
+    \begin{aligned}
+        E[T|X_1 = b_1, \dots, X_{i-1} = b_{i-1}] = \\
+        E[C_1|X_1 = b_1, \dots, X_{i-1} = b_{i-1}]\;+\\
+        E[C_2|X_1 = b_1, \dots, X_{i-1} = b_{i-1}]\;+\\
+        \dots\\
+        + \; E[C_t|X_1 = b_1, \dots, X_{i-1} = b_{i-1}]  
+    \end{aligned}
+\end{equation}
+Quello che si fa ora è confrontare i singoli valori attesi con gli stessi 
+ottenuti dopo l'assegnamento della iesima variabile.
+
+Si fa notare che, se una clausola $C_j$ appartiene a $D$, il valore atteso dopo 
+l'assegnamento della iesima variabile non cambia, ovvero quella clausola è già decisa.
+
+Il valore può cambiare per quelle che contengono la variabile $X_i$, consideriamone una
+che contiene quella variabile, per esempio:
+$$x_1 \lor \bar{x_4} \lor \dots \lor x_i \lor x_{i+1} \dots \lor x_n$$
+Consideriamo $h$ variabili da $i$ a $n$ comprese, ci sono $\frac{2^h -1}{2^h}$ assegnamenti delle $h$ variabili che rendono vera 
+la clausola.
+
+Il valore atteso della clausola vale, prima dell'assegnamento di $x_i$
+$$E[C_j] = \frac{2^{h} -1}{2^{h}}$$
+dopo l'assegnamento varia in questo modo
+\[
+    E[C_j] = 
+    \begin{cases}
+        1\;\mathit{se}\; x_i = 1\\
+        \frac{2^{h-1} -1}{2^{h-1}} \;\mathit{se}\; x_i = 0
+    \end{cases}
+\]
+il cambiamento di valore atteso vale 
+\[
+    \Delta\;\mathit{valore}\;\mathit{atteso} = 
+    \begin{cases}
+        1 - \frac{2^h -1}{2^h} = \frac{2^h - 2^h + 1}{2^h} = +\frac{1}{2^h}\;\mathit{se}\; x_i = 1\\
+        \frac{2^{h-1} -1}{2^{h-1}} - \frac{2^h -1}{2^h} = \frac{2^h -2 - 2^h + 1}{2^h} = -\frac{1}{2^h}\;\mathit{se}\; x_i = 0\\
+    \end{cases}
+\]
+Nell'algoritmo non si sta facendo altro che calcolare il delta di valore atteso di $T$ in base al 
+valore assegnato alla variabile $x_i$.\\
+Per la dimostrazione del teorema \ref{maxth} uno degli assegnamenti di $x_i$ produrrà un valore atteso 
+maggiore, quindi si sceglierà quello.
+
+Si sta quindi procedendo nell'algoritmo accertandosi di mantenere vera la proprietà enunciata dal teorema \ref{maxth}.
+\begin{theorem}
+    Al termine dell'algoritmo almeno $\frac{2^k -1}{2^k}t$ clausole saranno vere.
+\end{theorem}
+\begin{corollary}
+    L'algoritmo fornisce una $\frac{2^k -1}{2^k}$'approssimazione per MaxEkSat.
+\end{corollary}
+\begin{proof}
+    Sia $t^*$ la soluzione ottima e sia $\bar{t}$ la soluzione prodotta dall'algoritmo.
+    \begin{equation}
+        \begin{aligned}
+            \bar{t} \geq \frac{2^k -1}{2^k}t \implies t \leq \bar{t}\frac{2^k}{2^k -1} &&\text{Per il teorema \ref{maxth}}\\
+            \frac{t^*}{\bar{t}} \leq \frac{t}{\bar{t}} \leq \frac{\bar{t}\frac{2^k}{2^k -1}}{\bar{t}} \leq \frac{2^k}{2^k -1}
+        \end{aligned}
+    \end{equation}
+\end{proof}
+\begin{corollary}
+    MaxE3Sat è $\frac{7}{8}$-approssimante.
+\end{corollary}

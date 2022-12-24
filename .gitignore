@@ -10,7 +10,11 @@
 .ipynb_checkpoints
 *.ipynb_checkpoints
 
+*.pdf
 *.class
 .vscode
 .metadata
 __pycache__
+
+
+parallel-and-distributed-algorithms/theory/*.pdf

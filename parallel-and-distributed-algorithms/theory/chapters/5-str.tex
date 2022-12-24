@@ -1,0 +1,437 @@
+\section{Strutture dati}
+L'attenzione passa ora alle strutture dati, in particolare
+a quelle \emph{space-conscious}, si studiano quindi strutture che 
+implementano le primitive in maniera efficiente ma che occupano 
+poco spazio.
+
+\subsection{Information theoretical lower bound}
+L'information theoretical lower bound indica il numero di bit minimi necessari 
+a una struttura dati che assume particolari tipi di valori.
+
+\begin{theorem}
+    Una struttura dati con $v$ valori possibili, che usi 
+    $x_1, \dots, x_v$ bit per rappresentare tali valori, 
+    soddisfa:
+    $$\frac{\sum_{i=1}^v x_i}{v} \geq \log_2 v$$
+\end{theorem}
+\begin{proof}
+    Se la struttura usasse meno bit, due dei suoi valori possibili 
+    avrebbero la stessa rappresentazione binaria, assurdo.
+\end{proof}
+
+\paragraph{Strutture dati space-consious}
+Dato un abstract data type zdove $Z_n$ è l'information theoretical lower bound
+per strutture di taglia $n$, sia $D_n$ lo spazio medio occupato da tale struttura,
+ovviamente vale $D_n \geq Z_n$, tale struttura si dice:
+\begin{itemize}
+    \item \emph{Implicita} se $D_n = Z_n + O(1)$
+    \item \emph{Succinta} se $D_n = Z_n + o(Z_n)$
+    \item \emph{Compatta} se $D_n = O(Z_n)$
+\end{itemize} 
+a patto che le primitive abbiano la stessa complessità di quelle su una struttura 
+dati non compressa.
+
+\subsection{Rango e selezione}
+Dato un $b \in 2^n$, si definiscono due funzioni, di rango e selezione, 
+$$\mathit{rank}_b, \mathit{select}_b : \mathbb{N} \longrightarrow \mathbb{N}$$
+Dove: 
+$$\mathit{rank}_b(p) = |\{i\;|\; i < p, b_i = 1\}|$$
+$$\mathit{select}_b(k) = \max \{p\;|\; \mathit{rank}_b(p) \leq k\}$$
+
+\paragraph{Implementazione naïve}
+Una prima implementazione potrebbe essere quella che risponde con costo lineare 
+alle richieste, mantenendo solo il vettore $b$, tale struttura è troppo inefficiente, 
+ma sarebbe ottima per quanto riguarda la memoria, infatti equivale al theoretical 
+lower bound.
+
+\paragraph{Implementazione non space-consious}
+Per migliorare il primo approccio, si può mantenere in memoria la funzione di rank e select associata
+ad ogni posizione.
+Tale soluzione offre primitive costanti, ma occupa troppa memoria, 
+ovvero $O(2n\log n)$ bit.
+
+\paragraph{Desiderata}
+L'implementazione ideale consiste nell'avere una struttura succinta, ovvero
+che occupi $n + o(n)$ e che risponda alle query in $O(1)$.
+
+\subsubsection{Struttura di Jacobson per il rango}
+L'idea di base è quella di suddividere il vettore $b$ superblocchi, 
+lunghi rispettivamente $(\log n )^2$.\\
+Tali superblocchi si suddividono in blocchi, lunghi $\frac{1}{2}\log n$.
+
+\paragraph{Four Russian Trick}
+Soffermandosi ora sul numero di tipi di blocchi, ne esistono rispettivamente 
+$2^{\frac{1}{2}\log n}$.
+
+Consideriamo ora un certo blocco, memorizzare la sua tabella di rank
+significherebbe avere $\frac{1}{2}\log n$ righe, ognuna con un valore 
+che occupa $\log(\frac{1}{2}\log n)$.
+
+Se volessimo mantenere la tabella di rank per ogni tipo di blocco, si avrebbe
+\begin{equation}
+    \begin{aligned}
+        2^{\frac{1}{2}\log n} \cdot \frac{1}{2}\log n \cdot \log(\frac{1}{2}\log n)\\
+        \leq \sqrt{n}\frac{1}{2}\log n \log \log n = o(n)
+    \end{aligned}
+\end{equation}
+L'idea di mantenere in memoria tutte queste informazioni è chiamata Four Russian Trick, 
+sostanzialmente si spezza un problema in sottoproblemi talmente piccoli, da poterli mantenere 
+esplicitamente in memoria.
+
+\paragraph{Costruzione}
+Per costruire la struttura, memorizzo:
+\begin{enumerate}
+    \item per ogni superblocco, il numero di uni prima del superblocco,
+    indicato con $S[i]$
+    \item per ogni blocco, il numero di uni tra l'inizio del superblocco che lo contiene, 
+    e l'inizio del blocco, indicato con $B[i]$
+    \item la tabella discussa nel paragrafo precedente, indicata con \emph{TAB}
+\end{enumerate}
+
+\paragraph{Calcolo del rango}
+Il calcolo del rank per una certa posizione, equivale a
+$$\mathit{rank}_b(p) = S\bigg[\frac{p}{(\log n)^2}\bigg] + 
+B\bigg[\frac{p}{\frac{1}{2}\log n}\bigg] + \mathit{TAB}_t\bigg[p \mathit{\;mod\;} 
+\frac{1}{2}\log n\bigg]$$
+dove $t$ equivale al tipo del blocco in cui si trova $p$.
+Non è nulla di sofisticato, visto che i blocchi sono talmente piccoli che si
+possono usare come indici della tabella \emph{TAB}.\\
+La primitiva così ottenuta ha tempo costante.
+
+\paragraph{Spazio occupato}
+Lo spazio utilizzato dalla struttura, equivale allo spazio occupato dalle
+strutture ausiliarie e il vettore $b$, le strutture occupano:
+\begin{enumerate}
+    \item $S$: $\frac{n}{(\log n)^2} \cdot \log n = o(n)$
+    \item $B$: $\frac{n}{\frac{1}{2}\log n} \log ((\log n)^2) = o(n)$, visto che si stanno 
+    memorizzando
+    al massimo $(\log n)^2$ uni, ovvero la dimensione del superblocco.
+    \item \emph{TAB}: $o(n)$ per i calcoli fatti in precedenza.
+\end{enumerate}
+Lo spazio totale è $O(n) + o(n)$, il tempo della primitiva di rango è $O(1)$. La truttura è 
+quindi succinta.
+
+\subsubsection{Struttura di Clarke per la selezione}
+La creazione di una struttura efficacie per la selezione è complessa.
+La struttura di Clarke è divisa in livelli.
+
+\paragraph{Primo livello}
+Al primo livello, memorizzato in $P$ si mantengono le posizioni degli uni in posizioni 
+multiple di $\log n \log \log n$, quindi $$P[i] = \mathit{select}_b(i \cdot \log n \log \log n)$$
+Il vettore così creato occupa 
+$$\frac{n}{\log n \log \log n}\cdot \log n = o(n)$$
+
+\paragraph{Secondo livello}
+Si crea ora un secondo livello, $S$.
+Definiamo la quantità:
+$$\forall i, r_i = P[i+1] - P[i] \geq \log n \log \log n$$
+Si distinguono ora due livelli, in base alla densità di uni:
+\begin{itemize}
+    \item Caso sparso: $r_i \leq (\log n\log \log n )^2$, in questo 
+    caso $S[i]$ contiene la lista esplicita delle posizioni intermedie, 
+    ovvero le posizioni degli uni compresi tra $P[i]$ e $P[i+1]$, memorizzate
+    in modo relativo da $P[i]$. In questo caso la memoria occupata è 
+    \begin{equation}
+        \begin{aligned}
+            \log n \log \log n \cdot \log r_i 
+            \leq \frac{(\log n \log \log n)^2}{\log n \log \log n} \cdot \log r_i \\
+            \leq \frac{r_i}{\log n \log \log n} \cdot \log r_i
+            \leq \frac{r_i}{\log n \log \log n} \cdot \log n
+            \leq \frac{r_i}{\log \log n}
+        \end{aligned}
+    \end{equation}
+    \item Caso denso: $\log n\log \log n \leq r_i \leq (\log n\log \log n )^2$
+    in questo caso memorizzo le posizioni degli uni multiple di 
+    $\log r_i \log \log n$, ottengo che 
+    $$S[i][j] = \mathit{select}_b (i \log n \log \log n + j \log r_i \log \log n)$$
+    In questo caso la memoria occupata sarà:
+    \begin{equation}
+        \begin{aligned}
+            \frac{\log n \log \log n}{\log r_i \log \log n} \cdot \log r_i 
+            \leq \frac{r_i}{\log r_i \log \log n} \cdot \log r_i\\
+            \leq \frac{r_i}{\log r_i \log \log n} \cdot \log r_i = \frac{r_i}{\log \log n}
+        \end{aligned}
+    \end{equation}  
+\end{itemize}
+Valutando ora lo spazio occupato da $S$, si ottiene che per la memoria occupata 
+vale: 
+\begin{equation}
+    \begin{aligned}
+        \leq \sum_i \frac{r_i}{\log \log n} = \sum_i \frac{P[i+1] - P[i]}{\log \log n}\\
+        = \frac{P[n] - P[0]}{\log \log n} = \frac{n}{\log \log n} = o(n)
+    \end{aligned}
+\end{equation}
+
+\paragraph{Terzo livello}
+Per gli uni del caso denso del secondo livello, ovvero quando 
+$r_i \leq (\log n\log \log n )^2$, si crea un terzo livello.
+$S[i]$ contiene le posizioni multiple di $\log r_i \log \log n$.
+Definiamo ora
+$$\forall j, \bar{r}_j^i = S[i][j+1] - S[i][j]$$
+Vale che:
+$$ (\log n \log \log n)^2 > \bar{r}_j^i \geq \log r_i \log \log n$$
+Esistono ora due casi, come in precendenza:
+\begin{itemize}
+    \item Caso sparso: $\bar{r}_j^i \geq \log \bar{r}_j^i \log r_i (\log \log n)^2$.\\
+    Memorizzo in $T[i][j]$ la lista delle posizioni degli uni, come differenza da $S[i][j]$.
+    La memoria occupata da un elemento è:
+    \begin{equation}
+        \begin{aligned}
+            (\log r_i \log \log n)\cdot \log \bar{r}_j^i &= 
+            \frac{\log r_i (\log \log n)^2\cdot \log \bar{r}_j^i}{\log\log n} 
+            \\&\leq \frac{\bar{r}_j^i}{\log \log n}
+            = \frac{S[i][j+1] - S[i][j]}{\log \log n}
+        \end{aligned}
+    \end{equation}
+    Considerando tutti gli elementi:
+    \begin{equation}
+        \begin{aligned}
+            \sum_j \frac{S[i][j+1] - S[i][j]}{\log \log n} = 
+            \frac{P[i+1] - P[i]}{\log \log n} \leq \frac{n}{\log \log n}
+        \end{aligned}
+    \end{equation}
+    \item Caso denso: $\bar{r}_j^i < \log \bar{r}_j^i \log r_i (\log \log n)^2$.\\
+    In questo caso tra $S[i][j+1]$ e $S[i][j]$ ci sono pochi zeri, si utilizza il 
+    Four-Russian trick, vale che:
+    \begin{itemize}
+        \item visto che $r_i \leq (\log n \log \log n)^2$, essendo nel 
+        caso denso del secondo livello:
+        \begin{equation}
+            \begin{aligned}
+                \log \bar{r}_j^i \leq \log r_i \leq \log((\log n \log \log n)^2) = \\
+                2 \log \log n + 2 \log \log \log n \leq 4\log\log n        
+            \end{aligned}
+        \end{equation}
+        \item ricordiamo che vale $\bar{r}_j^i < \log \bar{r}_j^i \log r_i (\log \log n)^2$.
+        Per il punto precedente, $\log \bar{r}_j^i$ e $\log r_i$ sono entrambi $\leq 4\log\log n$.
+        quindi, mettendo tutto insieme:
+        $$\bar{r}_j^i \leq 16(\log \log n)^4$$
+    \end{itemize}
+\end{itemize}
+Lo spazio utilizzato dal Four-Russian trick è minore uguale di
+$$\leq 2^{\bar{r}_j^i}\cdot\bar{r}_j^i\cdot\log \bar{r}_j^i$$
+Ovvero il numero di tabelle, per il numero di righe per i bit per riga.
+Sfruttando le osservazioni precedenti:
+\begin{equation}
+    \begin{aligned}
+        2^{\bar{r}_j^i}\cdot\bar{r}_j^i\cdot\log \bar{r}_j^i
+        \leq 2^{16 (\log \log n)^4}\cdot 16(\log \log n)^4 \cdot \log(16(\log \log n)^4)\\
+        = (\log \log n)^{4\cdot 16} \cdot 16(\log \log n)^4\cdot \log(16(\log \log n)^4) = o(n)
+    \end{aligned}
+\end{equation}
+\begin{remark}
+    Nonostante la struttura sia teoricamente succinta, bisogna notare come 
+    la quantità $(\log \log n)^{4\cdot 16}$ sia nella pratica enorme.\\
+    La soluzione più semplice per adottare il design di Clark è saltare il 
+    Four-Russian trick e utilizzare sempre la memorizzazione esplicita, 
+    ovvero il primo punto del terzo livello.
+\end{remark}
+\subsection{Alberi binari}
+Un albero binario è definito ricorsivamente, ovvero, un albero può essere:
+\begin{enumerate}
+    \item Un nodo singolo
+    \item Un nodo con due figli che sono alberi binari
+\end{enumerate}
+I nodi senza figli sono detti \emph{nodi esterni} o foglie, 
+gli altri sono \emph{nodi interni}.
+
+\begin{theorem}
+    Il numero di nodi esterni è uguale al numero di nodi interni aumentato di uno.
+    $$|E| = |I| + 1$$
+\end{theorem}
+\begin{proof}
+    Su un unico nodo, il teorema vale, infatti i nodi esterni sono uno e zero 
+    quelli interni.
+
+    Su un albero $T$ con figli, indicati con $T_1$ e $T_2$: 
+    $$|E(T)| = |E(T_1)| + |E(T_2)| = (|I(T_1)| + 1 + |I(T_2)|) + 1$$
+    La quantità tra parentesi sono i nodi interni di $T$, ovvero quelli dei 
+    figli più se stesso, vale quindi il teorema.
+\end{proof}
+In generale si può dire che il numero di nodi totali di un albero binario 
+è equivalente a $$n = |E| + |I| + 2|E| - 1 = 2|I| + 1$$
+
+\begin{theorem}
+    Il numero di alberi binari con $n$ nodi interni equivale a
+    $$C_n = \frac{1}{n+1}\binom{2n}{n}$$
+\end{theorem}
+\paragraph{Information theoretical Lower Bound}
+Utilizzando l'\emph{approssimazione di Stirling}
+$$x! \approx \sqrt{2\pi x}\bigg(\frac{x}{e}\bigg)^x $$
+Si ottiene che il numero di alberi binari con $n$ nodi interi equivale a 
+\begin{equation}
+    \begin{aligned}
+        C_n &= \frac{1}{n+1}\binom{2n}{n} = \frac{1}{n+1}\cdot\frac{(2n)!}{n!(2n-n)!} 
+        = \frac{1}{n+1}\cdot\frac{(2n)!}{(n!)^2} \\
+        &\approx \frac{1}{n+1}\cdot
+        \frac{\sqrt{2\pi n}(\frac{2n}{e})^{2n}}{(\sqrt{2\pi n}(\frac{n}{e})^n)^2}
+        = \frac{1}{n+1}\cdot \frac{\sqrt{4\pi n}(\frac{2n}{e})^{2n}}{2\pi n (\frac{n}{e})^{2n}}\\
+        &= \frac{1}{n+1} \cdot \frac{1}{\sqrt{\pi n}}\cdot \bigg(\frac{2n}{n}\bigg)^{2n}
+        = \frac{1}{n+1}\cdot \frac{1}{\sqrt{\pi n}}\cdot 2^{2n} \approx \frac{4^n}{\sqrt{\pi n^3}}
+    \end{aligned}
+\end{equation}
+Segue che $$Z_n = \log(4^n) = n\log 4 = 2n$$
+
+\begin{theorem}
+    Per rappresentare un albero binario con $n$ nodi interni sono necessari
+    $2n - O(\log n)$ bit.
+\end{theorem}
+
+\paragraph{Numerazione nodi}
+I nodi dell'albero si considerano numerati dalla radice per livelli, 
+si mantiene poi un vettore $b$ lungo $2n +1$ per un albero con $n$ nodi interni
+dove una componente a uno significa che il nodo $i$ è interno, zero che è esterno.
+
+Definiamo ora delle primitive sull'albero:
+\begin{itemize}
+    \item $\mathit{isInternal(k)} = b_k$
+    \item $\mathit{leftChild(k)} = 2\mathit{rank}_b(k) +1$
+    \item $\mathit{rightChild(k)} = 2\mathit{rank}_b(k) +2$
+    \item $\mathit{parent(k)} = \mathit{select}_b(\lfloor \frac{k-1}{2} \rfloor)$
+\end{itemize}
+
+\paragraph{Spazio}
+Lo spazio occupato equivale a quello delle strutture più il vettore
+ $$2n + o(2n)$$
+Si possono considerare anche i dati per i nodi, nel caso in cui 
+i dati siano solo in quelli interni, si possono memorizzare in un vettore 
+e accedervi tramite indice $\mathit{rank}_b(k)$.
+
+\paragraph{Tempo}
+Il tempo delle primitive è costante.
+
+Segue che la struttura per gli alberi definita in questo modo è succinta.
+
+\subsection{Sequenze monotone di Elias-Fano}
+In questo caso si considera una sequenza di valori ordinati, 
+formalmente:
+$$0 \leq x_1 \leq \dots \leq x_{n-1} \leq u$$
+
+\paragraph{Memorizzazione}
+Sia $l = \max\big\{0, \lfloor \log \frac{u}{n}\rfloor\big\}$, 
+la rappresentazione binaria dei valori, per ogni elemento 
+$X_i$, è esplicita per gli $l$ bit meno significativi, 
+mentre per i restanti bit si adopera una tecnica differente.
+
+I bit superiori, che rappresentano la quantità $\lfloor \frac{x_i}{2^l} \rfloor$
+sono memorizzati per differenza, ovvero
+$$u_i = \bigg\lfloor \frac{x_i}{2^l} \bigg\rfloor - \bigg\lfloor 
+\frac{x_{i-1}}{2^l} \bigg\rfloor, \;\; x_{-1} = 0$$
+questi valori di differenze sono rappresentati in unario, dove $k$ in unario è 
+rappresentato da $k$ zeri seguiti da un uno.
+
+\paragraph{Spazio}
+I bit inferiori sono memorizzati esplicitamente, quindi, per ogni 
+elemento sono necessari $l_i = x_i\;\mathit{mod}\;2^l$ bit. Servono 
+quindi $nl$ bit per l'intera sequenza.
+
+Riguardo lo spazio occupato dalle differenze, indicato con $S$ vale
+\begin{equation}
+    \begin{aligned}
+        S &\leq \sum_{i=0}^{n-1} ( u_i + 1) = \sum_{i=0}^{n-1} \bigg( \bigg\lfloor \frac{x_i}{2^l} 
+        \bigg\rfloor -\bigg\lfloor \frac{x_{i-1}}{2^l} \bigg\rfloor  + 1\bigg) \\&=
+        n + \bigg\lfloor \frac{x_{n-1}}{2^l} \bigg\rfloor \leq n + \bigg\lfloor \frac{u}{2^l} \bigg\rfloor
+        \leq n + \frac{u}{2^l} \leq n + \frac{u}{2^{\lfloor\log \frac{u}{n}\rfloor}}
+    \end{aligned}
+\end{equation}
+Si distinguono ora due casi:
+\begin{enumerate}
+    \item $\frac{u}{n}$ è una potenza di 2:
+        $$S \leq n + \frac{u}{2^{\log \frac{u}{n}}} = n + \frac{u}{\frac{u}{n}} = 2n$$
+    \item $\frac{u}{n}$ non è una potenza di 2:
+         $$S \leq n + \frac{u}{2^{\log \frac{u}{n} -1}} = n + \frac{u}{\frac{u}{2n}} = 3n$$
+\end{enumerate}
+In totale lo spazio occupato è di
+\[A =\begin{cases}
+    ln +2\;\text{se la frazione è potenza di 2}\\
+    ln + 3\;\text{se la frazione non è potenza di 2}
+\end{cases}\]
+$$l \leq \log\frac{u}{n} \implies 
+A \leq \bigg( 2 + \bigg\lceil \log \frac{u}{n}\bigg\rceil\bigg)n$$
+
+\paragraph{Accesso ad un elemento}
+Per determinare quale sia l'iesimo elemento della sequenza, 
+si può ricorrere al vettore utilizzato per la parte alta delle rappresentazioni, 
+in particolare, vale che, dato $u$ il vettore appena nominato: 
+\begin{equation}
+    \begin{aligned}
+        \mathit{select}_u(i) = u_0 + u_1 + \dots + u_i + i 
+        = \sum_{t=0}^i \bigg(\bigg\lfloor \frac{x_t}{2^l}\bigg\rfloor - 
+        \bigg\lfloor \frac{x_{t-1}}{2^l}\bigg\rfloor \bigg) + i \\= 
+        \bigg\lfloor \frac{x_i}{2^l}\bigg\rfloor + i \implies 
+        \bigg\lfloor \frac{x_i}{2^l}\bigg\rfloor =  \mathit{select}_u(i) - i\\
+        \implies x_i = (\mathit{select}_u(i) - i)2^l + (x_i \; \mathit{mod}\;2^l)
+    \end{aligned}
+\end{equation}
+dove la seconda parte della somma è memorizzata esplicitamente come visto nel paragrafo 
+sullo spazio. Assumendo di avere una struttura dati per la select, e che l'operazione 
+di shift di $l$ bit sia costante, l'operazione di accesso totale è costante.
+
+\paragraph{Information theoretical lower bound}
+Per determinare l'efficienza della struttura proposta bisogna prima calcolare 
+il numero di sequenze monotone crescenti.
+Si può applicare la tecnica \emph{stars and bars}.
+
+Si nota che le sequenze di quel tipo sono in realzione uno ad uno 
+con i multi-insiemi di cardinalità $n$ di $u = \{0,1,\dots, u-1\}$.
+
+Questi ultimi sono in relazione uno ad uno con le soluzioni intere non negative
+dell'equazione 
+$$C_0 + C_1 + \dots + C_{u-1} = n$$
+Il problema si può vedere come contare i modi di mettere $u-1$ barre tra $n$ asterischi, 
+quindi, il numero di sequenze monotone crescenti è
+$$\binom{u + n-1}{u-1}$$
+Vale quindi che 
+\begin{equation}
+    \begin{aligned}
+        Z_n &= \log \binom{u + n-1}{u-1} = \log \frac{(u+n-1)!}{(u-1)! n!} = \log \binom
+        {u+n-1}{n} \\
+        &\approx n\log\frac{u+n-1}{n} = n\log\frac{u}{n}\cdot\bigg(1 + \frac{n}{u} - \frac{1}{u}\bigg)
+        \\&= n\log\frac{u}{n} + \log \bigg(1 + \frac{n}{u} - \frac{1}{u}\bigg) \approx
+        n\log\frac{u}{n} + n \bigg(\frac{n}{u} - \frac{1}{u}\bigg)\\
+        &= n \log \frac{u}{n} + \frac{n^2}{u} - \frac{n}{u} \leq n\log\frac{u}{n} + \frac{n^2}{u}
+    \end{aligned}
+\end{equation}
+l'ultimo termine è legato alla densità della sequenza, assumento che essa sia sparsa, 
+$n \leq \sqrt{u}$ e considerando lo spazio occupato dalla struttura
+$$Z_n \leq n\log\frac{u}{n},\; D_n = 2n + n\bigg\lceil \log \frac{u}{n}\bigg\rceil$$
+Considerando poi i bit per elemento
+$$\bar{Z_n} \leq \log\frac{u}{n}, \; \bar{D_n} = 2 + \bigg\lceil \log \frac{u}{n}\bigg\rceil 
+= \bar{Z_n} + O(1)$$
+Segue che la struttura non è succinta.
+
+\subsection{Parentesi bilanciate}
+
+Si studiano ora parole del linguaggio di Dick.
+Sia $D = \{(, ) \}$ l'insieme delle parentesi aperte e chiuse, 
+il linguaggio di Dick è $L \subseteq D^*$.
+
+Una parola $w \in L$ se:
+\begin{enumerate}
+    \item $\#_( w = \#_) w$ ovvero il numero di parentesi aperte
+    e chiuse coincide in $w$
+    \item $w = w_1w_2 \implies \#_( w_1 \geq \#_) w_2$
+\end{enumerate}
+
+Sia la funzione $$E_w(i) = |\{ j| j < i \mathit{\;t.c.\;} w_j = "(" \}| -
+|\{ j| j \leq i \mathit{\;t.c.\;} w_j = ")" \}|$$
+ovvero il numero di parentesi aperte con posizione minore ad $i$, meno il numero 
+di parentesi chiuse $i$ compresa.
+
+Si ovverva che in una parola di Dick, $E_w$ parte e finisce in zero, 
+può però ritoccarlo scorrendo la parola, 
+se la funzione assume zero solo all'inizio e alla fine si parla di parole
+\emph{fortemente bilanciate}, altrimenti di parole \emph{debolemente bilanciate}.
+Nel secondo caso si possono individuare punti di spezzamento che dividono 
+la parola in due parole di Dick.
+
+\paragraph{Primitive}
+Le primitive necessarie per questa struttura sono:
+\begin{enumerate}
+    \item $\mathit{findOpen}(p)$: trova la parentesi aperta corrispondente 
+    alla chiusa in posizione $p$
+    \item $\mathit{findClosed}(p)$: contrario del precedente
+    \item $\mathit{enclose}(p)$: trova la posizione della prima parentesi 
+    aperta che racchiude $p$, può non individuare nulla
+\end{enumerate}
+

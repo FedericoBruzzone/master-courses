@@ -1,0 +1,274 @@
+\section{Teoria della complessità di approssimazione}
+
+In questa sezione si affrontano alcune tematiche, in particolare il teorema PCP, 
+con il quale di riuscirà a dimostrare l'inapprossimabilità di MaxEkSat e Indipendent set.
+
+\subsection{Verificatori}
+Il concetto di verificatore assume diverse sfaccettature nel corso 
+delle sezioni che seguono, ma sostanzialmente è una macchina che si occupa di verificare 
+la decisione di un certo problema per un certo input.
+
+\subsubsection{NP attravero testimoni}
+Una Macchina di Turing verificatore per un problema di decisione $L \subseteq 2^*$, riceve due input, $x$ e $w$, testimone, 
+e si comporta come segue:
+\begin{enumerate}
+    \item se $x \notin L$ risponde no qualunque sia $w$
+    \item se $x \in L$, allora $\exists w\in 2^*$ tale che la macchina risponde sì
+\end{enumerate}
+Devono valere però:
+\begin{enumerate}
+    \item $|w| \leq P(|x|)$ ovvero la lunghezza di $w$ è polinomiale nell'input
+    \item la macchina lavora in tempo polinomiale
+\end{enumerate}
+
+\begin{remark}
+    Si può pensare alla classe NP come una classe di problemi facilmente verificabili, ma difficilmente 
+    risolvibili.
+\end{remark}
+\begin{remark}
+    Esistono problemi nè risolvibili nè  verificabili facilmente.
+\end{remark}
+\begin{theorem}
+    Un problema $L \subseteq 2^* \in $NP se e solo se esiste una Macchina di Turing deterministica $V$, verificatore,
+    e un polinomio $P()$, tali che:
+    \begin{enumerate}
+        \item $V(x,w)$ lavora in tempo polinomiale in $|x|$
+        \item $\forall x \in 2^*$:
+        \begin{enumerate}
+            \item se $x \in L$, $\exists w \in 2^*$ tale che $|w| \leq P(|x|)$ e $V(x,w) = \mathit{yes}$
+            \item se $x \notin L$, $\forall w \in 2^*$ $|w| \leq P(|x|)$, $V(x,w) = \mathit{no}$
+        \end{enumerate}
+    \end{enumerate}
+\end{theorem}
+
+\subsubsection{NP con oracolo}
+L'idea di una Macchina di Turing con oracolo presuppone l'esistenza, oltre 
+al nastro classico, di un nastro dell'oracolo.
+
+La Macchina può entrare in uno stato di query all'oracolo, 
+in cui lo interroga e l'oracolo risponderà, facendole cambiare stato di conseguenza.
+
+\begin{theorem}
+    Un problmema $L \subseteq 2^* \in $ NP se esiste una Macchina di Turing con oracolo $V$ e
+    un polinomip $P()$, tale che:
+    \begin{enumerate}
+        \item $V(x)$ lavora in tempo polinomiale in $|x|$
+        \item $V(x)$ effettua al più $P(|x|)$ query all'oracolo
+        \item $\forall x \in 2^*$:
+        \begin{enumerate}
+            \item se $x \notin L$, $V(x) = no$ qualunque sia l'oracolo
+            \item se $x \in L$, $V(x) = yes$ per una qualche stringa dell'oracolo
+        \end{enumerate}
+    \end{enumerate}
+\end{theorem}
+
+\subsubsection{Verificatore probabilistico}
+In questo caso si estende il concetto di verificatore con 
+oracolo aggiungendo un nastro di numero casuali che la Macchina può leggere.
+
+Date due funzioni 
+$$q,r : \mathbb{N} \longrightarrow \mathbb{N}$$
+$PCP[r,q]$ è la classe di linguaggi $L \subseteq 2^*$ per i quali esiste un verificatore probabilistico
+con le seguenti proprietà: 
+\begin{enumerate}
+    \item $V(x)$ lavora in tempo polinomiale
+    \item $V(x)$ fa al massimo $q(|x|)$ query all'oracolo
+    \item $V(x)$ usa al più $r(|x|)$ bit casuali
+    \item $\forall x \in 2^*$:
+    \begin{enumerate}
+        \item Se $x \notin L$, $V(x) = no$ con probabilità $\geq \frac{1}{2}$
+        \item Se $x \in L$, $V(x) = yes$ con probabilità $1$ per almeno
+        un $w \in 2^*$
+    \end{enumerate}
+\end{enumerate}
+
+\begin{remark}
+    Vale che:
+    \begin{itemize}
+        \item $NP = PCP[0,\mathit{Poly}] = \cup_{p : \mathit{polinomio}}PCP[0, p]$ 
+        \item $P = PCP[0,0]$
+    \end{itemize}
+\end{remark}
+
+\subsubsection{Teorema PCP}
+Definiti i verificatori probabilistici, si passa ora al teorema PCP.
+
+\begin{theorem}
+    $PCP[O(\log n), O(1)] = NP$
+\end{theorem}
+
+\subsubsection{Verificatore NP in forma canonica}
+Si considera ora la classe 
+$$PCP[r(n), q], r(n) = O(\log n), q \in \mathbb{N}$$
+Un verificatore facente parte di questa classe, può leggere 
+fino a $r(|x|)$ bit random, e $q$ query all'oracolo.
+
+Il processo seguito da un verificatore del genere è quello 
+di interrogare l'oracolo e agire di conseguenza.
+In particolare, si può pensare a un albero contenente le varie strade che può prendere 
+il verificatore in base alla risposta dell'oracolo. Ha quindi un comportamento 
+adattivo.
+
+Quello che può fare però il verificatore, invece che chiedere di volta in volta 
+all'oracolo, è simulare tutti i rami di decisione, e segnarsi quando dovrebbe 
+interrogarlo, in modo da poi richiedere in una volta sola tutto quello di 
+cui ha bisogno.
+
+Un verificatore in forma canonica è proprio questo, ovvero un verificatore che prima
+simula tutti i rami di computazione possibili, che variano in base all'interrogazione
+all'oracolo, per poi interrogarlo su tutte le posizioni di cui ha bisogno.\\
+Il verificatore così ottenuto può essere considerato come una semplice Macchina di Turing, 
+infatti non deve più interrogare l'oracolo.
+
+\subsection{Problemi inapprossimabili}
+In questa sezione si affrontano due dimostrazioni di inapprossimabilità, 
+esse sfruttano i concetti introdotti a sezione precedente.
+
+\subsubsection{Inapprossimabilità MaxEeSat}
+Il problema è stato introdotto a sezione \ref{eksat}, e si era individuato un algoritmo 
+deterministico che sfruttava concetti probabilistici.
+
+\begin{theorem}
+    Esiste un algoritmo deterministico che approssima MaxE3Set con tasso
+    $\frac{8}{7}$
+\end{theorem}
+
+\begin{theorem}
+    \label{th1ek}
+    Esiste un $\bar{\epsilon} > 0$ tale che MaxE3Sat non è $(\frac{8}{7}-\bar{\epsilon})$-approssimabile. 
+\end{theorem}
+
+Un versione rilassata del teorema appena introdotto è la seguente.
+\begin{theorem}
+    Esiste un $\bar{\epsilon} > 0$ tale che MaxE3Sat non è $(1+\bar{\epsilon})$-approssimabile. 
+\end{theorem}
+\begin{remark}
+    Il teorema \ref{th1ek} dimostra che l'algoritmo individuato a sezione \ref{eksat} è ottimo, 
+    mentre quello successivo che MaxE3Sat non fa parte di PTAS. La dimostrazione di quest'ultimo è
+    molto più semplice e usa lo stesso principio.
+\end{remark}
+\begin{lemma}
+    Esiste un $\epsilon > 0$ tale che MaxSat non è $(1+\bar{\epsilon})$-approssimabile in tempo polinomiale.
+\end{lemma}
+\begin{proof}
+    Considerando quanto detto su PCP a sezione precedente: 
+    $$L \in NP \implies \exists r(n) \in O(\log n), \exists w \in \mathbb{N}, L \in PCP[r(n), q]$$
+    Significa quindi che esiste un verificatore probabilistico $V$ che opera come segue:
+    $$x \in 2^* \longrightarrow V (R \in 2^{r(|x|)}, (w_{i_1}, \dots, w_{i_q})) \longrightarrow \mathit{yes}/\mathit{no}$$
+    Dove $(w_{i_1}, \dots, w_{i_q})$ sono funzione di $x$ e di $R$.
+    
+    Fissando $x$ e $R$ si può immaginare una funzione che opera così:
+    $$f^R(w_{i_1}^R, \dots, w_{i_q}^R) = \mathit{true\;sse\;V\;accetta}$$
+    La funzione può essre espressa come formula sat, e ridotta a 3-sat:
+    $$\Phi_x = \wedge_{R\in 2^{r(|x|)}} \phi_z^R$$
+    Dove $\phi_z^R$ è la traduzione di $f^R$ in una formula logica dove le 
+    variabili rappresentano il seguente evento:
+    \[
+        x_i = \begin{cases}
+            \mathit{true\;se\;} w_i = 1\\
+            \mathit{false\;se\;} w_i = 0
+        \end{cases}\]
+
+    $\Phi_x$ ha $2^{r(|x|)} \cdot 2^q$ clausole, ovvero una quantità polinomiale perch
+    $r(|x|) \in O(\log n)$.
+
+    Distinguiamo ora due casi:
+    \begin{enumerate}
+        \item se $x \in L$ esiste un $w$ per cui $V$ accetta con probabilità 1, 
+        ovvero per ogni $R \in 2^{r(|x|)} \implies \Phi_x$ ha $2^q\cdot 2^{r(|x|)}$
+        clausole soddisfatte da qualche assegnamento (da quello indotto da $w$).
+        \item se $x \notin L$, $V$ accetta con probabilità $< \frac{1}{2}$ 
+        qualunque sia $w$
+    \end{enumerate}
+
+    Quindi, si considera ora un certo problema $L$ facente parte di NP, e si sfrutta 
+    la costruzione della formula appena descritta, ottenendo una certa $\Phi_x$, 
+    questo è possibile perchè se $L$ è in NP esiste un verificatore PCP.
+    
+    Fissiamo $\bar{\epsilon} = \frac{1}{2^{q+1}}$.
+    Supponiamo che esiste un algoritmo per MaxSat con tasso di approssimazione $(1+\bar{\epsilon})$, 
+    sia $t^*(\Phi_x)$ la soluzione ottima dell'istanza di Sat.
+
+    Distinguiuamo ora i due casi come prima:
+    \begin{enumerate}
+        \item se $x \in L \implies t^*(\Phi_x) = 2^q \cdot 2^{r(|x|)}$
+        \item se $x \notin L \implies t^*(\Phi_x) \leq \frac{2^{r(|x|)}}{2} \cdot 2^q + \frac{2^{r(|x|)}}{2} 
+        \cdot 2^{q-1}$, 
+        ovvero, in metà dei casi risponde sì, mentre nell'altra metà sicuramente avrà un numero 
+        di clausole risolte al più di $2^{q-1}$, visto che deve rispondere no, che 
+        equivale a $\leq 2^{r(|x|)} \cdot 2^q - \frac{2^{r(|x|)}}{2}$
+    \end{enumerate}
+
+    Considerando l'algoritmo $(1+\bar{\epsilon})$-approssimante, nel primo caso, $x \in L$, individua una soluzione 
+    che corrisponde a
+    $$A = t(\Phi_x) \geq \frac{t^*(\Phi_x)}{1+\bar{\epsilon}} = \frac{2^q \cdot 2^{r(|x|)}}{\frac{1}{2^{q+1}}}$$
+    Nel secondo caso invece, $x \notin L$
+    $$B = t(\Phi_x) \leq t^*(\Phi_x) \leq 2^{r(|x|)} \cdot 2^q - \frac{2^{r(|x|)}}{2}$$
+    Vale che $A < B$:
+    \begin{equation}
+        \begin{aligned}
+            A - B = \frac{2^q \cdot 2^{r(|x|)}}{\frac{1}{2^{q+1}}}- 2^{r(|x|)} \cdot 2^q - \frac{2^{r(|x|)}}{2}\\
+            = 2^{r(|x|)} \cdot \frac{2^{q+1} - 2^{q+1}(1+ \frac{1}{2^{q+1}}) + 1 + \frac{1}{2^{q+1}}}{2(1+ \frac{1}{2^{q+1}})} > 0
+        \end{aligned}
+    \end{equation}
+    Questo significa che l'output emesso nel caso $x \in L$, è strettamente maggiore del caso in cui
+    $x \notin L$, questo implica che, calcolando $A$, si può capire, osservando l'output dell'algoritmo, 
+    a capire se $x \in L$. Ovvero in tempo polinomiale si è deciso $L$, assurdo.
+\end{proof}
+
+\begin{remark}
+    La dimostrazione del lemma si può estendere a MaxE3Sat.
+\end{remark}
+
+\subsubsection{Inapprossimabilità Max Indipendent Set}
+Il problema di Max Indipendent Set consiste in:
+
+\emph{Input}: $G = (V,E)$\\
+\emph{Output}: $X \subseteq V, \binom{X}{2}\cap E = \emptyset$\\
+\emph{Costo}: $|X|$\\
+\emph{Tipo}: max
+
+\begin{theorem}
+    Non è possibile approssimare in tempo polinomiale Max Indipendet Set a 
+    meno di $(2-\epsilon)$ per $\epsilon > 0$.
+\end{theorem}
+\begin{proof}
+    Si parte da un $L \subseteq 2^*, L \in NP$.
+
+    Per il teorema PCP, esiste un verificatore $$V \in PCP[r(n), q], r(n) \in O(\log n), 
+    q \in \mathbb{N}$$
+    tale che $V$ accetta $L$.
+
+    Fissato un $x \in 2^*$ simulo $V$ per ogni stringa $R \in 2^{r(|x|)}$ e per 
+    ogni sequenza $\in 2^q$, per un totale di $2^{r(|x|)} \cdot 2^q$ simulazioni, 
+    che sono in quantità polinomiale.
+
+    Siano ora tutte le simulazioni che ritornano sì, così fatte:
+    $$(R, \{i_1^R = v_1, \dots, i_q^R = v_q\})$$
+    Queste coppie diventano nodi di un grafo, esiste un lato 
+    tra due nodi, sse, dato 
+    $$(R^\prime, \{i_1^R = v_1^\prime, \dots, i_q^R = v_q^\prime\})$$
+    Non creo l'arco sse $R \neq R^\prime$ oppure se i secondi membri sono compatibili,
+    sarebbero incompatibili se in una stessa posizione ci fossero due $v_i$ differenti.
+    
+    Per il grafo, vale che: 
+    \begin{enumerate}
+        \item Se $x \in L$, $G_x$ ha un insieme indipendente di cardinalità $\geq 2^{r(|x|)}$:
+        questo perchè se $x \in L$ esiste un $w \in 2^q$ che accetta qualunque sia $R$. Ma allora 
+        ci sono $2^{r(|x|)}$ coppie compatibili con $w$, visto che $w$ fa accettare tutti, 
+        quindi non ci sono archi tra loro e di conseguenza vale l'osservazione.
+        \item Se $x \notin L$, gli insiemi indipendenti di $G_x$ hanno cardinalità $\leq 2^{r(|x|) -1}$:
+        supponendo che ne esista uno con cardinalità maggiore, esisterebbe un $w_s$ tale che 
+        tutte le simulazioni rappresentate dall'insieme si verificherebbero. Questo non è corretto 
+        poichè avremmo più della metà delle simulazioni verificate.
+    \end{enumerate}
+
+    Se ora esistesse un algoritmo $A$ con approssimazione $\alpha$, che 
+    produce una soluzione di cardinalità $|S_{G_x}| = \frac{|S^*_{G_x}|}{\alpha}$
+    \begin{enumerate}
+        \item $x \in L \implies |S^*_{G_x}| \geq 2^{r(|x|)} \implies |S_{G_x}| \geq \frac{2^{r(|x|)}}{\alpha}$
+        \item $x \notin L \implies |S^*_{G_x}| \leq \frac{2^{r(|x|)}}{2} \implies |S_{G_x}| \leq \frac{2^{r(|x|)}}{2}$
+    \end{enumerate}
+    Se $\alpha$ fosse $< 2$, i due casi sarebbero disgiunti, quindi deciderei in tempo polinomiale
+    l'appartenenza di $x$ a $L$.
+\end{proof}
