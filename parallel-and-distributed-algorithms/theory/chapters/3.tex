@@ -1,0 +1,19 @@
+\subsection{Types of parallel architecture}
+
+\begin{enumerate}
+ \item \textbf{shared memory}:\\ 
+  - Invisible property:\\
+   We have a central clock\\
+  - Communication property:\\
+   Constant time communication between processors:\\
+   For example: \textit{If $P_j$ wants communicate $x$ to $P_i$:}\\
+   - $P_j$ writes $x$ in central memory\\
+   - $P_i$ read $x$ from central memory
+ \item \textbf{distributed memory}:
+  - Invisible property:\\
+   We have a central clock\\
+  - Communication property:\\
+   The communication depends on the distance between processors: if $P_j$ wants communicate with $P_i$, we should ask ourselves how many processors there are in between.
+\end{enumerate}
+
+\subsubsection{PRAM model (Parallel RAM)}

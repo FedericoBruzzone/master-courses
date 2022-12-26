@@ -90,10 +90,35 @@ $FP$ = general problem class solved in polynomial time\\
 $NP$ = decision problem class solved in polynomial time on nDTM (non-deterministic Turing machine)
 
 \begin{remark}
- - the asymptotic evaluation of times can hide constants that make the difference in practice\\
+ the asymptotic evaluation of times can hide constants that make the difference in practice\\
   i.e., sometimes we prefer quick-sort ($O(n^2)$) over merge-sort ($O(n\lg{n})$)\\
- - the degree of the polynomial must be low\\
-  i.e., $n^1000$ on small instance is worse than exponential algorithms\\
+ the degree of the polynomial must be low\\
+  i.e., $n^{1000}$ on small instance is worse than exponential algorithms\\
 \end{remark}
 
 \section{Parallel Algorithms}
+
+\textbf{Problems}:
+
+\begin{enumerate}
+ \item \textbf{synthesis}:\\
+  How to build algorithms? We can draw inspiration from sequential algoithms, but we need to have innovative ideas.
+ \item \textbf{evaluation}:\\
+ How to evaluate performance?\\
+  - $time$\\
+  - $hardware$ = \# processor\\
+ What is efficient?\\
+  - $E$ = efficiency\\
+   It is usefull to have a ratio between $time$ and $hardware$
+ \item \textbf{universality}: \\
+  Am I able to define a class of problems for efficient parallel algorithm?\\
+  Sequential = $FP$\\
+  Parallel = $NC$\\
+  $NC \rightarrow$ problem solved by faster parallel algorithm with:\\
+   - polylogarithmic time\\
+   - polynomial hardware
+  \begin{proof}
+  $NC \subseteq FP$\\
+  To obtain a sequential algorithm starting from a parallel one, it is enough to simulate "with a processor" the work of the processors involved in sequence.
+  \end{proof}
+\end{enumerate}
