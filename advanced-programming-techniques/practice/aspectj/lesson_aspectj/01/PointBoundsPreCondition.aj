@@ -4,18 +4,18 @@ public aspect PointBoundsPreCondition {
  public static int MAX_Y = 1024;
  public static int MIN_Y = 0;
  
- pointcut onSetX(int newX):
+ pointcut beforeSetX(int newX):
   call(void Point.setX(int)) && args(newX);
 
- pointcut onSetY(int newY):
+ pointcut beforeSetY(int newY):
   call(void Point.setY(int)) && args(newY);
 
- before(int newX): onSetX(newX) {
+ before(int newX): beforeSetX(newX) {
   theAssert(newX >= MIN_X); 
   theAssert(newX <= MAX_X);
  }
 
- before(int newY): onSetY(newY) {
+ before(int newY): beforeSetY(newY) {
   theAssert(newY >= MIN_Y); 
   theAssert(newY <= MAX_Y);
  }
