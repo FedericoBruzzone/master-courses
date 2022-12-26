@@ -1,7 +1,7 @@
 class Point implements FigureElement {
-    private int x = 0, y = 0;
-
-    public int getX() {
+    private int x = 0, y = 0; 
+    
+		public int getX() {
         return x;
     }
 
