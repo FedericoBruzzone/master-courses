@@ -12,8 +12,9 @@ public aspect PointBoundsEnforcement {
 	args(newX);
  
  void around(int newX): onSetX(newX) {
-	System.out.println("around");
+	System.out.println("before around");
 	proceed(clip(newX, MIN_X, MAX_X));
+ 	System.out.println("after around");
  }
 
  pointcut onSetY(int newY):
@@ -21,12 +22,22 @@ public aspect PointBoundsEnforcement {
 	args(newY);
  
  void around(int newY): onSetY(newY) {
-  System.out.println("around");
 	proceed(clip(newY, MIN_Y, MAX_Y));
  }
 
  private int clip(int val, int min, int max) {
   return Math.max(min, Math.min(max, val));
  }
-
+ 
+ pointcut onGet(Point x):
+	target(x) &&
+  call(int Point.get*());
+ 
+ int around(Point x): onGet(x) {
+	System.out.println("before onGet");
+	int tmp = proceed(x);
+	System.out.println("after onGet");
+  return tmp;
+ }
+ 
 } 

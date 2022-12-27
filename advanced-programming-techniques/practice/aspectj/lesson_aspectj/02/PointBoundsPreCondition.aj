@@ -1,5 +1,5 @@
 public aspect PointBoundsPreCondition {
- 
+
  public static int MAX_X = 1024;
  public static int MIN_X = 0;
  public static int MAX_Y = 1024;
@@ -12,7 +12,7 @@ public aspect PointBoundsPreCondition {
   call(void Point.setY(int)) && args(newY);
 
  before(int newX): beforeSetX(newX) {
-	theAssert(newX >= MIN_X); 
+  theAssert(newX >= MIN_X);
   theAssert(newX <= MAX_X);
  }
 
@@ -23,7 +23,7 @@ public aspect PointBoundsPreCondition {
  
  private void theAssert(boolean v) {
   if (!v)
-		throw new RuntimeException();
+   throw new RuntimeException();
  }
 
 } 
