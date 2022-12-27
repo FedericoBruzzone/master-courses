@@ -34,3 +34,5 @@ FileSystem: Ctrl-P
 * CocInstall coc-python
 
 :last
+
+:! to write in bash

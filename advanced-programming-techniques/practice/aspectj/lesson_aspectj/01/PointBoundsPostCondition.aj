@@ -15,7 +15,7 @@ public aspect PointBoundsPostCondition {
  }
  
  after(Point p, int newY) returning: afterSetY(p, newY) {
-	System.out.println(p.getY() == newY);
+	//System.out.println(p.getY() == newY);
 	theAssert(p.getY() == newY); 
  }
 	

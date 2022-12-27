@@ -18,8 +18,8 @@ public aspect DisplayUpdating {
 			call(void Point.setY(int)));
 	
 	after(FigureElement fe) returning: move(fe) { 
-	 System.out.println(fe);
-	 System.out.println("DisplayUpdating::after()<-move()"); 
+	 //System.out.println(fe);
+	 //System.out.println("DisplayUpdating::after()<-move()"); 
 	 Display.update(); 
  }
 }
