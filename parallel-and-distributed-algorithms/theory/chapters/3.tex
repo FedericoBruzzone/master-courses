@@ -1,4 +1,4 @@
-\subsection{Types of parallel architecture}
+\textbf{Types of parallel architecture}
 
 \begin{enumerate}
  \item \textbf{shared memory}:\\ 
@@ -16,4 +16,103 @@
    The communication depends on the distance between processors: if $P_j$ wants communicate with $P_i$, we should ask ourselves how many processors there are in between.
 \end{enumerate}
 
-\subsubsection{PRAM model (Parallel RAM)}
+\subsection{PRAM model (Parallel RAM)}
+
+It is composed by:
+\begin{itemize}
+ \item A central memory (central clock)
+ \item $n$ sequential RAMs that have thier own private memory
+\end{itemize}
+
+Types of instruction:
+\begin{itemize}
+ \item logical arithmetic operations
+ \item operations from/to central memory:\\
+ - $STORE \ R[n] \ M[n]$\\
+ - $LOAD \  R[n^1] \ M[n^1]$
+\end{itemize}
+
+We are able to manipulate only the data in private memory, doing this the communication come in $O(1)$
+
+\textbf{From of instrucitions}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \For{$i \ \in \ I$}{$instruction_i$}
+ \caption{From of instrucitions}
+\end{algorithm}
+
+The processors with index in $I$ execute $instruction_i$\\
+The processors with index not in $I$ execute $null$
+
+What's \textbf{$instruction_i$}?\\
+There are two types of different architecture:
+\begin{itemize}
+ \item SIMD: \textit{single instruction multiple data}
+ \item MIMD: \textit{multiple instruction multiple data}
+\end{itemize}
+
+$instruction_i$ is for $i \neq j$ the same instruction
+
+Depending on the ability to access memory $M$ (central) we also have different architectures:
+\begin{itemize}
+ \item EREW:\\
+ - read/write in the same cell of $M$
+ \item CREW:\\
+ - simultaneous reading
+ - no simultaneous writing
+ \item CRCW:\\
+ - simultaneous reading/writing\\
+ For simultaneous writing we have different policies:
+ \begin{itemize}
+  \item common: the processor can write the same data, otherwise system shutdown
+  \item random: $P_i$ is chosen randomly
+  \item max/min: wins $P_i$ with max/min data
+  \item priority: wins $P_i$ with max priority
+ \end{itemize}
+\end{itemize}
+
+\textbf{Romputing Resources}
+
+- Sequencial: $t(n)$, $s(n)$\\
+- Parallel: $p(n)$, $T(n, p(n))$
+
+\textbf{Example of P-RAM algorithm}
+
+\begin{algorithm}[H]
+ - Assuming that array $A$ have distict value\\
+ - \# \ of \ proccessors = n\\
+ \SetAlgoLined
+ \KwIn{$A, \ n, \ x$}
+ \KwResult{$find x in A$}
+ $index \gets -1$\\
+ \For{$i=0; \ to \ n-1$} {
+  $P_i$: \If{$A[i] = x$} {
+   $index = i$
+  } 
+ }
+ \Return{$index$}
+ \caption{Find}
+\end{algorithm}
+
+Parallel time = constant
+
+If $A$ repeating elements $\rightarrow$ CRCW
+
+\textbf{Informal definition}
+
+$P(n)$ = number of processors required on input of length $n$.
+
+$T(n, P(n))$ = Time required by an input of length $n$ and $P(n)$ processors. (Worst case)
+
+\textbf{Formal definition}
+
+$t_i(n) = max\{(t_i)^{(j)}_{(n)} \ | \ 1 \leq j \leq P(n)\}$
+
+$T(n, P(n)) = \sum_{i=1}^{k(n)}{t_i(n)}$
+
+$T$ depends on $k(n)$
+
+$T$ depends on the input length $[logarithmic / uniform \ cost)$
+
+$T$ depends on $P(n)$
