@@ -1,4 +1,4 @@
-public aspect MyAspect<T> {
+public aspect MyAspect {
  
  pointcut onCall(Test t, int a):
 	target(t) &&

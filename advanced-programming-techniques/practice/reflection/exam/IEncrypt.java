@@ -1,5 +1,7 @@
 interface IEncrypt {
-    public long getKey(); 
-    public void setKey(long l);
-    public byte[] encrypt(byte[] b);
- }
+    public long getKey();
+
+    public void setKey(long key);
+
+    public byte[] encrypt(byte[] bytecode);
+}
