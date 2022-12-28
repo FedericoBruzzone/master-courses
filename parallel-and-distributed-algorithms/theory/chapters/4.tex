@@ -1,1 +1,82 @@
- 
+\textbf{Broadcast on P-RAM EREW}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{$x$}
+ %\KwResult{$find x in A$}
+ $A[0] \gets x$\\
+ \For{$i=0 \ to \ \log{n}-1$} {
+  \For{$j=2^{i} \ to \ 2^{i+1}-1$ /* parallelize */ } { 
+   $A[j] = A[j-2^{i}]$ 
+  }
+ } 
+ \caption{Broadcast}
+\end{algorithm}
+
+$t(n, n) = O(\log{n})$
+
+\textbf{Use Broadcast on P-RAM}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{$A, \ n, \ x$}
+ \KwResult{}
+ $Broadcast(x)$\\
+ $index \gets -1$\\
+ \For{$i=0 \ to \ n-1$ /* parallelize */} {
+  \If{$A[i] = x[i]$} { 
+   $index = i$ 
+  }
+ } 
+ \Return{index}
+ \caption{Find}
+\end{algorithm}
+
+- $t(n, n) = O(\log{n})$\\
+- if $A[i]$ are distinct $\rightarrow$ EREW\\
+- else $\rightarrow$ ERCW\\
+- ERCW can be transformed in EREW (increasing the time function)
+
+\subsection{Efficiency}
+
+A first comparison between the times\\
+$T(n,1) 	\leftrightarrow T(n, P(n))$\\ \\
+There are two cases:
+\begin{itemize}
+ \item $T(n, P(n)) = \Theta(T(n,1))$ NO!
+ \item $T(n, P(n)) = o(T(n,1))$ YES!
+\end{itemize}
+
+\textbf{Speed-up}
+
+$S(n, P(n)) = \frac{T(n,1)}{T(n, P(n))}$\\
+For example, if $S = 4$ the parallel algorithm is 4 times faster than sequential one.\\
+If we are in the case: $T(n, P(n)) = o(T(n,1)) \implies S(n, P(n)) \rightarrow +\infty$. We are not cosidering $P(n)$\\
+
+Problem: \textbf{SAT} (where the length of the formula is linearly related to the number of variables involved)\\
+$T(n,1) = 2^n$ for the moment ($ \in NP$)\\
+$T(n, P(n)) = O(n)$ using a processor for each assignment\\
+$S(n, P(n)) = \frac{2^n}{n} \rightarrow +\infty$ beacuse $P(n)=2^n$
+
+\textbf{Efficiency}
+
+$E(n, P(n)) = \frac{S(n, P(n))}{P(n)} = \frac{T(n,1)^*}{P(n) \cdot T(n, P(n))}$\\
+* means the best sequencial time ($o$ lower bound)\\
+$0 \leq E(n, P(n)) \leq 1$
+
+Problem: \textbf{SAT}\\
+$E(n, P(n)) \simeq \frac{1}{n} \rightarrow 0 $
+\begin{remark}
+ when $E \rightarrow 0$ we are using lots of processors, that they are not used for a long time. 
+\end{remark}
+
+We can see $E \leq 1$ in two distinct ways:
+
+\begin{enumerate}
+ \item through Parallel Alg. $\rightarrow$ Sequencial Alg.\\
+ The transformation: I sequence the parallel steps\\
+ Time: $T^{\sim}(n,1)$\\
+ $T(n,1) \leq T^{\sim}(n,1) \leq P(n) \cdot t_1(n) + \dots + P(n) \cdot t_{kn}(n) = P(n) \cdot \sum$
+\end{enumerate}
+
+PAG10
