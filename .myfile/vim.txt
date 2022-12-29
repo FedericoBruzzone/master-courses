@@ -25,6 +25,8 @@ Copy Part: Select part and press y
 Cut Part: Select part and press d
 Paste Part: Select part and press p
 
+Outside: "+y
+
 ===== MyPlug =====
 NERDTreeToggle: Ctrl-N
 FileSystem: Ctrl-P 

@@ -1,7 +1,7 @@
 class Line implements FigureElement {
  
- private Point p1, p2;
-
+ public /*private*/ Point p1, p2;
+ 
  public Line(Point p1, Point p2) {
   this.p1 = p1;
 	this.p2 = p2;
@@ -40,5 +40,8 @@ class Line implements FigureElement {
 	p1.moveBy(dx, dy); 
 	p2.moveBy(dx, dy); 
  } 
-
+  
+ public String toString() {
+  return "Line(" + this.p1 + ", " + this.p2 + ")"; 
+ }
 }

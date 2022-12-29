@@ -1,6 +1,6 @@
 class Point implements FigureElement {
  
- public /*private*/ int x = 0, y = 0; 
+ public /*private*/ int x, y; 
  
  public Point() {
   this.x = 0;
@@ -36,5 +36,9 @@ class Point implements FigureElement {
   x += dx;
   y += dy;
  }
-
+  
+ public String toString() {
+  return "Point(" + this.x + ", " + this.y + ")";
+ } 
+ 
 }
