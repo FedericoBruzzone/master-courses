@@ -10,13 +10,6 @@ public aspect CountingCalls {
  pointcut ends():
 	execution(public static void *.main(String[]));
 
- pointcut e():
-	this(FigureElement) && call(* *.*(..)); 
-
- before(): e() {
-	System.out.println(thisJoinPoint.getTarget() + " has called " + thisJoinPoint.getSignature());
- }
-
  before(FigureElement fe) : calls(fe) {
 	//System.out.println(thisJoinPoint.getThis()); 
 	//System.out.println(thisJoinPoint.getTarget()); 
