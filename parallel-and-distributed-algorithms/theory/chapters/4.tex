@@ -76,7 +76,29 @@ We can see $E \leq 1$ in two distinct ways:
  \item through Parallel Alg. $\rightarrow$ Sequencial Alg.\\
  The transformation: I sequence the parallel steps\\
  Time: $T^{\sim}(n,1)$\\
- $T(n,1) \leq T^{\sim}(n,1) \leq P(n) \cdot t_1(n) + \dots + P(n) \cdot t_{kn}(n) = P(n) \cdot \sum$
+ $T(n,1) \leq T^{\sim}(n,1) \leq P(n) \cdot t_1(n) + \dots + P(n) \cdot t_{kn}(n) = P(n) \cdot \sum$\\
+ We have that $T(n, 1) \leq P(n) \cdot T(n, P(N))$ (*)
+ \begin{remark}
+  from (*) $\frac{T(n,1)}{P(n)} \leq T(n, P(n))$\\
+  if $T(n,1)$ is the best sequential time. The best time of the parallel algorithm would be distributed equally to processors the sequencial work.
+ \end{remark}
+ \begin{remark}
+  from (*) $\frac{T(n,1)}{P(n) \cdot T(n,P(n))} \leq 1 \ | \ where \ P(n) \cdot T(n,P(n)) = E(n,P(n)))$\\
+  if $T(n,1)$ is the best sequential time. The best time of the parallel algorithm would be distributed equally to processors the sequencial work.
+ \end{remark}
+ $0 \leq E \leq 1$
+ \begin{itemize}
+  \item $E \rightarrow 0$ is no good
+  Given that $T(n,P(n)) = o(T(n,1))$ means $P(n)$ grows too fast\\
+  The best that we can have is $E \rightarrow K \leq 1$ where $K$ is a constant
+ \end{itemize}  
+ \item J. Wyllie (1979 PhD Thesis)\\
+ If $E \rightarrow 0$ then to improve the algorithm try to reduce $P(n)$ without degrading time\\
+ We can see the validity of this principle by reducing the number of processors from $P \rightarrow P/K$
+ Time:\\
+ $T(n,P/K) \leq \sum_{i=1}^{K(n)}K \cdot t_i(n) = K \cdot \sum_{i=1}^{K(n)} t_i(n) = K \cdot T(n)$\\
+ we have that: $T(n,P/K) \leq K \cdot T(n)$\\
+ E grow by decreasing the processors\\
+ $E(n, P/K) \leftrightarrow E(n,P)$              
 \end{enumerate}
 
-PAG10
