@@ -3,7 +3,7 @@
 In this repository there are the notes of the Master's Degree in Computer Science @ UniMi
 
 - **Advanced Programming** 
-- **Advanced Programming Techniques*
+- **Advanced Programming Techniques**
 - **Architecture for Big Data** 
 - **Algorithm and Complexity**
 - **Parallel and Distributed Algorithm**
