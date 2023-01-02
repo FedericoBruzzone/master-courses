@@ -1,5 +1,7 @@
 \documentclass[a4paper]{article}
 
+
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
@@ -11,10 +13,11 @@
 
 % ===== Graph =====
 \usepackage{tikz}
-% ===== multicol =====
+% ===== Multicol =====
 \usepackage{blindtext}
 \usepackage{multicol}
-% ===============
+% ===== Cancel =====
+\usepackage{cancel}
 
 \mathtoolsset{showonlyrefs}  
 \hypersetup{
@@ -23,6 +26,8 @@
     filecolor=black,      
     urlcolor=black,
 }
+
+\AtBeginDocument{\renewcommand\proofname{Proof}}
 
 \newcommand{\pluseq}{\mathrel{{+}{=}}}
 
@@ -52,6 +57,7 @@
 \input{chapters/2.tex}
 \input{chapters/3.tex}
 \input{chapters/4.tex}
+\input{chapters/5.tex}
 %\input{chapters/1-apx_classi_greedy.tex}
 %\input{chapters/2-apx_pricing.tex}
 %\input{chapters/3-probability.tex}
@@ -82,8 +88,6 @@
 \draw[->] (6) -- node[midway, above right, sloped, pos=1] {+1} (4);
 
 \end{tikzpicture} 
-
-+
 
 \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}] 
 \node[main] (1) {$x_1$}; 

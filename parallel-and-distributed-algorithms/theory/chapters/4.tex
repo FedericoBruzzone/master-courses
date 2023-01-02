@@ -99,6 +99,10 @@ We can see $E \leq 1$ in two distinct ways:
  $T(n,P/K) \leq \sum_{i=1}^{K(n)}K \cdot t_i(n) = K \cdot \sum_{i=1}^{K(n)} t_i(n) = K \cdot T(n)$\\
  we have that: $T(n,P/K) \leq K \cdot T(n)$\\
  E grow by decreasing the processors\\
- $E(n, P/K) \leftrightarrow E(n,P)$              
+ $E(n, P/K) \leftrightarrow E(n,P)$\\
+ $E(n, P/K) = \frac{T(n,1)}{P/K \cdot T(n, P/K)} \geq \frac{T(n,1)}{P \cdot T(n, P)}  = E(n,P)$\\
+ This formula show us that decreasing the processors improves efficiency.\\
+ $1 = E(n,1) = E(n, P/P) \geq E(n, P/K) \geq E(n,P)$\\
+ It is important to be careful to keep $T(n, P/K) \geq o(T(n,1))$ because $E(n,1) = 1, but T(n, P=1) = T(n,1) that is sequential.$         
 \end{enumerate}
 
