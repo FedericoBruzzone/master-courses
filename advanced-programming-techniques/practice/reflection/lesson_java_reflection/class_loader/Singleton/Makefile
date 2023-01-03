@@ -1,6 +1,6 @@
 JAVAC = javac
 
-package: SimpleClassLoader.class SingletonViolationTest.class Singleton.class 
+package: SimpleClassLoader.class SingletonViolationTest.class Singleton.class
 
 all: package
 
