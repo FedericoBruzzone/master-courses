@@ -1,0 +1,95 @@
+\textbf{Inductive step}: if \textbf{(*)} is true for $j-1$ we can proof that it is true for $J$.\\
+Program instruction: $M[2^{j}K] = M[2^{j}K] + M[2^{j}K - 2^{j-1}]$\\
+$M[2K \cdot 2^{j-1}] = M[2K \cdot 2^{j-1}] + \dots + M[2^{j-1}(2k-1)+1]$\\
+$M[2^{j-1}(2k-1)] \overset{(*)}{=} M[2^{j-1}(2k-1)] + \dots + M[2^{j-1}(2K-2)+1]$\\
+$M[2^{j}K] \overset{(*) is true}{=} M[2^{j}K] + \dots + M[2^{j-1}(2k-1)+1]$\\
+
+\textbf{Evaluation of the summation algorithm}
+
+$P(n) = n/2$\\
+$T(n, n/2) = 4 \log{n}$ micro-instruction: LD, LD, ADD, ST\\
+And if $n$ is not a power of 2?\\
+We stretch the input to the nearest power of 2.\\
+So we have:\\ 
+$P(n) = 2n/2 = 2$\\
+$T(n, n) = 4 \log{2n} \leq 5 \log{n}$ \\
+
+\textbf{Efficiency}
+$E(n,n) = \frac{n-1}{n \cdot 5 \log{n}} \sim \frac{n}{5 \log{n}} \rightarrow 0 (slowly)$\\
+Since the processor are a bit wasted we apply Wyllie: $P(n) = o(n)$ to have $E \rightarrow K \neq 0$\\
+
+\textbf{Apply Wyllie:}\\
+$n$ number,\\
+$p$ processors,\\
+$\Delta = n/p$ to sum.\\
+
+1 parallel step:\\
+$M[K \Delta] = M[K \Delta] + \dots + M[(K-1) \Delta+1] \ \ 1 \leq K \leq P$\\
+Sunsequent parallel steps:\\
+$M[\Delta], M[2 \Delta] + \dots + M[P \Delta]$\\
+That store in $M[P \Delta] = M[n] = \sum_i{M[i]}$\\
+Correctness: OK\\
+Evaluation:\\
+$p(n) = P$\\
+$T(n, p) = T(1 step) + T(subsequent \ steps) = n/p + 5 \log{p}$\\
+$E(n,p) = \frac{n-1}{P(n/p + 5 \log{p}} = \frac{n-1}{n + 5p \log{P}} \rightarrow K \neq 0$\\
+$E(n,p) \simeq n/2n \rightarrow 1/2$\\
+We would like to have $p \log{P} \leadsto P = \frac{n}{\log{5}}$\\
+In fact: $\frac{n}{5 \log{n}} \left(\log{\frac{n}{(\log{n})5}}\right)$\\
+$ = \frac{n}{5 \log{n}}\left(\log{n} - \log{5} - \log{\log{n}}\right)$\\
+$ = n/5\left(1 - \frac{\log{5}}{\log{n}} - \frac{\log{\log{n}}}{\log{n}}\right) \sim n/5$\\
+
+\textbf{Recap:}\\
+$p(n) = \frac{n}{5 \log{n}}$\\
+$T(n, p(n)) = 5\log{n} + 5\log{n} - \dots \leq 10\log{n}$\\
+Wyllie: [Use a sublinear number of processors and keep a logarithmic time]\\
+
+\textbf{Can we do better for sum algorithm?}\\
+Lower bound\\
+\begin{itemize}
+ \item for sum algorithm we can see a parallel algorithm using a tree:\\
+ leaves: numbers to sum\\
+ leyers: parallel step\\
+ layer with the most nodes: number of processors\\
+ height of the tree: time\\
+\end{itemize}
+
+\subsubsection{Sum as a schema for other problems}
+
+\textbf{OP iterata} where op is associative.\\
+\textbf{input:} $M[1], \dots, M[n]$\\
+\textbf{output:} $OP_i \ M[1] \rightarrow M[n]$\\
+For example: $OP = +, *, \bigwedge, \bigvee, \oplus, min, max, \cdot, \dots$\\
+We have a efficiency solution in parallel:\\
+$P = O(\frac{n}{\log{n}}$ = $T = O(\log{n})$ and with modern PRAM models we can have a constant time.\\
+
+\subsection{CRCW - PRAM}
+
+Problem $\wedge-iterate$: $M[n] = \bigwedge_{i}{M[i]}$ 
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ %\KwIn{}
+ %\KwResult{}
+ \For{$1 \leq K \leq n$ /*parallelize*/} {
+  \If{$M[K] = 0$} {   
+   $M[n] = 0$ 
+  }
+ }
+ %\Return{}
+ \caption{$\wedge-iterate$}
+\end{algorithm}
+
+Note:\\
+$CW$ with common politic\\
+$p(n) = n$\\
+$T(n, n) = 3$\\
+$E(n, n) = \frac{n-1}{n \cdot 3} \rightarrow 1/3$\\
+Sum as a subproblem of other problems:\\
+\begin{itemize}
+ \item Inner product of vectors
+ \item Product matrix-vector
+ \item Product matrix-matrix
+ \item Power of matrix
+\end{itemize}
+
