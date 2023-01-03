@@ -1,14 +1,8 @@
 public aspect MyAspect2 {
 
- /*pointcut this_call():*/
-	/*call(void B.b_test()) &&*/
-	/*within(Main);*/
-
- pointcut tmp():	
-  call(* *.*(..));
-
  pointcut this_call():
-  tmp() && !within(MyAspect2) && !within(java.lang.*);
+	call(void B.b_test()) &&
+	within(Main);
 
  before(): this_call() {
   //((A)thisJoinPoint.getTarget()).n = 69;
