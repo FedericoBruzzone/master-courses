@@ -1,17 +1,20 @@
 AJC = ajc -1.9
 AJ = aj
 
-package: JavaFile.class
+MYASPECT =MyAspect2.class
 
-first: package FirstAj.class
+package: $(MYASPECT)
 
 all: package
 
-JavaFile.class: *.java
-	$(AJC) *.java
+MyAspect2.class: MyAspect2.aj
+	$(AJC) MyAspect2.aj *.java
 
-FirstAj.class: ExceptionLogging.aj
-	$(AJC) ExceptionLogging.aj
+MyAspect1.class: MyAspect1.aj
+	$(AJC) MyAspect1.aj *.java
+
+run:
+	$(AJ) Main
 
 clean:
 	rm *.class
