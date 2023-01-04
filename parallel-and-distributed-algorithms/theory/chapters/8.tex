@@ -1,0 +1,51 @@
+\textbf{Some questions:}
+\begin{itemize}
+ \item How many numbers without succesors are generated at j-th step?\\
+ $2^j$
+ \item How many steps does the algorithm take?\\
+ $\log{n} : 2^j = n \Rightarrow \log{n}$
+ \item How many processor are active at j-th step?\\
+ $1 \leq k \leq n - 2^{j-1}$
+ \item Let $S[k]$ the position $M[k]$ successors, how can I initialize $S$?\\
+ $S[k] = k + 1$ and $S[n] = 0$
+ \item Given $p_k$ what istruction on M should it execute?\\
+ $M[k] + M[S[k]] \rightarrow M[S[k]]$\\
+ how should it update $S$?\\
+ $S[k] = (S[k]==0 ? 0 : S[S[k]]$ 
+\end{itemize} 
+
+\textbf{Parallel algorithm ($M$ and $S$ already given)}\\
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{$M[1], M[2], \dots, M[n]$}
+ \KwResult{$\sum_{i_1}^{k} M[i] \rightarrow M[k]$ where $1 \leq k \leq n$}
+ \For{$j=1 \ to \ \log{n}$} {
+  \For{$1 \leq k \leq n-2^j$ /*parallelize*/} {   
+   $M[S[k]] = M[k] + M[S[k]]$ \\
+   $S[k] = (S[k]==0 ? 0 : S[S[k]])$ 
+  }
+ }
+ %\Return{}
+ \caption{Prefix sum - Kogge Stone}
+\end{algorithm}
+
+\textbf{Correctness:}
+\begin{itemize}
+ \item is EREW PRAM\\
+ $p_k$ works on $M[k]$ and $M[S[k]]$:\\
+ if $i \neq j \Rightarrow S[i] \neq \S[j]$ (they have successors except the case $S[i] = \S[j] = 0$)
+ \item 
+ \begin{proof}
+ $M[k] = \sum_{i=i}^{k}M[i]$ where $1 \leq k \leq n$\\
+ Work on j-th property.\\
+  \begin{equation}
+   M[t] = 
+    \begin{cases}
+      M[t] + \dots + M[1] where t \leq 2^j\\
+      M[t] + \dots + M[t - 2^k + 1] where t \geq 2^j
+    \end{cases}\,.
+  \end{equation}
+ 
+ \end{proof} 
+\end{itemize}
+

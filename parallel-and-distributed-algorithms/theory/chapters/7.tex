@@ -63,3 +63,36 @@ $\log{n}$ times the product $A \cdot A$. It is like sequencial where replace $\c
 \textbf{Performance:}\\
 $p(n) = \frac{n^3}{\log{n}} \Rightarrow T(n, p(n)) = \log{n} \cdot \log{n} = \log^2{n}$\\
 $E(n,p(n)) \simeq  \frac{n^{2.80} \cdot \log{n}}{\frac{n^3}{\log{n}} \cdot \log^2{n}} = \frac{n^{2.80}}{n^3} \rightarrow 0 (slowly)$
+
+\subsection{Prefix sum}
+
+Sequential time = $n - 1$
+
+\textbf{Input:} $M[1], M[2], \dots, M[n]$\\
+\textbf{Output:} $\sum_{i_1}^{k} M[i] \rightarrow M[k]$ where $1 \leq k \leq n$\\
+We assume $n$ power of 2\\
+\textbf{Sequencially}
+\begin{lstlisting}[]
+for k=2 to n do
+ M[k] = M[k] + M[k-1]
+\end{lstlisting}
+
+\textbf{Parallel solution}\\
+Solve with \textbf{parallel sum} whole possibile prefix.\\\\
+\textbf{Problems:}
+\begin{itemize}
+ \item It is not EREW but I can reduce the problem
+ \item I have a CREW algorithm on PRAM with:\\
+ $p(n) \leq (n-1) \cdot \frac{n}{\log{n}} \simeq \frac{n^2}{\log{n}}$\\
+ $= \sum_{i=2}^{n}\frac{i}{\log{i}} \geq \frac{1}{\log{n}} \sum_{i=2}^{n} i \simeq \frac{n^2}{\log{n}}$\\
+ $T(n, p(n)) \simeq \log{n}$ and $E \simeq \frac{n-1}{\frac{n^2}{\log{n}} \cdot \log{n}} \rightarrow 0 (inefficient)$
+\end{itemize}
+
+\subsubsection{KOGGE-STONE - pointer doubling (1973)}
+\textbf{Idea:} we establish a bond between numbers, each processor deals with a binding and do sum in this way...\\
+position : $\dots i \dots \ j \dots$\\
+numbers: $\dots m \dots k \dots$\\
+$i$ do $m+k$ and put the result in $j$\\
+\begin{remark}
+ no element has a successor
+\end{remark}
