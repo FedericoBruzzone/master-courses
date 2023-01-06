@@ -5,7 +5,7 @@ public class DecryptClassLoader extends ClassLoader {
     public DecryptClassLoader(ClassLoader parent) {
         super(parent);
     }
-
+    
     @Override
     public Class<?> loadClass(String className) throws ClassNotFoundException {
         if (className.startsWith("java")) {
