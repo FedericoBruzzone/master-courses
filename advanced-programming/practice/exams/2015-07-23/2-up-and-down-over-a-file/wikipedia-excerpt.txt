@@ -1,0 +1,10 @@
+A computer file is a resource for storing information, which is available to a computer program and is usually based on some kind of durable storage. A file is "durable" in the sense that it remains available for other programs to use after the program that created it has finished executing. Computer files can be considered as the modern counterpart of paper documents which traditionally are kept in office and library files, and this is the source of the term.
+
+[Etymology]{}
+The word "file" was used publicly in the context of computer storage as early as February, 1950. In an RCA (Radio Corporation of America) advertisement in Popular Science Magazine describing a new "memory" vacuum tube it had developed, RCA stated:
+
+    "...the results of countless computations can be kept "on file" and taken out again. Such a "file" now exists in a "memory" tube developed at RCA Laboratories. Electronically it retains figures fed into calculating machines, holds them in storage while it memorizes new ones, speeds intelligent solutions through mazes of mathematics."
+
+In 1952, "file" was used in referring to information stored on punched cards.
+
+In early usage, people regarded the underlying hardware (rather than the contents) as the file. For example, the IBM 350 disk drives were called "disk files".[3] In about 1961 the Burroughs MCP and the MIT Compatible Time-Sharing System introduced the concept of a "file system", which managed several virtual "files" on one storage device, giving the term its present-day meaning. Although the current term "register file" shows the early concept of files, it has largely disappeared.
