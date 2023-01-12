@@ -3,7 +3,7 @@
 
 public class TestPreConditions {
 
- public static void main(String[] args) /*throws Throwable*/ {
+ public static void main(String[] args) throws Throwable {
   FigureFactory ff = new FigureFactory();
 	Point ff_p = ff.makePoint(0, 0);
   System.out.println("ff_p has been created");
@@ -25,7 +25,10 @@ public class TestPreConditions {
 	Line l2 = new Line(ff_p, ff_p);
  
   l1.p1 = l2.p1;
-}
+
+  throw new Exception();
+
+ }
 
  //public static void test(Point p) {
   //p.setX(1025);

@@ -14,7 +14,7 @@ public aspect LocalCountingCalls {
  pointcut ends():
   execution(public static void *.main(String[]));
 
- before(FigureElement fe): calls(fe) /*&& !within(LocalCountingCalls)*/ {
+ before(FigureElement fe): calls(fe) && !within(LocalCountingCalls) {
   fe.counter += 1;
  }
 

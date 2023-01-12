@@ -4,7 +4,7 @@ public class A {
 
     public A(int i_a) {
         this.i_a = i_a;
-		}
+	}
 
     public void test() {
         System.out.println("A::a");
