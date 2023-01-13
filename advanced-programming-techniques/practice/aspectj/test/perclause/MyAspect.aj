@@ -12,16 +12,7 @@ privileged public aspect MyAspect
 
 	public pointcut trackIncrement(I i):
 		target(i) &&
-		call(* *.increment(..)); // use execution for perthis
-
-	public pointcut trackIncrementThis():
-		this(I) &&
-		call(* *.increment(..));
-
-	before(): trackIncrementThis() {
-		System.out.println(thisJoinPoint.getThis());
-		System.out.println(thisJoinPoint.getTarget());
-	}
+		execution(* *.increment(..)); // use call for pertarget
 
 	after(I i): trackIncrement(i) {
 		// System.out.println(MyAspect.aspectOf()); // for cflow & cflowbelow
