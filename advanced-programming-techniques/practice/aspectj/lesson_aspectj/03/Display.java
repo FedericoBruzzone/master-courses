@@ -1,7 +1,6 @@
 class Display {
- 
- public static void update() {
-	System.out.println("Display::update");
- }
 
+  public static void update() {
+    System.out.println("Display::update");
+  }
 }

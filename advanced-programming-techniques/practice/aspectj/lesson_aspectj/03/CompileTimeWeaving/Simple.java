@@ -9,8 +9,9 @@ public class Simple {
 	}
   
 	private static void count(int value, int delay) {
-    for (int i=0;i<value;i++)
-      try { Thread.sleep(delay); } catch (Exception e) {}
+    for (int i=0;i<value;i++) try { 
+		  Thread.sleep(delay); 
+		} catch (Exception e) {}
   }
 
 	public static void main(String[]argv) {

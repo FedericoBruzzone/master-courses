@@ -1,8 +1,7 @@
 public class Test {
 
- public int test(int arg) {
-  System.out.println("Test::test: " + arg);
-  return 0;
- }
-
+  public int test(int arg) {
+    System.out.println("Test::test: " + arg);
+    return 0;
+  }
 }

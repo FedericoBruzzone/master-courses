@@ -1,5 +1,4 @@
 interface FigureElement {
 
- public void moveBy(int x, int y);
-
+  public void moveBy(int x, int y);
 }
