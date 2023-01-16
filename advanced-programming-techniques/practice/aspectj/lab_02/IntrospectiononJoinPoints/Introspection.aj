@@ -1,38 +1,38 @@
 public aspect Introspection {
 
   pointcut trackAllCall():
-    call(* *.*(..)) && !within(Introspection);
+    call(* *.*(..)) && !within(Introspection) && cflow(execution(public static void *.main(..))); 
 
   pointcut trackAllExecution():
-    execution(* *.*(..)) && !within(Introspection);
+    execution(* *.*(..)) && !within(Introspection) && cflow(execution(public static void *.main(..)));
 
   pointcut trackGet():
-    get(* *.*) && !within(Introspection);
+    get(* *.*) && !within(Introspection) && cflow(execution(public static void *.main(..)));
 
   pointcut trackSet():
-    set(* *.*) && !within(Introspection);
+    set(* *.*) && !within(Introspection) && cflow(execution(public static void *.main(..)));
 
   pointcut trackCallConstructor():
-    call(new(..)) && !within(Introspection);
+    call(new(..)) && !within(Introspection) && cflow(execution(public static void *.main(..)));
   
   pointcut trackExecutionConstructor():
-    execution(new(..)) && !within(Introspection);
+    execution(new(..)) && !within(Introspection) && cflow(execution(public static void *.main(..)));
 
-	/*after(): trackAllCall() {*/
-		/*System.out.println("Instrospection::trackAllCall :- after " + thisJoinPoint.getTarget());*/
-	/*}*/
-
-  /*before(): trackAllCall() {*/
-    /*System.out.println("Instrospection::trackAllCall :- before " + thisJoinPoint.getTarget());*/
-  /*}*/
-
-  after(): trackAllExecution() {
-    System.out.println("Instrospection::trackAllExecution :- after " + thisJoinPoint.getTarget());
+  after(): trackAllCall() {
+    System.out.println("Instrospection::trackAllCall :- after " + thisJoinPoint.getTarget());
   }
 
-	/*before(): trackAllExecution() {*/
-		/*System.out.println("Instrospection::trackAllExecution :- before " + thisJoinPoint.getTarget());*/
-	/*}*/
+  before(): trackAllCall() {
+    System.out.println("Instrospection::trackAllCall :- before " + thisJoinPoint.getTarget());
+  }
+
+  after(): trackAllExecution() {
+         System.out.println("Instrospection::trackAllExecution :- after " + thisJoinPoint.getTarget());
+  }
+
+  before(): trackAllExecution() {
+    System.out.println("Instrospection::trackAllExecution :- before " + thisJoinPoint.getTarget());
+  }
 	
 	/*after(): trackCallConstructor() {*/
 		/*System.out.println("Instrospection::trackCallConstructor :- after " + thisJoinPoint.getTarget());*/
