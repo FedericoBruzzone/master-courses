@@ -9,5 +9,8 @@ public class A {
     public void test() {
         System.out.println("A::a");
     }
-
+ 
+    public String toString() {
+        return "A::toString";
+    }
 }
