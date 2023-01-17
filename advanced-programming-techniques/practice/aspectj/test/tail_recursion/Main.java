@@ -2,9 +2,9 @@ public class Main {
 
   public int factorial(int n, int tail) throws TailException {
     if (n == 1) {
-      return tail; 
+      return tail;
     } else {
-      return factorial(n-1, tail*n); 
+      return factorial(n - 1, tail * n);
     }
   }
 
