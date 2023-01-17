@@ -5,7 +5,8 @@ public class Main {
 		B bb = new B();
 		C cc = new C();
 
-		bb.b();
+		//bb.b();
+    cc.c();
   }
 
 }

@@ -4,14 +4,14 @@ public class C {
 	B c_b = null;
 
   public C() {
-		this.c_a = new A();
-		//this.c_b = new B();
+    //this.c_a = new A();
+    this.c_b = new B();
 	}
 
   public void c() {
     System.out.println("C::c");
-		this.c_a.a(); 
-		//this.c_b.b();
+    //this.c_a.a(); 
+    this.c_b.b();
 	}
 
 }
