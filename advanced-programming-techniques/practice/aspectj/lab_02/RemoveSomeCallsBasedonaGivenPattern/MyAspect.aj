@@ -7,10 +7,13 @@ public aspect MyAspect {
   /*}*/
 
   public pointcut track(A a): 
-    cflowbelow(/*this(C)*/ call(* C.*(..))) && !cflowbelow(call(* B.*(..))) && call(* *.*(..)) && target(a);
+    cflowbelow(call(* C.*(..)) && cflow(call(* B.*(..)))) && 
+    !within(MyAspect) && 
+    !this(A) &&
+    target(a);
  
-   void around(A a): track(a) {
-    System.out.println(a + " poi");
+   before(A a): track(a) {
+    System.out.println("[ERROR]");
   }
 
 }
