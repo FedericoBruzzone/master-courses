@@ -1,0 +1,534 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+
+<style type="text/css" media="all">@import "../../adapt-lab.css";</style>
+<style type="text/css" media="all">@import "../../pygments.css";</style>
+<link rel="shortcut icon" href="http://cazzola.di.unimi.it/logo/logo.ico" type="image/x-icon">
+<link rel="icon" href="http://cazzola.di.unimi.it/logo/logo.ico" type="image/x-icon">
+
+<title>Esame di Programmazione Avanzata del 23 Luglio 2015</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="keywords" content="['Python', 'Walter Cazzola']">
+
+<script type="text/javascript">
+var showMode = 'block';
+	if (document.all) showMode = '';
+
+	function toggleId(id, y_scroll){
+	  if (document.all) {
+		var obj = document.all[id];
+	  } else if (document.getElementById) {
+		 var obj = document.getElementById(id);
+	  } else return false;
+	  if (obj.style.display == 'none') {
+	     obj.style.display = showMode;
+	  	 if (y_scroll) scroll(0,y_scroll);
+	  } else obj.style.display = 'none';
+	  return false;
+	}
+</script>
+
+</head>
+<body style="background-image: url(../../backgrounds/rosetta.jpg); background-repeat: repeat-x;">
+
+<!-- INIZIO CONTAINER -->
+<div id="contentmain">
+
+   <!-- INIZIO CONTENUTO PRINCIPALE -->
+
+   <div class="document">
+<div class="header"><h1 class="title">Exam of Advance in Programming</h1><div class="subtitle">23 July 2015</div></div><br><br><!-- Exam of Advance in Programming -->
+<!-- ============================== -->
+<!-- 23 July 2015 -->
+<!-- - - - - - - - - - - - - -->
+<p><strong>Disclaimer.</strong> Note that to have a running solution for
+ an exercise is not enough: you need a well-cooked solution that proves
+your ability to use what explained during the classes. The worth of the 2
+ exercises is 16 and 14 points respectively. To pass the exam you have
+to do both exercises. The submissions with only one exercise will not be
+ evaluated at all.</p>
+<div class="midline">Exercise 1: Word of Mouth.</div><!-- Exercise 1: Word of Mouth. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>In computer science, edit distance is a way of quantifying how
+dissimilar two strings (e.g., words) are to one another by counting the
+minimum number of operations required to transform one string into the
+other. This is also the basis of a well known <em>car game</em> (a car
+game is one of those games that children play to spend time during a
+long travel in a car) that consists to a reach word from another by
+changing only one letter at each turn. Basically, one player decides a
+couple of words respectively the starting and ending word. All the
+players are sorted in some way and at each turn a player says a new word
+ that differs from the previous one (the starting one if the player is
+the first one) of only one character. Wins who says the ending word.</p>
+<p>The exercise consists of writing a function <tt class="docutils literal">chain</tt>
+ that calculates and returns all the possible paths that bring from the
+starting word to the ending one. The rules for passing from one word to
+anther are those above explained plus no word can be repeated in the
+path and all the used words should belong to <a class="reference external" href="http://cazzola.di.unimi.it/didattica/programmazione-avanzata/wordlist-7.txt">this</a> dictionary. The <tt class="docutils literal">chain</tt>
+ function will return the result as a string where each line contains a
+different path and all the path are lexicographically sorted. If no path
+ is possible the result will be the empty string.</p>
+<p><strong>Note.</strong> The only acceptable solutions are those that uses <strong>recursion</strong> any other approach will be rejected.</p>
+<div class="highlight" style="background:#E5F9E5;border-style:solid;border-width:1pt;border-color:#98E698;"><pre><span class="kn">from</span> <span class="nn">editd</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">"### witness → fatness"</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="s">"witness"</span><span class="p">,</span> <span class="s">"fatness"</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">"### warning → earring"</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="s">"warning"</span><span class="p">,</span> <span class="s">"earring"</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">"### sailing → writing"</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="s">"sailing"</span><span class="p">,</span> <span class="s">"writing"</span><span class="p">))</span>
+</pre></div>
+
+
+<br>
+
+<div class="highlight" style="background:#DFDFDF;border-style:solid;border-width:1pt;border-color:#6E6E6E;"><pre><span class="go">[17:23]cazzola@surtur:~/pa/es1&gt;python3 main-editd.py</span>
+<span class="go">### witness → fatness</span>
+<span class="go">['witness', 'fitness', 'fatness']</span>
+
+<span class="go">### warning → earring</span>
+<span class="go">['warning', 'warring', 'barring', 'earring']</span>
+<span class="go">['warning', 'warring', 'barring', 'jarring', 'earring']</span>
+<span class="go">['warning', 'warring', 'earring']</span>
+<span class="go">['warning', 'warring', 'jarring', 'barring', 'earring']</span>
+<span class="go">['warning', 'warring', 'jarring', 'earring']</span>
+
+<span class="go">### sailing → writing</span>
+<span class="go">['sailing', 'failing', 'mailing', 'railing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'mailing', 'railing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'mailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'mailing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'railing', 'mailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'railing', 'mailing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'railing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'railing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'failing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'failing', 'railing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'failing', 'railing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'failing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'failing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'railing', 'failing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'railing', 'failing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'railing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'railing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'mailing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'failing', 'mailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'failing', 'mailing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'failing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'failing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'mailing', 'failing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'mailing', 'failing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'mailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'mailing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'railing', 'wailing', 'waiting', 'writing']</span>
+<span class="go">['sailing', 'wailing', 'waiting', 'whiting', 'writing']</span>
+<span class="go">['sailing', 'wailing', 'waiting', 'writing']</span>
+</pre></div>
+<div class="midline">Exercise 2: Up and Down over a File.</div><!-- Exercise 2: Up and Down over a File -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>In python, files are iterable objects but it is impossible to push back in the stream what has already been read.</p>
+<p>This is exercise is about reimplementing an iterator--called <tt class="docutils literal">UpDownFile</tt>--over files that permits to get a word at each call of the <tt class="docutils literal">next</tt>
+ operator. A word is any piece of text without any, white space,
+punctuation symbol--including brackets, squared and curly
+parenthesis--and end of line/file. Moreover it supports a <tt class="docutils literal">ungetw</tt> method that permits to push back a word at a time in the file stream. That is, a call to <tt class="docutils literal">next</tt> after a call to <tt class="docutils literal">ungetw</tt> will extract the last extracted word.</p>
+<p><strong>Note</strong>, any solution that do not implement an
+interator will be considered wrong; any solution that do not respect the
+ given--by the example below--interface will be considered wrong; any
+solution that uses shortcuts from any standard library will be
+considered wrong: the only admitted methods on files are <tt class="docutils literal">open</tt> and <tt class="docutils literal">read</tt>.</p>
+<p>The following is a possible <tt class="docutils literal">main</tt> followed by the desired execution result.
+The text file used in the main can be downloaded from <a class="reference external" href="http://cazzola.di.unimi.it/didattica/programmazione-avanzata/wikipedia-excerpt.txt">here</a>.</p>
+<div class="highlight" style="background:#E5F9E5;border-style:solid;border-width:1pt;border-color:#98E698;"><pre><span class="kn">from</span> <span class="nn">iter</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+  <span class="n">fiter</span> <span class="o">=</span> <span class="n">UpDownFile</span><span class="p">(</span><span class="s">'wikipedia-excerpt.txt'</span><span class="p">)</span>
+  <span class="nb">iter</span><span class="p">(</span><span class="n">fiter</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">'### Let</span><span class="se">\'</span><span class="s">s go up and down for a while'</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">'### Let</span><span class="se">\'</span><span class="s">s finish the iteration'</span><span class="p">)</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span> <span class="k">pass</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s">'### Let</span><span class="se">\'</span><span class="s">s restart the iteration'</span><span class="p">)</span>
+  <span class="nb">iter</span><span class="p">(</span><span class="n">fiter</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+  <span class="n">fiter</span><span class="o">.</span><span class="n">ungetw</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">fiter</span><span class="p">))</span>
+</pre></div>
+
+
+<br>
+
+<div class="highlight" style="background:#DFDFDF;border-style:solid;border-width:1pt;border-color:#6E6E6E;"><pre><span class="go">[11:26]cazzola@surtur:~/pa/es2&gt;python3 main-iter.py</span>
+<span class="go">### Let's go up and down for a little</span>
+<span class="go">A</span>
+<span class="go">computer</span>
+<span class="go">file</span>
+<span class="go">is</span>
+<span class="go">a</span>
+<span class="go">resource</span>
+<span class="go">is</span>
+<span class="go">a</span>
+<span class="go">is</span>
+<span class="go">computer</span>
+<span class="go">file</span>
+<span class="go">is</span>
+<span class="go">### Let's finish the iteration</span>
+<span class="go">is</span>
+<span class="go">a</span>
+<span class="go">resource</span>
+<span class="go">for</span>
+<span class="go">storing</span>
+<span class="go">information</span>
+<span class="go">which</span>
+<span class="go">is</span>
+<span class="go">available</span>
+<span class="go">to</span>
+<span class="go">a</span>
+<span class="go">computer</span>
+<span class="go">program</span>
+<span class="go">and</span>
+<span class="go">is</span>
+<span class="go">usually</span>
+<span class="go">based</span>
+<span class="go">on</span>
+<span class="go">some</span>
+<span class="go">kind</span>
+<span class="go">of</span>
+<span class="go">durable</span>
+<span class="go">storage</span>
+<span class="go">A</span>
+<span class="go">file</span>
+<span class="go">is</span>
+<span class="go">durable</span>
+<span class="go">in</span>
+<span class="go">the</span>
+<span class="go">sense</span>
+<span class="go">that</span>
+<span class="go">it</span>
+<span class="go">remains</span>
+<span class="go">available</span>
+<span class="go">for</span>
+<span class="go">other</span>
+<span class="go">programs</span>
+<span class="go">to</span>
+<span class="go">use</span>
+<span class="go">after</span>
+<span class="go">the</span>
+<span class="go">program</span>
+<span class="go">that</span>
+<span class="go">created</span>
+<span class="go">it</span>
+<span class="go">has</span>
+<span class="go">finished</span>
+<span class="go">executing</span>
+<span class="go">Computer</span>
+<span class="go">files</span>
+<span class="go">can</span>
+<span class="go">be</span>
+<span class="go">considered</span>
+<span class="go">as</span>
+<span class="go">the</span>
+<span class="go">modern</span>
+<span class="go">counterpart</span>
+<span class="go">of</span>
+<span class="go">paper</span>
+<span class="go">documents</span>
+<span class="go">which</span>
+<span class="go">traditionally</span>
+<span class="go">are</span>
+<span class="go">kept</span>
+<span class="go">in</span>
+<span class="go">office</span>
+<span class="go">and</span>
+<span class="go">library</span>
+<span class="go">files</span>
+<span class="go">and</span>
+<span class="go">this</span>
+<span class="go">is</span>
+<span class="go">the</span>
+<span class="go">source</span>
+<span class="go">of</span>
+<span class="go">the</span>
+<span class="go">term</span>
+<span class="go">Etymology</span>
+<span class="go">The</span>
+<span class="go">word</span>
+<span class="go">file</span>
+<span class="go">was</span>
+<span class="go">used</span>
+<span class="go">publicly</span>
+<span class="go">in</span>
+<span class="go">the</span>
+<span class="go">context</span>
+<span class="go">of</span>
+<span class="go">computer</span>
+<span class="go">storage</span>
+<span class="go">as</span>
+<span class="go">early</span>
+<span class="go">as</span>
+<span class="go">February</span>
+<span class="go">1950</span>
+<span class="go">In</span>
+<span class="go">an</span>
+<span class="go">RCA</span>
+<span class="go">Radio</span>
+<span class="go">Corporation</span>
+<span class="go">of</span>
+<span class="go">America</span>
+<span class="go">advertisement</span>
+<span class="go">in</span>
+<span class="go">Popular</span>
+<span class="go">Science</span>
+<span class="go">Magazine</span>
+<span class="go">describing</span>
+<span class="go">a</span>
+<span class="go">new</span>
+<span class="go">memory</span>
+<span class="go">vacuum</span>
+<span class="go">tube</span>
+<span class="go">it</span>
+<span class="go">had</span>
+<span class="go">developed</span>
+<span class="go">RCA</span>
+<span class="go">stated</span>
+<span class="go">the</span>
+<span class="go">results</span>
+<span class="go">of</span>
+<span class="go">countless</span>
+<span class="go">computations</span>
+<span class="go">can</span>
+<span class="go">be</span>
+<span class="go">kept</span>
+<span class="go">on</span>
+<span class="go">file</span>
+<span class="go">and</span>
+<span class="go">taken</span>
+<span class="go">out</span>
+<span class="go">again</span>
+<span class="go">Such</span>
+<span class="go">a</span>
+<span class="go">file</span>
+<span class="go">now</span>
+<span class="go">exists</span>
+<span class="go">in</span>
+<span class="go">a</span>
+<span class="go">memory</span>
+<span class="go">tube</span>
+<span class="go">developed</span>
+<span class="go">at</span>
+<span class="go">RCA</span>
+<span class="go">Laboratories</span>
+<span class="go">Electronically</span>
+<span class="go">it</span>
+<span class="go">retains</span>
+<span class="go">figures</span>
+<span class="go">fed</span>
+<span class="go">into</span>
+<span class="go">calculating</span>
+<span class="go">machines</span>
+<span class="go">holds</span>
+<span class="go">them</span>
+<span class="go">in</span>
+<span class="go">storage</span>
+<span class="go">while</span>
+<span class="go">it</span>
+<span class="go">memorizes</span>
+<span class="go">new</span>
+<span class="go">ones</span>
+<span class="go">speeds</span>
+<span class="go">intelligent</span>
+<span class="go">solutions</span>
+<span class="go">through</span>
+<span class="go">mazes</span>
+<span class="go">of</span>
+<span class="go">mathematics</span>
+<span class="go">In</span>
+<span class="go">1952</span>
+<span class="go">file</span>
+<span class="go">was</span>
+<span class="go">used</span>
+<span class="go">in</span>
+<span class="go">referring</span>
+<span class="go">to</span>
+<span class="go">information</span>
+<span class="go">stored</span>
+<span class="go">on</span>
+<span class="go">punched</span>
+<span class="go">cards</span>
+<span class="go">In</span>
+<span class="go">early</span>
+<span class="go">usage</span>
+<span class="go">people</span>
+<span class="go">regarded</span>
+<span class="go">the</span>
+<span class="go">underlying</span>
+<span class="go">hardware</span>
+<span class="go">rather</span>
+<span class="go">than</span>
+<span class="go">the</span>
+<span class="go">contents</span>
+<span class="go">as</span>
+<span class="go">the</span>
+<span class="go">file</span>
+<span class="go">For</span>
+<span class="go">example</span>
+<span class="go">the</span>
+<span class="go">IBM</span>
+<span class="go">350</span>
+<span class="go">disk</span>
+<span class="go">drives</span>
+<span class="go">were</span>
+<span class="go">called</span>
+<span class="go">disk</span>
+<span class="go">files</span>
+<span class="go">3</span>
+<span class="go">In</span>
+<span class="go">about</span>
+<span class="go">1961</span>
+<span class="go">the</span>
+<span class="go">Burroughs</span>
+<span class="go">MCP</span>
+<span class="go">and</span>
+<span class="go">the</span>
+<span class="go">MIT</span>
+<span class="go">Compatible</span>
+<span class="go">Time-Sharing</span>
+<span class="go">System</span>
+<span class="go">introduced</span>
+<span class="go">the</span>
+<span class="go">concept</span>
+<span class="go">of</span>
+<span class="go">a</span>
+<span class="go">file</span>
+<span class="go">system</span>
+<span class="go">which</span>
+<span class="go">managed</span>
+<span class="go">several</span>
+<span class="go">virtual</span>
+<span class="go">files</span>
+<span class="go">on</span>
+<span class="go">one</span>
+<span class="go">storage</span>
+<span class="go">device</span>
+<span class="go">giving</span>
+<span class="go">the</span>
+<span class="go">term</span>
+<span class="go">its</span>
+<span class="go">present-day</span>
+<span class="go">meaning</span>
+<span class="go">Although</span>
+<span class="go">the</span>
+<span class="go">current</span>
+<span class="go">term</span>
+<span class="go">register</span>
+<span class="go">file</span>
+<span class="go">shows</span>
+<span class="go">the</span>
+<span class="go">early</span>
+<span class="go">concept</span>
+<span class="go">of</span>
+<span class="go">files</span>
+<span class="go">it</span>
+<span class="go">has</span>
+<span class="go">largely</span>
+<span class="go">disappeared</span>
+<span class="go">### Let's restart the iteration</span>
+<span class="go">A</span>
+<span class="go">computer</span>
+<span class="go">file</span>
+<span class="go">file</span>
+</pre></div>
+<p>Your solution should implement the same behavior.</p>
+<!-- α -->
+</div>
+
+
+   <!-- COPYRIGHT -->
+    <div id="footer">
+        Last Modified: Thu, 23 Jul 2015 09:19:15
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+          ADAPT Lab.&nbsp;
+          <img src="Esame%20di%20Programmazione%20Avanzata%20del%2023%20Luglio%202015_files/logo%2520svg%252002.png" height="15px" width="15px">
+
+    </div>
+    <!-- FINE COPYRIGHT -->
+</div>
+<!-- FINE CONTENUTO PRINCIPALE -->
+
+
+<!-- INIZIO COLONNA -->
+<div id="colonna">
+
+    <div class="boxSidebar">
+       <p align="center">
+         </p><center>
+            <img class="nospacetop" src="Esame%20di%20Programmazione%20Avanzata%20del%2023%20Luglio%202015_files/io-camogli.jpg" align="middle" hspace="0px">
+         </center>
+       <p></p>
+
+    <h2 class="sectiontitle"><a href="" onclick="return toggleId('personal');">Walter Cazzola</a></h2>
+    <div id="personal" style="display:block">
+    </div>
+
+    <h2 class="sectiontitle"><a href="" onclick="return toggleId('teaching');">Didactics</a></h2>
+    <div id="teaching" style="display:none">
+    </div>
+
+    <h2 class="sectiontitle"><a href="" onclick="return toggleId('publications');">Publications</a></h2>
+    <div id="publications" style="display:none">
+    </div>
+
+    <h2 class="sectiontitle"><a href="#" onclick="return toggleId('funded_projects');">Funded Projects</a></h2>
+    <div id="funded_projects" style="display:none">
+    </div>
+
+    <h2 class="sectiontitle"><a href="" onclick="return toggleId('research');">Research Projects</a></h2>
+    <div id="research" style="display:none">
+    </div>
+
+    <h2 class="sectiontitle"><a href="" onclick="return toggleId('events');">Related Events</a></h2>
+    <div id="events" style="display:none">
+    </div>
+    <br><br><br><br><br><br>
+</div>
+<!-- FINE COLONNA -->
+
+</div>
+
+
+
+
+</body></html>

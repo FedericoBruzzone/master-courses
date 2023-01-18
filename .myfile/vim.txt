@@ -1,5 +1,12 @@
 Vim command
 
+==== start line - end line ===
+$ - 0
+
+==== Replace ====
+LINE :s/<search>/<replace>
+LINE :%s/<search>/<replace>
+
 ==== Comments ===
 Edit mode and press ++
 

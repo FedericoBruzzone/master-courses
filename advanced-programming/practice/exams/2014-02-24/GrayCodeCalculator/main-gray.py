@@ -1,0 +1,21 @@
+from gray import *
+
+if __name__ == "__main__":
+    print( "GC(1) :-", end=' ')
+    for gc in gray(1): print(gc, end=' ')
+    print( "\nGC(2) :-", end=' ')
+    for gc in gray(2): print(gc, end=' ')
+    print( "\nGC(3) :-", end=' ')
+    for gc in gray(3): print(gc, end=' ')
+    print( "\nGC(4) :-", end=' ')
+    for gc in gray(4): print(gc, end=' ')
+    print()
+    print( "GC_(1) :-", end=' ')
+    for gc in mgray(1): print(gc, end=' ')
+    print( "\nGC_(2) :-", end=' ')
+    for gc in mgray(2): print(gc, end=' ')
+    print( "\nGC_(3) :-", end=' ')
+    for gc in mgray(3): print(gc, end=' ')
+    print( "\nGC_(4) :-", end=' ')
+    for gc in mgray(4): print(gc, end=' ')
+    print()
