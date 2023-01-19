@@ -10,8 +10,10 @@
 .ipynb_checkpoints
 *.ipynb_checkpoints
 
-!advanced-programming/practice/exams/2013-09-02/*.pdf
+
 *.pdf
+!advanced-programming/practice/exams/2013-09-02/*.pdf
+!advanced-programming/practice/exams/2014-02-24/*.pdf
 *.class
 .vscode
 .metadata
