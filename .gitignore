@@ -10,7 +10,7 @@
 .ipynb_checkpoints
 *.ipynb_checkpoints
 
-!/2014-02-24/*.pdf
+!advanced-programming/practice/exams/2013-09-02/*.pdf
 *.pdf
 *.class
 .vscode
