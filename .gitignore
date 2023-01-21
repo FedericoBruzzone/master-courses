@@ -18,7 +18,7 @@
 *.class
 .vscode
 .metadata
-__pycache__
+*__pycache__
 
 
 parallel-and-distributed-algorithms/theory/*.pdf
