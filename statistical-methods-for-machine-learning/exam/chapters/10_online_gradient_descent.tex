@@ -10,8 +10,8 @@
         \DontPrintSemicolon
         \caption{Projected Online Gradient Descent}
         \KwIn{$\eta > 0$, $U > 0$}
-        $\boldsymbol{w} = 0$\\
-        \For{$i = 1, 2, \dots$}{
+        $\boldsymbol{w}_i = 0$\\
+        \For{$t = 1, 2, \dots$}{
             $\boldsymbol{w}'_{t+1} = \boldsymbol{w}_{t} - \frac{\eta}{\sqrt{t}}\nabla \ell_{t}(\boldsymbol{w}_{t})$\\ 
             $\boldsymbol{w}_{t+1} = \underset{\boldsymbol{w} : \Vert \boldsymbol{w} \Vert \leq U}{\textmd{argmin}}\ \|\boldsymbol{w} - \boldsymbol{w}'_{t+1}\|$\\ 
         }    
