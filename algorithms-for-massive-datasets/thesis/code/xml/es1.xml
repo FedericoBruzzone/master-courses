@@ -1,0 +1,16 @@
+<uml:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" ...>
+   <eAnnotations xmi:id="_CJ-H82-REeKy7e45n5wFog" source="uml2.diagrams">
+      <contents xmi:type="umlnotation:UMLDiagram" xmi:id="_147481158487"...>
+         <children xmi:type="umlnotation:UMLShape" xmi:id="_147481158767"...>
+            <children xmi:type="notation:BasicDecorationNode" xmi:id="_14748115".../>
+            <children xmi:type="notation:DecorationNode" xmi:id="_14748115"...>
+              <element xsi:nil="true"/>
+              <layoutConstraint xmi:type="notation:Size" xmi:id="_147481158".../>
+            </children>
+                                 ...
+   <packagedElement xmi:type="uml:Class" xmi:id="_14748115876702136368034"...>
+      <ownedAttribute xmi:id="_tKbQcK5AEeaNYoue_GDXIg" name="attribute1"...>
+         <type xmi:type="uml:PrimitiveType" href="pathmap://UAL_LIBRARIES/".../>
+      </ownedAttribute>
+      <ownedBehavior xmi:type="uml:Activity" xmi:id="_7UxD0O6tEeaDa_uoGXx4Eg"...>
+         <eAnnotations xmi:id="_7VCJkO6tEeaDa_uoGXx4Eg" source="uml2.diagrams">

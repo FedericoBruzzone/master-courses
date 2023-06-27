@@ -1,0 +1,40 @@
+\chapter{HDFS and MapReduce}\label{chap:hdfs-map-reduce}
+
+\section{Things Useful to Know}\label{sec:things-useful-to-know}
+
+\begin{enumerate}
+    \item The \textbf{TF.IDF} (\textit{Term Frequency times Inverse Document Frequency}) measure of word importance.
+    \item Hash functions and their use.
+    \item Secondary storage (disk) its effect on running time of algorithms.
+    \item The base $e$ of natural logarithm and identities involving that constant.
+    \item Power laws.
+\end{enumerate}
+
+\subsection{Importance of Words in Documents}\label{subsec:importance-of-words-in-documents}
+
+Classification often starts by looking at documents, and finding the significant words in those documents. Our first guess might be that the words appearing most frequently in a document are the most significant. However, that intuition is exactly opposite of the truth. The formal measure of how concentrated into relatively few documents are the occurrences of a given word is called \textbf{TF.IDF}. It is normally computed as follows. Suppose we have a collection of $N$ documents. Define $f_{ij}$ to be the \textit{frequency} of term (word) $i$ in document $j$. Then, define the \textit{term frequency} $\bm{TF}_{ij}$ to be:
+\begin{equation*}\label{eq:tf}
+    \bm{TF}_{ij} = \frac{f_{ij}}{\max_{k} f_{kj}}
+\end{equation*}
+That is, the term frequency of term $i$ in document $j$ is $f_{ij}$ normalized by dividing it the maximum number of occurrences of any term (perhaps excluding stop words) in the same document. 
+
+The IDF for a term is defined as follows. Suppose term $i$ appears in $n_i$ of the $N$ documents in the collection. Then $\bm{IDF}_i = \log_2(N/n_i)$. The \textbf{TF.IDF} score for term $i$ in document $j$ is then $\bm{TF}_{ij} \times \bm{IDF}_i$.
+
+\subsection{Hash Functions}\label{subsec:hash-functions}
+
+A hash function $h$ takes a \textit{hash-key} value as an argument and produces a \textit{bucket number} as a result. The bucket number is an integer, normally in the range $0$ to $B - 1$, where $B$ is the number of buckets. Hash-keys can be of any type. There is an intuitive property of hash functions that they ``randomize'' hash-keys.
+
+\subsection{Indexes}\label{subsec:indexes}
+
+An \textit{index} is a data structure that makes it efficient to retrieve objects given the value of one or more elements of those objects. The most common situation is one where the objects are records, and the index is on one of the fields of that record. Given a value $v$ for that field, the index lets us retrieve all the records with value $v$ in that field.
+
+\subsection{Secondary Storage}\label{subsec:secondary-storage}
+
+Disks are organized into \textit{blocks}, which are the minimum units that the operating system uses to move data between main memory and disk. It takes approximately ten milliseconds to \textit{access} and read a disk block. That delay is at least five orders of magnitude (a factor of $10^5$) slower than the time taken to read a word from main memory. You can assume that a disk cannot transfer data to main memory at more than a hundred million bytes per second (100MB), no matter how that data is organized. That is not a problem when your dataset is a megabyte. But a dataset of a hundred gigabytes or a terabyte presents problems just accessing it, let alone doing anything useful with it.
+
+\subsection{The Base of Natural Logarithms}\label{subsec:the-base-of-natural-logarithms}
+
+The constant $e = 2.7182818...$ has a number of useful special properties. In particular:
+\begin{equation*}
+    \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e
+\end{equation*}

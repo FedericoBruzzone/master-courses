@@ -1,0 +1,58 @@
+\PassOptionsToPackage{table, svgnames}{xcolor}
+% \PassOptionsToPackage{pdftex,   % driver used for rendering
+%    breaklinks,            % links can cross several lines and still point to the same element
+%    bookmarks,             % creates the outline menu
+%    bookmarksnumbered,     %
+%    pdfdisplaydoctitle,    % the titlebar shows the document title
+%    plainpages=false,      %
+%    pdfpagemode = UseNone, % hides the outline menu when opened
+%    pdfpagelabels,         %
+%    hidelinks,             % disables links' colors and borders 
+%    pdfa=true,             % to have a archival compliant pdf (pdf/a)
+% hyperindex}{hyperref}
+
+\documentclass{adapt-lab}
+
+\usepackage{pifont}
+\usepackage{rotating}
+
+\newcommand{\cwcomment}[1]{\profcomment[Walter]{#1}}
+\newcommand{\evcomment}[1]{\studcomment[Edo]{#1}}
+
+%\usepackage{amsthm}
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+%\usepackage{subfig}
+
+\begin{document}
+
+\title{Title}
+\author{Name \& Surname}
+\matricola{123456}
+\ayear{2013--2014}
+\advisor{Prof.\,Walter Cazzola}
+\coadvisor{Dr.\,Lorenzo Capra}
+\school{}
+\degree{BSc in Computer Science}
+\selectlanguage{english}
+
+\makefirstpage
+
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+
+\input sample/ex-introduction.tex
+\input sample/ex-newchap.tex
+
+\inlinerust{fn}
+
+\appendix
+
+\bibliographystyle{plain}
+\bibliography{local,reflection,aosd,my_work,oolanguages,programming,software_engineering,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc}
+
+\end{document}

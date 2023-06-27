@@ -1,0 +1,387 @@
+\ProvidesFile{lstlang0.sty}[2014/07/25 1.0a listings language file by Walter Cazzola]
+
+% Definition for neverlang with semantic actions written in java and scala the default is java
+\lst@definelanguage[java]{neverlang}[5.0]{java}{%
+   morekeywords=[2]{%
+      reference, concrete, syntax, from, init, decl, slice, slices, roles, mapping,
+      language, imports, module, is, with, role, endemic, declare, rename, bundle,
+      \$0, \$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9, \$10, \$\$,
+      \$11, \$12, \$13, \$14, \$15, \$16, \$17, \$18, \$19, \$20, 
+      rewrite, from, eval, $suspend, resume},
+   otherkeywords = {\#0, \#1, \#2, \#3, \#4, \#5, \#6, \#7, \#8, \#9, \#10,%
+                \#11, \#12, \#13, \#14, \#15, \#16, \#17, \#18, \#19, \#20
+    },
+   sensitive=true,
+   literate=%
+     {<--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {<--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {-->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {-->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {=>}{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {=>\ }{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {\ =>}{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {\ =>\ }{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3,
+   morestring=[b]/,
+   morestring=[b]',
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/}
+}
+
+\lst@definelanguage[java]{optneverlang}[java]{neverlang}{%
+   morekeywords=[2]{%
+      exception,when,type,type_any, swap, print, def, action%
+   }
+}
+
+\lst@definelanguage[scala]{neverlang}[]{scala}{
+   morekeywords=[2]{
+      reference, concrete, syntax, from, init, decl, slice, slices, roles, mapping,
+      language, imports, module, is, with, role, endemic, declare, rename, bundle,
+      \$0, \$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9, \$10, \$\$,
+      \$11, \$12, \$13, \$14, \$15, \$16, \$17, \$18, \$19, \$20, 
+      rewrite, from, eval, $suspend, resume},
+   otherkeywords = {\#0, \#1, \#2, \#3, \#4, \#5, \#6, \#7, \#8, \#9, \#10,%
+                \#11, \#12, \#13, \#14, \#15, \#16, \#17, \#18, \#19, \#20
+    },
+   sensitive=true,
+   literate=%
+     {<--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {<--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {-->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {-->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {=>}{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {=>\ }{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {\ =>}{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3
+     {\ =>\ }{{\ensuremath{{\:}{\Rightarrow}{\:}}}}3,
+   morestring=[b]',
+   morestring=[b]/,
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/}
+}
+
+% definition for evil (the language for the RPN) hosted in c 
+\lst@definelanguage[]{evil}[]{c}{
+   morekeywords={function, declare, par, alt},
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/},
+   morestring=[b]'
+}
+
+% fake neverlang used in the work with Paola
+\lst@definelanguage{fakeneverlang}[5.0]{java}{%
+   morekeywords=[2]{productions, actions, then},
+   keywordsprefix={$},
+   sensitive=true,
+   literate=%
+     {<--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {<--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--}{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {\ <--\ }{{\ensuremath{{\:}{\leftarrowtriangle}{\:}}}}3
+     {-->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {-->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->}{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3
+     {\ -->\ }{{\ensuremath{{\:}{\rightarrowtriangle}{\:}}}}3,
+   morestring=[b]",
+   morestring=[b]',
+   morestring=[b]/,
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/}
+}
+
+% Definition for CoarseЯ
+\lst@definelanguage{coarser}[5.0]{java}{%
+   morekeywords=[2]{%
+      within, constraints, variables,composite_pattern%
+   },
+   sensitive=true,
+   literate=%
+     {||-}{{\ensuremath{{\:}{\Vdash}{\:}}}}3
+     {||-\ }{{\ensuremath{{\:}{\Vdash}{\:}}}}3
+     {\ ||-}{{\ensuremath{{\:}{\Vdash}{\:}}}}3
+     {\ ||-\ }{{\ensuremath{{\:}{\Vdash}{\:}}}}3
+     {|-}{{\ensuremath{{\:}{\vdash}{\:}}}}3
+     {|-\ }{{\ensuremath{{\:}{\vdash}{\:}}}}3
+     {\ |-}{{\ensuremath{{\:}{\vdash}{\:}}}}3
+     {\ |-\ }{{\ensuremath{{\:}{\vdash}{\:}}}}3
+     {«}{\guillemotleft{}}1
+     {»}{\guillemotright{}}1
+     {·}{{\ensuremath{{\:}{\bullet}}}}2
+     {·\ }{{\ensuremath{{\:}{\bullet}}}}2
+     {\ ·}{{\ensuremath{{\:}{\bullet}}}}2
+     {\ ·\ }{{\ensuremath{{\:}{\bullet}}}}2,
+   morestring=[b]',
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/}
+}
+
+% definition for linda hosted in c and in java
+\lst@definelanguage[c]{linda}[]{c}{
+   morekeywords=[2]{process, in, inp, rd, rdp, eval, out},
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/},
+   morestring=[b]'
+}
+
+\lst@definelanguage[java]{linda}[]{java}{
+   morekeywords=[2]{var, print, process, in, inp, rd, rdp, eval, out},
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/},
+   morestring=[b]'
+}
+
+%\lst@definelanguage{scala}{   
+%   morekeywords={
+%      Any, AnyRef, AnyVal, Array, Boolean, Int, List, Nothing, Null, Option,
+%      String, Unit, abstract, boolean, case, catch, class, def, default, do,
+%      else, extends, false, final, finally, for, forSome, if, implicit, import,
+%      int, lazy, match, mixin, new, null, object, override, package, private,
+%      protected, requires, return, sealed, super, this, throw, trait, true,
+%      try, type, unit, val, var, while, with, yield},
+%   otherkeywords={=,=>,<-,<\%,<:,>:,\#,@},   
+%   sensitive=true,   
+%   morecomment=[l]{//},   
+%   morecomment=[n]{/*}{*/},   
+%   morestring=[b]",   
+%   morestring=[b]',   
+%   morestring=[b]""",
+%%   literate=%
+%%     {=>}{\ensuremath{\:\Rightarrow\:}}3
+%%     {=>\ }{\ensuremath{\:\Rightarrow\:}}3
+%%     {\ =>}{\ensuremath{\:\Rightarrow\:}}3
+%%     {\ =>\ }{\ensuremath{\:\Rightarrow\:}}3
+%}[keywords,comments,strings]
+
+\lst@definelanguage[5.0]{java}[]{java}{%
+   %keywordsprefix={@},%
+   sensitive=false,%
+   moredelim=**[is][\bfseries\color{Teal}]{+-+}{+-+},
+   morekeywords={@interface,@retention,@target,enum,assert}%
+}
+
+\lst@definelanguage[11]{java}[5.0]{java}{%
+   %keywordsprefix={@},%
+   sensitive=false,%
+   moredelim=**[is][\bfseries\color{Teal}]{+-+}{+-+},
+   morekeywords={var,@interface,@retention,@target,enum,assert,module,requires,opens,open,exports,to}%
+}
+
+\lst@definelanguage[]{@java}[5.0]{java}{}
+
+%%
+%% AspectJ definition (c) Robert Wenner, Walter Cazzola
+%%
+\lst@definelanguage[AspectJ]{Java}[5.0]{Java}%
+  {morekeywords={%
+      adviceexecution,after,args,around,aspect,aspectOf,before,%
+      call,cflow,cflowbelow,%
+      execution,get,handler,if,initialization,issingleton,pointcut,%
+      percflow,percflowbelow,perthis,pertarget,preinitialization,%
+      privileged,proceed,returning,set,staticinitialization,strictfp,%
+      target,this,thisEnclosingJoinPoint,thisJoinPoint,throwing,%
+      within,withincode,declare,error,warning,soft,parent},%
+   MoreSelectCharTable=%
+     \lst@DefSaveDef{`.}\lst@umdot{\lst@umdot\global\let\lst@derefop\@empty}%
+     \ifx\lst@derefinstalled\@empty\else
+        \global\let\lst@derefinstalled\@empty
+\lst@AddToHook{Output}%
+{\lst@ifkeywords
+    \ifx\lst@derefop\@empty
+       \global\let\lst@derefop\relax
+       \ifx\lst@thestyle\lst@gkeywords@sty
+          \ifx\lst@currstyle\relax
+             \let\lst@thestyle\lst@identifierstyle
+          \else
+             \let\lst@thestyle\lst@currstyle
+          \fi
+       \fi
+    \fi
+ \fi}
+\lst@AddToHook{BOL}{\global\let\lst@derefop\relax}%
+\lst@AddTo\lst@ProcessSpace{\global\let\lst@derefop\relax}%
+     \fi
+  }%
+
+\lst@definelanguage{@aspectj}[aspectj]{java}{%
+   morekeywords={@block,@expr,@log,@verbose,
+   @interface,@retention,@target}% to have the keyword of java 5
+}
+
+\lst@definelanguage{BibTeX}{
+   keywords={%
+      @article,@book,@collectedbook,@conference,@electronic,@ieeetranbstctl,%
+      @inbook,@incollectedbook,@incollection,@injournal,@inproceedings,%
+      @manual,@mastersthesis,@misc,@patent,@periodical,@phdthesis,@preamble,%
+      @proceedings,@standard,@string,@techreport,@unpublished,%
+      author, title,booktitle,series,year,pages,publisher,address
+   },
+   comment=[l][\itshape]{@comment},
+   sensitive=false
+  }
+
+\lst@definelanguage{caesarj}{
+   morekeywords={
+      float, public, interface, class, cclass, static, void, extends, implements, 
+      final, boolean, return, new, double, int, if, aspect, after, pointcut, this, 
+      execution, before, args, abstract, deploy, wraps},
+   sensitive=true,
+   morecomment=[l]{//},
+   morecomment=[s]{/*}{*/},
+   morestring=[b]",
+}
+
+\lst@definelanguage[openjava]{java}[]{java}{%
+   morekeywords={instantiates}%
+}
+
+\lst@definelanguage[openc++]{c++}[]{c++}{%
+   morekeywords={metaclass}%
+}
+
+\lst@definelanguage[]{Yacc}{
+   otherkeywords={
+      \%left, \%nonassoc, \%prec, \%right, \%start, \%token, 
+      \%type, \%union, \%\%, \%\{, \%\}, |, :, \$\$, 
+      \$1, \$2, \$3, \$4, \$5, \$6, \$7, \$8, \$9
+    },%
+    keywords={\%seeREADME},%
+    morecomment=[n]{/*}{*/},%
+    morestring=[b]{"},%
+    sensitive=true
+  }[keywords,comments,strings]%
+
+
+%% Yacc: Bison
+
+%% Listings does not support ``moreotherkeywords'', so we cannot
+%% simply inherit.  To bad for code duplication.
+\lst@definelanguage[Bison]{Yacc}%
+  {otherkeywords=%
+    {\%binary,\%debug,\%default-prec,\%define,\%defines,\%destructor,
+      \%dprec,\%error-verbose,\%expect,\%expect-rr,\%file-prefix,
+      \%fixed-output-files,\%initial-action,\%glr-parser,
+      \%language,\%left,
+      \%lex-param,\%locations,\%merge,\%name-prefix,\%no-default-prec,
+      \%no-lines,\%nonassoc,\%nondeterministic-parser,\%nterm,\%output,
+      \%parse-param,\%prec,\%printer,\%pure-parser,\%right,\%skeleton,
+      \%start,\%term,\%token,\%token-table,\%type,\%union,\%verbose,\%yacc,
+      \%\%,\%\{,\%\},|,:,
+      \$\$,\$1,\$2,\$3,\$4,\$5,\$6,\$7,\$8,\$9,
+      @\$,@1,@2,@3,@4,@5,@6,@7,@8,@9
+    },%
+    keywords={\%seeREADME},%
+    morecomment=[n]{/*}{*/},%
+    morecomment=[s]{//},%
+    morestring=[b]{"},%
+    sensitive=true
+  }[keywords,comments,strings]%
+
+\lst@definelanguage{Bison}[Bison]{Yacc}{}
+
+\lst@definelanguage{javascript}{
+   morekeywords={
+      abstract,false, private, boolean, final, protected, break, finally,
+      public, byte, float, return, case, for, short, catch, function, static,
+      char, goto, switch, class, if, synchronized, const, implements, this,
+      continue, import, throw, debugger, in, throws, default, instanceof,
+      transient, delete, int, true, do, interface, try, double, long, typeof,
+      else, native, var, enum, new, void, export, null, while, extends,
+      package, with},
+   sensitive=true,
+   morecomment=[l][commentstyle]{//},
+   morecomment=[s][commentstyle]{/**}{*/},
+   morestring=[b]",
+   morestring=[b]'
+}
+
+\lstdefinelanguage{Smalltalk}{
+  morekeywords={self,super,true,false,nil,thisContext}, 
+  morestring=[d]',
+  morecomment=[s]{"}{"},
+  alsoletter={\#:},
+  literate=
+    {>>}{{$\:\gg\:$}}2
+    {^}{{$\uparrow$}}1
+    {-->}{{\quad$\longrightarrow$\quad}}3
+    {<--}{{$\:\leftarrow\:$}}2
+    ,
+  tabsize=4
+}[keywords,comments,strings]
+
+\lstdefinelanguage[3]{python}[]{python}{%
+   keywords={False, class, finally, is, return, None, continue, for, lambda, 
+       try, True, def, from, nonlocal, while, and, del, global, not, with, as, 
+       elif, if, or, yield, assert, else, import, pass, break, except, in, raise}%
+}
+
+\lstdefinelanguage[Objective]{C}[GNU99]{C}{%
+   morekeywords={@catch,@class,@encode,@end,@finally,@implementation,%
+       @interface,@private,@protected,@protocol,@public,@selector,%
+       @synchronized,@throw,@try,BOOL,Class,IMP,NO,Nil,SEL,YES,_cmd,%
+       bycopy,byref,id,in,inout,nil,oneway,out,self,super,%
+       % The next two lines are Objective-C 2 keywords.
+       @dynamic,@package,@property,@synthesize,readwrite,readonly,%
+       assign,retain,copy,nonatomic},%
+   moredirectives={import}%
+}
+
+\lstdefinelanguage[GNU99]{C}[99]{C}{%
+   morekeywords={asm,__asm__,__extension__,typeof,__typeof__}%
+}
+
+\lstdefinelanguage[99]{C}{%
+   morekeywords={_Bool,_Complex,_Imaginary,auto,break,case,char,%
+       const,continue,default,do,double,else,enum,extern,float,for,%
+       goto,if,inline,int,long,register,restrict,return,short,signed,%
+       sizeof,static,struct,switch,typedef,union,unsigned,void,volatile,%
+       while},%
+   sensitive,%
+   morecomment=[s]{/*}{*/},%
+   morecomment=[l]//,%
+   morestring=[b]",%
+   morestring=[b]',%
+   moredelim=*[directive]\#,%
+   moredirectives={define,elif,else,endif,error,if,ifdef,ifndef,line,%
+      include,pragma,undef,warning}%
+}[keywords,comments,strings,directives]%
+
+\lstdefinelanguage{Rust}{%
+  sensitive,%
+, morecomment=[l]{//},%
+, morecomment=[s]{/*}{*/},%
+, moredelim=[s][{\itshape\color[rgb]{0,0,0.75}}]{\#[}{]},%
+, morestring=[b]{"},%
+, alsodigit={},%
+, alsoother={},%
+, alsoletter={!},%
+, morekeywords={break, continue, else, for, if, in, loop, match, return, while},  % control flow keywords
+, morekeywords={as, const, let, move, mut, ref, static},  % in the context of variables
+, morekeywords={enum, fn, impl, Self, self, struct, trait, type, use, where},  % in the context of declarations
+, morekeywords={crate, extern, mod, pub, super},  % in the context of modularisation
+, morekeywords={unsafe},  % markers
+, morekeywords={abstract, alignof, become, box, do, final, macro, offsetof, override, priv, proc, pure, sizeof, typeof, unsized, virtual, yield},  % reserved identifiers
+, morekeywords=[2]{Add, AddAssign, Any, AsciiExt, AsInner, AsInnerMut, AsMut, AsRawFd, AsRawHandle, AsRawSocket, AsRef, Binary, BitAnd, BitAndAssign, Bitor, BitOr, BitOrAssign, BitXor, BitXorAssign, Borrow, BorrowMut, Boxed, BoxPlace, BufRead, BuildHasher, CastInto, CharExt, Clone, CoerceUnsized, CommandExt, Copy, Debug, DecodableFloat, Default, Deref, DerefMut, DirBuilderExt, DirEntryExt, Display, Div, DivAssign, DoubleEndedIterator, DoubleEndedSearcher, Drop, EnvKey, Eq, Error, ExactSizeIterator, ExitStatusExt, Extend, FileExt, FileTypeExt, Float, Fn, FnBox, FnMut, FnOnce, Freeze, From, FromInner, FromIterator, FromRawFd, FromRawHandle, FromRawSocket, FromStr, FullOps, FusedIterator, Generator, Hash, Hasher, Index, IndexMut, InPlace, Int, Into, IntoCow, IntoInner, IntoIterator, IntoRawFd, IntoRawHandle, IntoRawSocket, IsMinusOne, IsZero, Iterator, JoinHandleExt, LargeInt, LowerExp, LowerHex, MetadataExt, Mul, MulAssign, Neg, Not, Octal, OpenOptionsExt, Ord, OsStrExt, OsStringExt, Packet, PartialEq, PartialOrd, Pattern, PermissionsExt, Place, Placer, Pointer, Product, Put, RangeArgument, RawFloat, Read, Rem, RemAssign, Seek, Shl, ShlAssign, Shr, ShrAssign, Sized, SliceConcatExt, SliceExt, SliceIndex, Stats, Step, StrExt, Sub, SubAssign, Sum, Sync, TDynBenchFn, Terminal, Termination, ToOwned, ToSocketAddrs, ToString, Try, TryFrom, TryInto, UnicodeStr, Unsize, UpperExp, UpperHex, WideInt, Write},
+, morekeywords=[2]{Send},  % additional traits
+%
+, morekeywords=[3]{bool, char, f32, f64, i8, i16, i32, i64, isize, str, u8, u16, u32, u64, unit, usize, i128, u128},  % primitive types
+, morekeywords=[4]{Err, false, None, Ok, Some, true}  % prelude value constructors
+, morekeywords=[3]{AccessError, Adddf3, AddI128, AddoI128, AddoU128, ADDRESS, ADDRESS64, addrinfo, ADDRINFOA, AddrParseError, Addsf3, AddU128, advice, aiocb, Alignment, AllocErr, AnonPipe, Answer, Arc, Args, ArgsInnerDebug, ArgsOs, Argument, Arguments, ArgumentV1, Ashldi3, Ashlti3, Ashrdi3, Ashrti3, AssertParamIsClone, AssertParamIsCopy, AssertParamIsEq, AssertUnwindSafe, AtomicBool, AtomicPtr, Attr, auxtype, auxv, BackPlace, BacktraceContext, Barrier, BarrierWaitResult, Bencher, BenchMode, BenchSamples, BinaryHeap, BinaryHeapPlace, blkcnt, blkcnt64, blksize, BOOL, boolean, BOOLEAN, BoolTrie, BorrowError, BorrowMutError, Bound, Box, bpf, BTreeMap, BTreeSet, Bucket, BucketState, Buf, BufReader, BufWriter, Builder, BuildHasherDefault, BY, BYTE, Bytes, c, CannotReallocInPlace, cc, Cell, Chain, CHAR, CharIndices, CharPredicateSearcher, Chars, CharSearcher, CharsError, CharSliceSearcher, CharTryFromError, Child, ChildPipes, ChildStderr, ChildStdin, ChildStdio, ChildStdout, Chunks, ChunksMut, ciovec, clock, clockid, Cloned, cmsgcred, cmsghdr, CodePoint, Color, ColorConfig, Command, CommandEnv, Component, Components, CONDITION, condvar, Condvar, CONSOLE, CONTEXT, Count, Cow, cpu, CRITICAL, CStr, CString, CStringArray, Cursor, Cycle, CycleIter, daddr, DebugList, DebugMap, DebugSet, DebugStruct, DebugTuple, Decimal, Decoded, DecodeUtf16, DecodeUtf16Error, DecodeUtf8, DefaultEnvKey, DefaultHasher, dev, device, Difference, Digit32, DIR, DirBuilder, dircookie, dirent, dirent64, DirEntry, Discriminant, DISPATCHER, Display, Divdf3, Divdi3, Divmoddi4, Divmodsi4, Divsf3, Divsi3, Divti3, dl, Dl, Dlmalloc, Dns, DnsAnswer, DnsQuery, dqblk, Drain, DrainFilter, Dtor, Duration, DwarfReader, DWORD, DWORDLONG, DynamicLibrary, Edge, EHAction, EHContext, Elf32, Elf64, Empty, EmptyBucket, EncodeUtf16, EncodeWide, Entry, EntryPlace, Enumerate, Env, epoll, errno, Error, ErrorKind, EscapeDebug, EscapeDefault, EscapeUnicode, event, Event, eventrwflags, eventtype, ExactChunks, ExactChunksMut, EXCEPTION, Excess, ExchangeHeapSingleton, exit, exitcode, ExitStatus, Failure, fd, fdflags, fdsflags, fdstat, ff, fflags, File, FILE, FileAttr, filedelta, FileDesc, FilePermissions, filesize, filestat, FILETIME, filetype, FileType, Filter, FilterMap, Fixdfdi, Fixdfsi, Fixdfti, Fixsfdi, Fixsfsi, Fixsfti, Fixunsdfdi, Fixunsdfsi, Fixunsdfti, Fixunssfdi, Fixunssfsi, Fixunssfti, Flag, FlatMap, Floatdidf, FLOATING, Floatsidf, Floatsisf, Floattidf, Floattisf, Floatundidf, Floatunsidf, Floatunsisf, Floatuntidf, Floatuntisf, flock, ForceResult, FormatSpec, Formatted, Formatter, Fp, FpCategory, fpos, fpos64, fpreg, fpregset, FPUControlWord, Frame, FromBytesWithNulError, FromUtf16Error, FromUtf8Error, FrontPlace, fsblkcnt, fsfilcnt, fsflags, fsid, fstore, fsword, FullBucket, FullBucketMut, FullDecoded, Fuse, GapThenFull, GeneratorState, gid, glob, glob64, GlobalDlmalloc, greg, group, GROUP, Guard, GUID, Handle, HANDLE, Handler, HashMap, HashSet, Heap, HINSTANCE, HMODULE, hostent, HRESULT, id, idtype, if, ifaddrs, IMAGEHLP, Immut, in, in6, Incoming, Infallible, Initializer, ino, ino64, inode, input, InsertResult, Inspect, Instant, int16, int32, int64, int8, integer, IntermediateBox, Internal, Intersection, intmax, IntoInnerError, IntoIter, IntoStringError, intptr, InvalidSequence, iovec, ip, IpAddr, ipc, Ipv4Addr, ipv6, Ipv6Addr, Ipv6MulticastScope, Iter, IterMut, itimerspec, itimerval, jail, JoinHandle, JoinPathsError, KDHELP64, kevent, kevent64, key, Key, Keys, KV, l4, LARGE, lastlog, launchpad, Layout, Lazy, lconv, Leaf, LeafOrInternal, Lines, LinesAny, LineWriter, linger, linkcount, LinkedList, load, locale, LocalKey, LocalKeyState, Location, lock, LockResult, loff, LONG, lookup, lookupflags, LookupHost, LPBOOL, LPBY, LPBYTE, LPCSTR, LPCVOID, LPCWSTR, LPDWORD, LPFILETIME, LPHANDLE, LPOVERLAPPED, LPPROCESS, LPPROGRESS, LPSECURITY, LPSTARTUPINFO, LPSTR, LPVOID, LPWCH, LPWIN32, LPWSADATA, LPWSAPROTOCOL, LPWSTR, Lshrdi3, Lshrti3, lwpid, M128A, mach, major, Map, mcontext, Metadata, Metric, MetricMap, mflags, minor, mmsghdr, Moddi3, mode, Modsi3, Modti3, MonitorMsg, MOUNT, mprot, mq, mqd, msflags, msghdr, msginfo, msglen, msgqnum, msqid, Muldf3, Mulodi4, Mulosi4, Muloti4, Mulsf3, Multi3, Mut, Mutex, MutexGuard, MyCollection, n16, NamePadding, NativeLibBoilerplate, nfds, nl, nlink, NodeRef, NoneError, NonNull, NonZero, nthreads, NulError, OccupiedEntry, off, off64, oflags, Once, OnceState, OpenOptions, Option, Options, OptRes, Ordering, OsStr, OsString, Output, OVERLAPPED, Owned, Packet, PanicInfo, Param, ParseBoolError, ParseCharError, ParseError, ParseFloatError, ParseIntError, ParseResult, Part, passwd, Path, PathBuf, PCONDITION, PCONSOLE, Peekable, PeekMut, Permissions, PhantomData, pid, Pipes, PlaceBack, PlaceFront, PLARGE, PoisonError, pollfd, PopResult, port, Position, Powidf2, Powisf2, Prefix, PrefixComponent, PrintFormat, proc, Process, PROCESS, processentry, protoent, PSRWLOCK, pthread, ptr, ptrdiff, PVECTORED, Queue, radvisory, RandomState, Range, RangeFrom, RangeFull, RangeInclusive, RangeMut, RangeTo, RangeToInclusive, RawBucket, RawFd, RawHandle, RawPthread, RawSocket, RawTable, RawVec, Rc, ReadDir, Receiver, recv, RecvError, RecvTimeoutError, ReentrantMutex, ReentrantMutexGuard, Ref, RefCell, RefMut, REPARSE, Repeat, Result, Rev, Reverse, riflags, rights, rlim, rlim64, rlimit, rlimit64, roflags, Root, RSplit, RSplitMut, RSplitN, RSplitNMut, RUNTIME, rusage, RwLock, RWLock, RwLockReadGuard, RwLockWriteGuard, sa, SafeHash, Scan, sched, scope, sdflags, SearchResult, SearchStep, SECURITY, SeekFrom, segment, Select, SelectionResult, sem, sembuf, send, Sender, SendError, servent, sf, Shared, shmatt, shmid, ShortReader, ShouldPanic, Shutdown, siflags, sigaction, SigAction, sigevent, sighandler, siginfo, Sign, signal, signalfd, SignalToken, sigset, sigval, Sink, SipHasher, SipHasher13, SipHasher24, size, SIZE, Skip, SkipWhile, Slice, SmallBoolTrie, sockaddr, SOCKADDR, sockcred, Socket, SOCKET, SocketAddr, SocketAddrV4, SocketAddrV6, socklen, speed, Splice, Split, SplitMut, SplitN, SplitNMut, SplitPaths, SplitWhitespace, spwd, SRWLOCK, ssize, stack, STACKFRAME64, StartResult, STARTUPINFO, stat, Stat, stat64, statfs, statfs64, StaticKey, statvfs, StatVfs, statvfs64, Stderr, StderrLock, StderrTerminal, Stdin, StdinLock, Stdio, StdioPipes, Stdout, StdoutLock, StdoutTerminal, StepBy, String, StripPrefixError, StrSearcher, subclockflags, Subdf3, SubI128, SuboI128, SuboU128, subrwflags, subscription, Subsf3, SubU128, Summary, suseconds, SYMBOL, SYMBOLIC, SymmetricDifference, SyncSender, sysinfo, System, SystemTime, SystemTimeError, Take, TakeWhile, tcb, tcflag, TcpListener, TcpStream, TempDir, TermInfo, TerminfoTerminal, termios, termios2, TestDesc, TestDescAndFn, TestEvent, TestFn, TestName, TestOpts, TestResult, Thread, threadattr, threadentry, ThreadId, tid, time, time64, timespec, TimeSpec, timestamp, timeval, timeval32, timezone, tm, tms, ToLowercase, ToUppercase, TraitObject, TryFromIntError, TryFromSliceError, TryIter, TryLockError, TryLockResult, TryRecvError, TrySendError, TypeId, U64x2, ucontext, ucred, Udivdi3, Udivmoddi4, Udivmodsi4, Udivmodti4, Udivsi3, Udivti3, UdpSocket, uid, UINT, uint16, uint32, uint64, uint8, uintmax, uintptr, ulflags, ULONG, ULONGLONG, Umoddi3, Umodsi3, Umodti3, UnicodeVersion, Union, Unique, UnixDatagram, UnixListener, UnixStream, Unpacked, UnsafeCell, UNWIND, UpgradeResult, useconds, user, userdata, USHORT, Utf16Encoder, Utf8Error, Utf8Lossy, Utf8LossyChunk, Utf8LossyChunksIter, utimbuf, utmp, utmpx, utsname, uuid, VacantEntry, Values, ValuesMut, VarError, Variables, Vars, VarsOs, Vec, VecDeque, vm, Void, WaitTimeoutResult, WaitToken, wchar, WCHAR, Weak, whence, WIN32, WinConsole, Windows, WindowsEnvKey, winsize, WORD, Wrapping, wrlen, WSADATA, WSAPROTOCOL, WSAPROTOCOLCHAIN, Wtf8, Wtf8Buf, Wtf8CodePoints, xsw, xucred, Zip, zx}
+%
+, morekeywords=[5]{assert!, assert_eq!, assert_ne!, cfg!, column!, compile_error!, concat!, concat_idents!, debug_assert!, debug_assert_eq!, debug_assert_ne!, env!, eprint!, eprintln!, file!, format!, format_args!, include!, include_bytes!, include_str!, line!, module_path!, option_env!, panic!, print!, println!, select!, stringify!, thread_local!, try!, unimplemented!, unreachable!, vec!, write!, writeln!}  % prelude macros
+}%
+
+%% ivan
+%\lst@definelanguage{xml}{
+%	morekeywords={
+%		module, name, depend, depend re-exports, export},
+%	sensitive=true,
+%	morecomment=[s]{<!--}{-->},
+%	morestring=[b]",
+%}
