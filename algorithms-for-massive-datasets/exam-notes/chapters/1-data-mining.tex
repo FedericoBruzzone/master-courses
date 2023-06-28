@@ -1,4 +1,4 @@
-\chapter{HDFS and MapReduce}\label{chap:hdfs-map-reduce}
+\chapter{Data Mining}\label{chap:data-mining}
 
 \section{Things Useful to Know}\label{sec:things-useful-to-know}
 
@@ -38,3 +38,55 @@ The constant $e = 2.7182818...$ has a number of useful special properties. In pa
 \begin{equation*}
     \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e
 \end{equation*}
+
+Some algebra lets us obtain approximations to many complex expression. Condiser $(1 + \alpha)^\beta$, where $\alpha$ a small. We can rewirte the expression as $(1 + \alpha)^{(1/\alpha)(\alpha\beta)}$. Then subsitute $\alpha = 1/n$ and $1/\alpha = n$, so we have that $(1+\frac{1}{n})^{n(\alpha\beta)}$, which is
+\begin{equation*}
+    \Bigg(\left(1 + \frac{1}{n}\right)^n\Bigg)^{\alpha\beta}
+\end{equation*}
+Since $\alpha$ is assumed small, $n$ is large, so the subexpression $\left(1 + \frac{1}{n}\right)^n$ will be cose to the limiting value of $e$. 
+
+Some other usefull approximations follow from the Taylor expansion of $e^x$. That is,
+\begin{equation*}
+    \begin{split}
+    e^x & = \sum_{i=0}^{\infty} \frac{x^i}{i!} \\
+        & = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots
+    \end{split}
+\end{equation*}
+
+When $x$ is large, the above series converges slowly, although it does converge because $n!$ grows faster than $x^n$ for any constant $x$.
+
+\subsection{Power Laws}\label{subsec:power-laws}
+
+There are many phenomena that relate two variables by a \textit{power law}, that is, a linear relationship between the logarithms of the variables. Figure~\ref{fig:power-law} suggest such a relationship that is: $\log_{10} y = 6 - 2\log_{10}x$
+
+\begin{figure}[H]
+\centering
+\scalebox{0.8}{
+\begin{tikzpicture}
+    % Axes
+    \draw[->] (0,0) -- (6,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,8) node[above] {$y$};
+    
+    % Ticks and labels on x-axis
+    \foreach \x/\label in {1/1, 2/10, 3/100, 4/1000, 5/10.000}
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {\label};
+    
+    % Ticks and labels on y-axis
+    \foreach \y/\label in {1/1, 2/10, 3/100, 4/1000, 5/10.000, 6/100.000, 7/1.000.000}
+        \draw (0.1,\y) -- (-0.1,\y) node[left] {\label};
+    
+    % Dotted line
+    \draw[dotted] (0,7) -- (4,0);
+\end{tikzpicture}
+}
+\caption{A power law with a slope of $-2$}
+\label{fig:power-law}
+\end{figure}
+
+\begin{tikzpicture}
+    \node [draw=black, thick, rectangle, minimum width=14cm, minimum height=2cm, align=center, text width=12cm] (box) {
+        \textbf{The Matthew Effect} \\
+        Often, the existence of power laws with values of the exponent higher than 1 are explained by the \textit{Matthew effect}. In the biblical \textit{Book of Matthew}, there is a verse about ``the rich get richer.'' Many phenomena exhibit this behavior, where getting a high value of some property causes that very property to increase.
+    };
+\end{tikzpicture}
+

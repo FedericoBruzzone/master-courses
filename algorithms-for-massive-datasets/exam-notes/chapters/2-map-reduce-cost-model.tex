@@ -1,0 +1,20 @@
+\chapter{MapReduce and Cost Model}\label{chap:map-reduce-cost-model}
+
+\section{Algorithms Using MapReduce}\label{sec:algorithms-using-mapreduce}
+
+MapReduce is not a solution to every problem, not even every problem that profitably can use many compute nodes operating in parallel. The original purpose for which the Google implementation of MapReduce was created was executed very large matrix-verctor multiplication as are needed in the calculation of PageRank (See Chapter ~\ref{chap:link-analysis}). We shall see that matrix-vector and matrix-matrix calculations fit nicely into the MapReduce style of computing. Another imortant class of operations that can use MapReduce effectively are the relational-algebra operations.   
+
+\subsection{Matrix-Vector Multiplication by MapReduce}\label{subsec:matrix-vector-multiplication}
+
+Suppose we have an $n \times n$ matrix $M$, whose element in row $i$ and column $j$ will be denoted $m_{ij}$. Suppose we also have a vector $\mathbf{v}$ of length $n$, whose $j$-th element is $\mathbf{v}_j$. Then the matrix-vector product is the vector $\mathbf{x}$ of length $n$, whose $i$-th element $\mathbf{v}_i$ is given by 
+\begin{equation*}
+    \mathbf{x}_i = \sum_{j=1}^n m_{ij} \mathbf{v}_j
+\end{equation*}
+Let $n$ be large, but not so large that vector $\mathbf{v}$ cannot fit in memory and thus be avaiable to every Map task.The matrix M and vector $\mathbf{v}$ are stored in the distributed file system (DFS). We assume that the row-column coordinates of each matrix element will be discoverable from from its position in the file, or because it is stored explicitly as a triple $(i, j, m_{ij})$.We also assume the position of the element $\mathbf{v}_j$ in the vector $\mathbf{v}$ is discoverable in the same way.
+
+\textbf{The Map Function}: The Map function is written to apply to one element of $m$. Each Map task will operate on a chunk of the matrix $M$. From each matrix element $m_{ij}$ it produce a key-value pair $(i, m_{ij}\mathbf{v}_j)$
+
+\textbf{The Reduce Function}: The Reduce function simply sumus all the values associated with a given key $i$. The result will be a pair $(i, \mathbf{x}_i)$.
+
+\subsection{If the Vector $\mathbf{v}$ Cannot Fit in Memory}\label{subsec:vector-v-cannot-fit-in-memory}
+
