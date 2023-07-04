@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+        
+<head>
+
+<style type="text/css" media="all">@import "../../adapt-lab.css";</style>
+<link rel="shortcut icon" href="../../logo/logo.ico" type="image/x-icon"/>
+<link rel="icon" href="../../logo/logo.ico" type="image/x-icon"/>
+
+<title>Esame di Programmazione Avanzata del 05-09-2011</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+<meta name="keywords" content="['Python', 'Walter Cazzola']"/>
+
+<script type="text/javascript">
+var showMode = 'block';
+	if (document.all) showMode = '';
+
+	function toggleId(id, y_scroll){
+	  if (document.all) {
+		var obj = document.all[id];
+	  } else if (document.getElementById) {
+		 var obj = document.getElementById(id);
+	  } else return false;
+	  if (obj.style.display == 'none') {
+	     obj.style.display = showMode;
+	  	 if (y_scroll) scroll(0,y_scroll);
+	  } else obj.style.display = 'none';
+	  return false;
+	}
+</script>
+
+</head>
+<body style="background-image: url(../../backgrounds/rosetta.jpg); background-repeat: repeat-x;">
+
+<!-- INIZIO CONTAINER -->
+<div id="contentmain">
+      
+   <!-- INIZIO CONTENUTO PRINCIPALE -->
+
+   <div class="document">
+<div class="header"><h1 class="title">Exam of Advance in Programming</h1><div class="subtitle">05 September 2011</div></div><br/><br/><!-- Exam of Advance in Programming -->
+<!-- ============================== -->
+<!-- 05 Semptember 2011 -->
+<!-- - - - - - - - - - - - - - - - - - - -->
+<p><strong>Disclaimer.</strong> Note that to have a running solution for an exercise is not enough: you need a well-cooked solution that proves your ability to use what explained during the classes. All the exercises have the same value: 12; the submission with only one exercise will not be evaluated at all.</p>
+<div class="midline">Exercise 1: Extremely Reduced VI (ER-VI).</div><!-- Exercise 1: Extremely Reduced VI (ER-VI). -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>As you probably know, <strong>vi</strong> is a <cite>modal</cite> text editor: it operates in either insert mode (where typed text becomes part of the document) or normal mode (where keystrokes are interpreted as commands that control the edit session). <strong>Ex</strong> is a line editor that serves as the foundation for the screen editor vi. Ex commands work on the current line or on a range of lines in a file.</p>
+<p><strong>Syntax of Ex commands</strong></p>
+<p><tt class="docutils literal">:[address] command [options]</tt></p>
+<p>In our exercise we are going to implement a simplified version of the line editor Ex used by VI.</p>
+<p>In particular you have to implement a class <tt class="docutils literal">editor</tt> representing a line of text with the following operations defined on it:</p>
+<ul class="simple">
+<li><tt class="docutils literal">x</tt> which deletes the character under the cursor (does nothing if no characters are present) and move the cursor on the character on the right if present otherwise back of one;</li>
+<li><tt class="docutils literal">dw</tt> which deletes from the character under the cursor (included) to the next space (excluded) or to the end of the line and moves the cursor on the character on the right if any or backwards otherwise;</li>
+<li><tt class="docutils literal">i</tt> which adds a character <tt class="docutils literal">c</tt> after the character under the cursor and moves the cursor under <tt class="docutils literal">c</tt></li>
+<li><tt class="docutils literal">iw</tt> which adds a word <tt class="docutils literal">w</tt> followed by a blank space after the character under the cursor and moves the cursor under the blank space;</li>
+<li><tt class="docutils literal">l</tt> which moves the cursor <tt class="docutils literal">n</tt> (1 as default, i.e., when nothing is specified) characters on the right from the current position (it does nothing when at the end of the text or it moves less if it is close to the end);</li>
+<li><tt class="docutils literal">h</tt> which moves the cursor <tt class="docutils literal">n</tt> (1 as default, i.e., when nothing is specified) character on the left from the current position (it does nothing when at the beginning of the text or it moves less if it is close to the beginning).</li>
+</ul>
+<p>Clearly all the above operations are methods invokable on instances of the editor class. Each instance should have clear where the cursor is after each computation.</p>
+<p>The following is an example of use:</p>
+<embed src="esame 2011-09-05.p1.pdf" width="100%" height="654.4062904839212213640314196px">
+
+<BR>
+
+<embed src="esame 2011-09-05.p2.pdf" width="100%" height="300.1204122127032541751880562px">
+
+<BR><div class="midline">Exercise 2: Debugger Helper for ER-VI</div><!-- Exercise 2:  Debugger Helper for ER-VI. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>As you can imagine in the previous exercise, to debug the editor class is not easy. In particular is difficult to find out which operation has changed the text and where the cursor is in any moment. To this respect write a decorator <tt class="docutils literal">debug</tt> (to be applied to the <tt class="docutils literal">editor</tt> class of the previous exercise) that, when you print the line of text prints also who has performed the operation and where the cursor is as in the following example.</p>
+<embed src="esame 2011-09-05.p3.pdf" width="100%" height="654.4062904839212213640314196px">
+
+<BR>
+
+<embed src="esame 2011-09-05.p4.pdf" width="100%" height="300.1204122127032541751880562px">
+
+<BR><div class="midline">Exercise 3: Undo/Redo for ER-VI.</div><!-- Exercise 3: Undo/Redo for ER-VI. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Any (usable) editor should have a mechanism to undo and redo the actions carried out on the text and our line editor cannot do an exception to this rule.</p>
+<p>On the other side undo/redo operations are normally orthogonal to the text editing actions and they are separately implemented. We are going to adopt the same approach to their implementation by defining a <tt class="docutils literal">UndoRedo</tt> <strong>metaclass</strong>.</p>
+<p>The <tt class="docutils literal">UndoRedo</tt> metaclass will add to the <tt class="docutils literal">editor</tt> class two operations:</p>
+<ul class="simple">
+<li><tt class="docutils literal">u</tt> which undoes the effects of the last executed command (<tt class="docutils literal">ctrlr</tt> included) at every call (this means that two consecutive calls will undo the effects of the last two executed commands);</li>
+<li><tt class="docutils literal">ctrlr</tt> which redoes the effects of the last undone command at every call (consecutive calls have a behavior similar to the undo case).</li>
+</ul>
+<p>Note that every pair of calls <tt class="docutils literal">u</tt> → <tt class="docutils literal">ctrlr</tt> will leave the text unchanged. A call to <tt class="docutils literal">ctrlr</tt> method after any other editing command (i.e., any method different from <tt class="docutils literal">u</tt>) has no effect.</p>
+<p>The undo/redo model to implement is linear, i.e., if you edit the text after an undo operation you lose the possibility to redo the all changes to it and a successive undo do not restore this possibility.</p>
+<p>The following example should explain the desired behavior:</p>
+<embed src="esame 2011-09-05.p5.pdf" width="100%" height="808.4439649820670138474044609px">
+
+<BR>
+
+<embed src="esame 2011-09-05.p6.pdf" width="100%" height="361.7357397034673563428421499px">
+
+<BR></div>
+
+  
+   <!-- COPYRIGHT -->
+    <div id="footer">
+        Last Modified: Mon, 12 Sep 2011 18:02:08
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          ADAPT Lab.&nbsp;
+          <img src="../../logo/logo (svg) 02.png" width="15px" height="15px"></img>
+
+    </div>
+    <!-- FINE COPYRIGHT -->
+</div>
+<!-- FINE CONTENUTO PRINCIPALE -->
+
+
+<!-- INIZIO COLONNA -->
+<div id="colonna">
+
+    <div class="boxSidebar">
+       <p align="center">
+         <center>
+            <img class="nospacetop" src="../../imgs/io-camogli.jpg" hspace="0px" align="middle"></img>
+         </center>
+       </p>
+
+    <h2 class="sectiontitle"><a href="index.html#" onclick="return toggleId('personal');">Walter Cazzola</a></h2>
+    <div id="personal" style="display:block">
+            <a class="on" href="../../index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home Page</a><br/>
+            <a class="on" href="../../adapt-lab.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ADAPT Lab.</a><br/>
+            <a class="on" href="../../cv.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Curriculum Vitae</a><br/>
+            <a class="off" href="../../topics.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Research Topic</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('teaching');">Didactics</a></h2>
+    <div id="teaching" style="display:none">
+            <a class="on" href="../../pa.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PA 2009-10</a><br/>
+            <a class="on" href="../../tsp.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2009-10</a><br/>
+            <a class="on" href="../../phd-apt.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PhD: ADT Curricula</a><br/>
+            <hr>
+            <a class="on" href="../../fap08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAP 2008-09</a><br/>
+            <a class="on" href="../../tsp08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2008-09</a><br/>
+            <hr>
+            <a class="off" href="../../thesis.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thesis Proposals</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('publications');">Publications</a></h2>
+    <div id="publications" style="display:none">
+            <a class="on" href="../../cazzolawbib-by-year.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Year</a><br/>
+            <a class="on" href="../../cazzolawbib-by-topic.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Topic</a><br/>
+            <a class="on" href="../../cazzolawbib-by-kind.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Kind</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('funded_projects');">Funded Projects</a></h2>
+    <div id="funded_projects" style="display:none">
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/ramses1.htm" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES</a><br/>
+            <a class="on" href="http://bart.disi.unige.it/EOS2/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOS-DUE</a><br/>
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES II</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('research');">Research Projects</a></h2>
+    <div id="research" style="display:none">
+            <a class="on" href="../../atjava.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Java</a><br/>
+            <a class="on" href="../../neverlang.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Neverlang</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blueprint</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOP->HiddenMetrics</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mChaRM</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSE Library</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reflective Petri Nets</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smart Reflection</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SNA Servants</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReverseR</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('events');">Related Events</a></h2>
+    <div id="events" style="display:none">
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE10/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'10</a><br/>
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE09/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'09</a><br/>
+            <a class="on" target="_blank" href="http://2009.ecoop.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ECOOP'09</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'08</a><br/>
+            <a class="on" target="_blank" href="http://www.aspect-modeling.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOM'08</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE07.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'07</a><br/>
+    </div>
+    <br/><br/><br/><br/><br/><br/>
+<!-- ADDFREESTATS.COM AUTOCODE V4.0 -->
+<center><script type="text/javascript">
+<!--
+var AFS_Account="00210510";
+var AFS_Tracker="auto";
+var AFS_Server="www2";
+var AFS_Page="DetectName";
+var AFS_Url="DetectUrl";
+// -->
+</script>
+<script type="text/javascript" src="http://www2.addfreestats.com/cgi-bin/afstrack.cgi?usr=00210510">
+</script>
+<noscript>
+<a href="http://www.addfreestats.com" >
+<img src="http://www2.addfreestats.com/cgi-bin/connect.cgi?usr=00210510Pauto" border=0 alt="AddFreeStats.com Free Web Stats!">Web Stats</a>
+</noscript>
+<!-- ENDADDFREESTATS.COM AUTOCODE V4.0  -->
+    <br/><a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+</center>
+
+</div>
+<!-- FINE COLONNA -->
+  
+</div>
+
+</body>
+</html>
+
