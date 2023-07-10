@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+        
+<head>
+
+<style type="text/css" media="all">@import "../../adapt-lab.css";</style>
+<link rel="shortcut icon" href="../../logo/logo.ico" type="image/x-icon"/>
+<link rel="icon" href="../../logo/logo.ico" type="image/x-icon"/>
+
+<title>Esame di Programmazione Avanzata del 21-07-2011</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+<meta name="keywords" content="['Python', 'Walter Cazzola']"/>
+
+<script type="text/javascript">
+var showMode = 'block';
+	if (document.all) showMode = '';
+
+	function toggleId(id, y_scroll){
+	  if (document.all) {
+		var obj = document.all[id];
+	  } else if (document.getElementById) {
+		 var obj = document.getElementById(id);
+	  } else return false;
+	  if (obj.style.display == 'none') {
+	     obj.style.display = showMode;
+	  	 if (y_scroll) scroll(0,y_scroll);
+	  } else obj.style.display = 'none';
+	  return false;
+	}
+</script>
+
+</head>
+<body style="background-image: url(../../backgrounds/rosetta.jpg); background-repeat: repeat-x;">
+
+<!-- INIZIO CONTAINER -->
+<div id="contentmain">
+      
+   <!-- INIZIO CONTENUTO PRINCIPALE -->
+
+   <div class="document">
+<div class="header"><h1 class="title">Exam of Advance in Programming</h1><div class="subtitle">21 July 2011</div></div><br/><br/><!-- Exam of Advance in Programming -->
+<!-- ============================== -->
+<!-- 21 July 2011 -->
+<!-- - - - - - - - - - - - - -->
+<p><strong>Disclaimer.</strong> Note that to have a running solution for an exercise is not enough: you need a well-cooked solution that proves your ability to use what explained during the classes. All the exercises have the same value: 12; the submission with only one exercise will not be evaluated at all.</p>
+<div class="midline">Exercise 1: Wandering around Europe.</div><!-- Exercise 1: Wandering around Europe. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>As everyone knows Europe is a collection of countries close to each other; each country has a pool of neighboring countries whose inhabitants have to cross to reach other countries. Basically when you plan a car trip around Europe it is a common issue to determine how many countries it is necessary to cross (in order to get the right currencies and all your electric equipment working at every stop).</p>
+<p>To help planning your trip you have to write a function <tt class="docutils literal">crossing</tt> that given a country name and n (the desired number of steps) gives you the set of countries you can reach crossing n countries starting from the given country. Note that:</p>
+<ol class="arabic simple">
+<li>in zero steps you can't exit from the starting country;</li>
+<li>in one step you get only in the border countries;</li>
+<li>the path must always be minimal, e.g., from Italy you can get in Belgium crossing Switzerland and Germany or only France the second is the one to choose;</li>
+<li>you can't cross a country twice or more or get back, e.g., Italy → Switzerland → Italy or Italy → Switzerland → France are wrong.</li>
+</ol>
+<p>Since Europe is tightly coupled to Asia in the exercise exclude Kazakhstan, Georgia, Azerbaijan, Cyprus and Turkey from Europe, i.e., consider Europe as a group of islands separated from Asia in the listed countries (that could be considered as ocean if you like). To help those with problems in geography this is a political map of Europe to be used.</p>
+<img alt="europe-map.png" class="align-center" src="europe-map.png" style="width: 100%;" />
+<p><strong>Hint</strong> define a generator <tt class="docutils literal">border</tt>, used by <tt class="docutils literal">crossing</tt>, that given the starting country at each step provides the set of border countries of the border computed in the previous step.</p>
+<p>The following is an example of use:</p>
+<embed src="esame 2011-07-21.p1.pdf" width="100%" height="146.0840261720863875633394008px">
+
+<BR>
+
+<embed src="esame 2011-07-21.p2.pdf" width="100%" height="361.7357397034673563428421499px">
+
+<BR><div class="midline">Exercise 2: Are You Wandering Correctly around Europe?</div><!-- Exercise 2: Are You Wandering Correctly around Europe? -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Since vacations are an important matter we cannot do our work wrong. It is time to validate exercise 1 against errors. Use test-driven development to write a class to run tests on the previous exercise.</p>
+<p><strong>Hint.</strong> Some properties that should be valid in the previous exercise are:</p>
+<ol class="arabic simple">
+<li>all countries listed as neighbors of another country must list such a country as a neighbor</li>
+<li>a path can be followed in the two directions, i.e., if you get in c₁, c₂ and c₃ from a country c in n steps then in n steps from either c₁, c₂ and c₃ you must get in c.</li>
+</ol>
+<p>These are just a couple of <strong>necessary</strong> test not the only possible but represents a good minimal pool of tests to consider your exercise correct.</p>
+<div class="midline">Exercise 3: Sleep Sort.</div><!-- Exercise 3: Sleep Sort. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Recently on the Internet is possible to see a novel approach to sorting named sleep sort that promises linear time complexity. Such an approach rely on the <strong>sleep</strong> system call to sort the numbers: each number is dealt as a thread which is suspended as many milliseconds as the number itself and when resumed it will just print its number. The scheduler will play the magic by resuming the threads in the correct order.</p>
+<p>The following is the shell script implementation:</p>
+<embed src="esame 2011-07-21.p3.pdf" width="100%" height="192.2945554470127697854366817px">
+
+<BR><p>The approach suffers of several issues: it doesn't work with negative numbers and it takes eons to sort large numbers, just to cite a few. But the idea is interesting and it is a good exercise to be realized in different languages, as python or java.</p>
+<p>The exercise consists of coding the sleep sort algorithm as a python function that gets the numbers to be sorted and spawns the threads according to the presented algorithm.</p>
+<p><strong>Hint.</strong> Take a look at the standard modules <tt class="docutils literal">threading</tt>, <tt class="docutils literal">queue</tt> and <tt class="docutils literal">time</tt>.</p>
+<p>The following is an example of the expected behavior:</p>
+<embed src="esame 2011-07-21.p4.pdf" width="100%" height="99.87220843963107946971773410px">
+
+<BR>
+
+<embed src="esame 2011-07-21.p5.pdf" width="100%" height="84.46869868132228539568530713px">
+
+<BR></div>
+
+  
+   <!-- COPYRIGHT -->
+    <div id="footer">
+        Last Modified: Fri, 22 Jul 2011 16:01:17
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          ADAPT Lab.&nbsp;
+          <img src="../../logo/logo (svg) 02.png" width="15px" height="15px"></img>
+
+    </div>
+    <!-- FINE COPYRIGHT -->
+</div>
+<!-- FINE CONTENUTO PRINCIPALE -->
+
+
+<!-- INIZIO COLONNA -->
+<div id="colonna">
+
+    <div class="boxSidebar">
+       <p align="center">
+         <center>
+            <img class="nospacetop" src="../../imgs/io-camogli.jpg" hspace="0px" align="middle"></img>
+         </center>
+       </p>
+
+    <h2 class="sectiontitle"><a href="index.html#" onclick="return toggleId('personal');">Walter Cazzola</a></h2>
+    <div id="personal" style="display:block">
+            <a class="on" href="../../index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home Page</a><br/>
+            <a class="on" href="../../adapt-lab.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ADAPT Lab.</a><br/>
+            <a class="on" href="../../cv.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Curriculum Vitae</a><br/>
+            <a class="off" href="../../topics.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Research Topic</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('teaching');">Didactics</a></h2>
+    <div id="teaching" style="display:none">
+            <a class="on" href="../../pa.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PA 2009-10</a><br/>
+            <a class="on" href="../../tsp.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2009-10</a><br/>
+            <a class="on" href="../../phd-apt.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PhD: ADT Curricula</a><br/>
+            <hr>
+            <a class="on" href="../../fap08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAP 2008-09</a><br/>
+            <a class="on" href="../../tsp08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2008-09</a><br/>
+            <hr>
+            <a class="off" href="../../thesis.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thesis Proposals</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('publications');">Publications</a></h2>
+    <div id="publications" style="display:none">
+            <a class="on" href="../../cazzolawbib-by-year.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Year</a><br/>
+            <a class="on" href="../../cazzolawbib-by-topic.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Topic</a><br/>
+            <a class="on" href="../../cazzolawbib-by-kind.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Kind</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('funded_projects');">Funded Projects</a></h2>
+    <div id="funded_projects" style="display:none">
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/ramses1.htm" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES</a><br/>
+            <a class="on" href="http://bart.disi.unige.it/EOS2/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOS-DUE</a><br/>
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES II</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('research');">Research Projects</a></h2>
+    <div id="research" style="display:none">
+            <a class="on" href="../../atjava.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Java</a><br/>
+            <a class="on" href="../../neverlang.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Neverlang</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blueprint</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOP->HiddenMetrics</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mChaRM</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSE Library</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reflective Petri Nets</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smart Reflection</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SNA Servants</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReverseR</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('events');">Related Events</a></h2>
+    <div id="events" style="display:none">
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE10/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'10</a><br/>
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE09/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'09</a><br/>
+            <a class="on" target="_blank" href="http://2009.ecoop.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ECOOP'09</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'08</a><br/>
+            <a class="on" target="_blank" href="http://www.aspect-modeling.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOM'08</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE07.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'07</a><br/>
+    </div>
+    <br/><br/><br/><br/><br/><br/>
+<!-- ADDFREESTATS.COM AUTOCODE V4.0 -->
+<center><script type="text/javascript">
+<!--
+var AFS_Account="00210510";
+var AFS_Tracker="auto";
+var AFS_Server="www2";
+var AFS_Page="DetectName";
+var AFS_Url="DetectUrl";
+// -->
+</script>
+<script type="text/javascript" src="http://www2.addfreestats.com/cgi-bin/afstrack.cgi?usr=00210510">
+</script>
+<noscript>
+<a href="http://www.addfreestats.com" >
+<img src="http://www2.addfreestats.com/cgi-bin/connect.cgi?usr=00210510Pauto" border=0 alt="AddFreeStats.com Free Web Stats!">Web Stats</a>
+</noscript>
+<!-- ENDADDFREESTATS.COM AUTOCODE V4.0  -->
+    <br/><a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+</center>
+
+</div>
+<!-- FINE COLONNA -->
+  
+</div>
+
+</body>
+</html>
+
