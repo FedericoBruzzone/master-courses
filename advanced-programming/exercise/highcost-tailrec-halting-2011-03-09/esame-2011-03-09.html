@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+        
+<head>
+
+<style type="text/css" media="all">@import "../../adapt-lab.css";</style>
+<link rel="shortcut icon" href="../../logo/logo.ico" type="image/x-icon"/>
+<link rel="icon" href="../../logo/logo.ico" type="image/x-icon"/>
+
+<title>Esame di Programmazione Avanzata del 09-03-2011</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+<meta name="keywords" content="['Python', 'Walter Cazzola']"/>
+
+<script type="text/javascript">
+var showMode = 'block';
+	if (document.all) showMode = '';
+
+	function toggleId(id, y_scroll){
+	  if (document.all) {
+		var obj = document.all[id];
+	  } else if (document.getElementById) {
+		 var obj = document.getElementById(id);
+	  } else return false;
+	  if (obj.style.display == 'none') {
+	     obj.style.display = showMode;
+	  	 if (y_scroll) scroll(0,y_scroll);
+	  } else obj.style.display = 'none';
+	  return false;
+	}
+</script>
+
+</head>
+<body style="background-image: url(../../backgrounds/rosetta.jpg); background-repeat: repeat-x;">
+
+<!-- INIZIO CONTAINER -->
+<div id="contentmain">
+      
+   <!-- INIZIO CONTENUTO PRINCIPALE -->
+
+   <div class="document">
+<div class="header"><h1 class="title">Exam of Advance in Programming</h1><div class="subtitle">9 March 2011</div></div><br/><br/><!-- Exam of Advance in Programming -->
+<!-- ============================== -->
+<!-- 09 March 2011 -->
+<!-- - - - - - - - - - - - - - -->
+<p><strong>Disclaimer.</strong> Note that to have a running solution for an exercise is not enough: you need a well-cooked solution that proves your ability to use what explained during the class. All the exercises have the same value: 12; the submission with only one exercise will not be evaluated.</p>
+<!-- The worth of the first exercise is 16; the last two exercises are simpler and their worth is 8 if you commit only the first exercise or the last two exercises your exam will not be evaluated. -->
+<div class="midline">Exercise 1: To Compute the Path with the Highest Cost.</div><!-- Exercise 1: To Compute the Path with the Highest Cost. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Everyday we have to face some choices and each of these choices will provide a different profit (or a drawback) for us and sometimes the profit we get from a choice depends on the choices we have done before and so on. It is a really common situation to desire to get the maximum benefit from any choice we do but in everyday situation is quite impossible since we only know the past and not where our choices address us.</p>
+<p>Let us suppose to be in an ideal situation where both past, present and future possibilities, all their interdependencies and the cost/benefit of each choice are known. Such a base of knowledge can be represented as a direct acyclic graph (for simplicity we suppose that every choice originates only and always two scenarios and each scenario can be reached by two adjacent choices) where the nodes are the choices and the edges represent the different scenarios the choice originates; the cost/benefit of the choice is absolute, independent of the choice we do and associated to the node in the tree. The next figure represents an example of such a representation.</p>
+<img alt="tree.jpg" class="align-center" src="tree.jpg" style="width: 50%;" />
+<p>Given such a base of knowledge is quite easy to do the right choice at each crossroad to maximize our final benefit (or to minimize our loss). Please note that sometimes is necessary to sacrifice something to get the maximum.</p>
+<p>The goal of the exercise is to write a function (<tt class="docutils literal">maxpath</tt>) that computes and returns the maximum benefit we can achieve from a base of knowledge as the one described above. To simplify the exercise the base of knowledge is stored per levels in a list of lists (each list contains all the nodes in a level, note that the length of the lists in adjacent levels <strong>always</strong> differs of one). <strong>Note</strong> only functional (i.e., that uses comprehensions, recursion, iterators or filter/map/reduce functions) solutions are admissible all other solutions are <strong>automatically rejected</strong>.</p>
+<p>The  following is an example of the expected behavior:</p>
+<embed src="esame 2011-03-09.p5.pdf" width="100%" height="158.1375778500189673137961998px">
+
+<BR>
+
+<embed src="esame 2011-03-09.p6.pdf" width="100%" height="67.88869788190326189778778697px">
+
+<BR><div class="midline">Exercise 2: Tail Recursion in Python.</div><!-- Exercise 2: Tail Recursion in Python. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>As you well know, recursion in python is a pain: there is an hard limit on how many times a method can recur (or better on how big the stack can grow), it is slow and it does not support the tail recursion optimization technique. The first issue can be circumvented by using the <tt class="docutils literal">sys.setrecursionlimit()</tt> but the two remaining are tied together and no solution is provided by the standard python library.</p>
+<p><strong>The tail recursion optimization technique.</strong> When a function is called, the computer must remember the place it was called from, the return address, so that it can return to that location with the result once the call is complete. Typically, this information is saved on the <strong>call stack</strong>, a simple list of return locations ordered by when the call locations they describe were reached. For tail calls --- i.e., calls that happen inside another function and that produce return values that are immediately returned by the calling function --- there is no need to remember the place we are calling from --- instead, we can perform tail call elimination by leaving the stack alone (except possibly for function arguments and local variables), and the newly called function will return its result directly to the original caller.</p>
+<p>Fortunately the <tt class="docutils literal">sys</tt> standard module gives access to the call stack and to its frames (to know more on python frames look at <a class="reference external" href="http://docs.python.org/py3k/reference/datamodel.html#types">http://docs.python.org/py3k/reference/datamodel.html#types</a>) and playing with exceptions you can easily implements the tail recursion optimization technique.</p>
+<p>The exercise consists of implementing a decorator that when used to decorate a <strong>tail recursive</strong> function will apply the described optimization technique. Note that a working implementation of the optimization technique will render useless to modify the hard limit on the deep of the call stack.</p>
+<p>The following is an example of the expected behavior:</p>
+<embed src="esame 2011-03-09.p3.pdf" width="100%" height="228.1258853413876390736267905px">
+
+<BR>
+
+<embed src="esame 2011-03-09.p4.pdf" width="100%" height="71.90172530527771508693752311px">
+
+<BR><div class="midline">Exercise 3: Halting Problem.</div><!-- Exercise 3: Halting Problem. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>In computer science one of the most difficult (if not impossible) task is to determine if a program will terminate or not before executing it. Also during the execution is not easy to see if the program is only taking too long to respond or if its computation is stuck in an infinite loop. Notwithstanding that the task is really relevant especially considering that time is money and to wait forever in front of a black screen is not admissible nowadays.</p>
+<p>A partial solution to this problem is to limit the available resources used by a task in order to stop its execution when the resources run out. This permit to reduce the waiting time for nonterminating tasks but some result cannot be calculated if the resources are not wisely allocated to the task. The resource to be limited is the execution time and the limitation can be carried out by timing or more efficiently by counting the executed computational units (instructions).</p>
+<p>The exercise consists of implementing a decorator that fixed a number of admissible steps (<tt class="docutils literal">resources</tt>) will stop the computation when the used steps overcome the available resources. In our case, the resource limiter will have a course grain since it is quite hard to count the execution of a single statement through a decorator but quite easy to count the function/method calls.</p>
+<p>The following is an example of the expected behavior:</p>
+<embed src="esame 2011-03-09.p1.pdf" width="100%" height="228.1258853413876390736267905px">
+
+<BR>
+
+<embed src="esame 2011-03-09.p2.pdf" width="100%" height="84.39902426375610435383884026px">
+
+<BR></div>
+
+  
+   <!-- COPYRIGHT -->
+    <div id="footer">
+        Last Modified: Wed, 06 Apr 2011 17:16:04
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          ADAPT Lab.&nbsp;
+          <img src="../../logo/logo (svg) 02.png" width="15px" height="15px"></img>
+
+    </div>
+    <!-- FINE COPYRIGHT -->
+</div>
+<!-- FINE CONTENUTO PRINCIPALE -->
+
+
+<!-- INIZIO COLONNA -->
+<div id="colonna">
+
+    <div class="boxSidebar">
+       <p align="center">
+         <center>
+            <img class="nospacetop" src="../../imgs/io-camogli.jpg" hspace="0px" align="middle"></img>
+         </center>
+       </p>
+
+    <h2 class="sectiontitle"><a href="index.html#" onclick="return toggleId('personal');">Walter Cazzola</a></h2>
+    <div id="personal" style="display:block">
+            <a class="on" href="../../index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home Page</a><br/>
+            <a class="on" href="../../adapt-lab.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ADAPT Lab.</a><br/>
+            <a class="on" href="../../cv.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Curriculum Vitae</a><br/>
+            <a class="off" href="../../topics.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Research Topic</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('teaching');">Didactics</a></h2>
+    <div id="teaching" style="display:none">
+            <a class="on" href="../../pa.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PA 2009-10</a><br/>
+            <a class="on" href="../../tsp.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2009-10</a><br/>
+            <a class="on" href="../../phd-apt.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PhD: ADT Curricula</a><br/>
+            <hr>
+            <a class="on" href="../../fap08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAP 2008-09</a><br/>
+            <a class="on" href="../../tsp08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2008-09</a><br/>
+            <hr>
+            <a class="off" href="../../thesis.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thesis Proposals</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('publications');">Publications</a></h2>
+    <div id="publications" style="display:none">
+            <a class="on" href="../../cazzolawbib-by-year.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Year</a><br/>
+            <a class="on" href="../../cazzolawbib-by-topic.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Topic</a><br/>
+            <a class="on" href="../../cazzolawbib-by-kind.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Kind</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('funded_projects');">Funded Projects</a></h2>
+    <div id="funded_projects" style="display:none">
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/ramses1.htm" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES</a><br/>
+            <a class="on" href="http://bart.disi.unige.it/EOS2/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOS-DUE</a><br/>
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES II</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('research');">Research Projects</a></h2>
+    <div id="research" style="display:none">
+            <a class="on" href="../../atjava.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Java</a><br/>
+            <a class="on" href="../../neverlang.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Neverlang</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blueprint</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOP->HiddenMetrics</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mChaRM</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSE Library</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reflective Petri Nets</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smart Reflection</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SNA Servants</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReverseR</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('events');">Related Events</a></h2>
+    <div id="events" style="display:none">
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE10/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'10</a><br/>
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE09/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'09</a><br/>
+            <a class="on" target="_blank" href="http://2009.ecoop.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ECOOP'09</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'08</a><br/>
+            <a class="on" target="_blank" href="http://www.aspect-modeling.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOM'08</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE07.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'07</a><br/>
+    </div>
+    <br/><br/><br/><br/><br/><br/>
+<!-- ADDFREESTATS.COM AUTOCODE V4.0 -->
+<center><script type="text/javascript">
+<!--
+var AFS_Account="00210510";
+var AFS_Tracker="auto";
+var AFS_Server="www2";
+var AFS_Page="DetectName";
+var AFS_Url="DetectUrl";
+// -->
+</script>
+<script type="text/javascript" src="http://www2.addfreestats.com/cgi-bin/afstrack.cgi?usr=00210510">
+</script>
+<noscript>
+<a href="http://www.addfreestats.com" >
+<img src="http://www2.addfreestats.com/cgi-bin/connect.cgi?usr=00210510Pauto" border=0 alt="AddFreeStats.com Free Web Stats!">Web Stats</a>
+</noscript>
+<!-- ENDADDFREESTATS.COM AUTOCODE V4.0  -->
+    <br/><a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+</center>
+
+</div>
+<!-- FINE COLONNA -->
+  
+</div>
+
+</body>
+</html>
+
