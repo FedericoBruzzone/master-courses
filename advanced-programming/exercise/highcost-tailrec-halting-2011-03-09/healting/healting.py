@@ -8,8 +8,6 @@ def get_number_of_resource(frame):
 
 def check_resource(F):
     def wrapper(*args, **kwargs):
-        # frame = inspect.stack()
-        # print(inspect.stack()[0].frame == inspect.currentframe())
         frame = inspect.currentframe()
         wrapper.resource = get_number_of_resource(frame)
         if wrapper.resource in [9, 160]:
