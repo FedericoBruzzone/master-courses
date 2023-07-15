@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+        
+<head>
+
+<style type="text/css" media="all">@import "../../adapt-lab.css";</style>
+<link rel="shortcut icon" href="../../logo/logo.ico" type="image/x-icon"/>
+<link rel="icon" href="../../logo/logo.ico" type="image/x-icon"/>
+
+<title>Esame di Programmazione Avanzata del 11-03-2010</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+<meta name="keywords" content="['Python', 'Walter Cazzola']"/>
+
+<script type="text/javascript">
+var showMode = 'block';
+	if (document.all) showMode = '';
+
+	function toggleId(id, y_scroll){
+	  if (document.all) {
+		var obj = document.all[id];
+	  } else if (document.getElementById) {
+		 var obj = document.getElementById(id);
+	  } else return false;
+	  if (obj.style.display == 'none') {
+	     obj.style.display = showMode;
+	  	 if (y_scroll) scroll(0,y_scroll);
+	  } else obj.style.display = 'none';
+	  return false;
+	}
+</script>
+
+</head>
+<body style="background-image: url(../../backgrounds/rosetta.jpg); background-repeat: repeat-x;">
+
+<!-- INIZIO CONTAINER -->
+<div id="contentmain">
+      
+   <!-- INIZIO CONTENUTO PRINCIPALE -->
+
+   <div class="document">
+<div class="header"><h1 class="title">Exam of Advance in Programming</h1><div class="subtitle">11 March 2010</div></div><br/><br/><!-- Exam of Advance in Programming -->
+<!-- ============================== -->
+<!-- 11 March 2010 -->
+<!-- - - - - - - - - - - - - - - - - -->
+<p><strong>Disclaimer.</strong> Note that to have a running solution for an exercise is not enough: you need a well-cooked solution that proves your ability to use what explained during the class. The worth of each exercise is 8 if you commit less than 3 exercises your exam will not evaluated.</p>
+<div class="midline">Exercise 1: Badly Engineered Sine.</div><!-- Exercise 1: Badly Engineered Sine -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>The Taylor series is a representation of a function as an infinite sum of terms calculated from the values of its derivatives at a single point. They approximate a function with the following characteristics:</p>
+<ul class="simple">
+<li>the approximation is characterized by an error, this is decreasing at the increasing of the considered factors in the series, i.e., the function is more closely approximated when more addends are considered;</li>
+</ul>
+<p>Taylor's series for</p>
+<center><img src="http://www.codecogs.com/png.latex?\displaystyle\sin(x)=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}+\cdots" /></center><!-- .. raw:: html -->
+<!--  -->
+<!-- <center><embed src="esame%202010-03-11.p1.pdf" width="243px" height="30px"></center> -->
+<p>can be implemented in Python as:</p>
+<embed src="esame 2010-03-11.p2.pdf" width="100%" height="207.6025315361603434284260011px"><!-- <embed src="esame 2010-03-11.p2.pdf" width="100%" height="210px"> -->
+<p>Unfortunately, this version is bugged. Provide a test case that stress the bug and a corrected version of the program.</p>
+<p>Note that, in our case for smaller numbers the series converges to the right value around zero but diverges when far from zero.</p>
+<div class="midline">Exercise 2: Process Scheduling.</div><!-- Exercise 2: Process Scheduling. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Scheduling is a key concept in computer multitasking, multiprocessing operating system designs. Scheduling refers to the way processes are assigned to run on the available CPUs, since there are typically many more processes running than there are available CPUs. CPU scheduling deals with the problem of deciding which of the processes in the ready queue is to be allocated the CPU. There are many different CPU scheduling algorithms. Two of the most used are:</p>
+<ol class="arabic simple">
+<li><strong>First In First Out</strong> (FIFO) which simply queues processes in the order that they arrive in the ready queue.</li>
+<li><strong>Round-Robin</strong> which assigns a fixed time unit per process, called CPU quantum, and cycles through them until the termination</li>
+</ol>
+<p>Let us consider a single CPU computer with a list of process to schedule. The goal of the exercise is to implement a naïve <tt class="docutils literal"><span class="pre">scheduler</span></tt> class whose instances will model and simulates the scheduler work with a given scheduling algorithm and a list of processes in the ready queue. A process is characterized by a name, the time of arrival in the ready queue (a non negative integer) and how long it lasts. Each process has only one operation (named <tt class="docutils literal"><span class="pre">run</span></tt>) which simply prints the process name, process execution is represented by the execution of this operation: every time the process get the CPU it class <tt class="docutils literal"><span class="pre">run()</span></tt>. Note that the time of arrival is necessary to implement the FIFO scheduling algorithm whereas how long the process last is necessary to the round-robin algorithm. Process are all in  the queue at beginning even if they have different arrival time. The class implementing the FIFO algorithm will hardwire the CPU quantum.</p>
+<p>The assignment solution should include the <tt class="docutils literal"><span class="pre">scheduler</span></tt> class, two classes respectively representing the FIFO (named `` fifo``) and round-robin (named <tt class="docutils literal"><span class="pre">round_robin</span></tt>) scheduling algorithms and the process class. Note that, the easiest way to realize the two scheduling algorithms is to use iterators.</p>
+<p>The following is an example of how to execute the scheduler.</p>
+<embed src="esame 2010-03-11.p3.pdf" width="100%" height="191.8158441895194787109909581px"><!-- <embed src="esame 2010-03-11.p3.pdf" width="100%" height="210px"> -->
+<div class="midline">Exercise 3: Combinatorics.</div><!-- Exercise 3: Combinatorics. -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>As you should know the <tt class="docutils literal"><span class="pre">itertools</span></tt> module provides some combinatoric operations: <tt class="docutils literal"><span class="pre">combinations</span></tt>, <tt class="docutils literal"><span class="pre">permutations</span></tt> and <tt class="docutils literal"><span class="pre">combinations_with_replacement</span></tt> (look at the documentation if you do not know what they do).</p>
+<p>The power set of a set S is the set of all subsets of S including the empty set and S itself. Let us write a generator for the power set of a set and a generator for the complement of each of the above generators (namely <tt class="docutils literal"><span class="pre">ccombinations</span></tt>, <tt class="docutils literal"><span class="pre">cpermutations</span></tt> and <tt class="docutils literal"><span class="pre">ccombinations_with_replacement</span></tt>) in the power set of S. Note that, the order counts in permutations so the power set should contains both {A, B} and {B, A} sets.</p>
+<p>The exercise must be solved in a functional manner (list processing, closures, comprehensions, ...) any other solution will be considered wrong.</p>
+<div class="midline">Exercise 4: Lossless Image Compacting.</div><!-- Exercise 4: Lossless Image Compacting -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p>Images can be viewed as a rectangular matrices of pixels where each pixel contains the information about the color. In general, the level of details implies the size of the picture so more and more details means larger size. As a good approximation a nxn black and white picture needs n*n bits (just 0 for white, 1 for black, gray is yielded by close black and white pixels) of information to be represented. Of course this could be a very large value and, above all, useless: formats as JPG reduce such a size by compacting the picture and losing some details.</p>
+<p>A <strong>quadtree</strong> is a tree data structure in which each internal node has up to four children. Quadtrees are most often used to partition a two dimensional space by recursively subdividing it into four quadrants or regions.</p>
+<p>The quadtree represents a partition of space in two dimensions by decomposing the region into four equal quadrants, subquadrants, and so on with each leaf node containing data corresponding to a specific subregion. Each node in the tree either has exactly four children, or has no children (a leaf node).  The root node represents the entire image region. If the pixels in any region are not entirely blacks or whites, it is subdivided. Each leaf node represents a block of pixels that are all blacks or all whites. In the following picture you have an example of the quadtree representation.</p>
+<div align="center" class="align-center"><img alt="esame%202010-03-11.quadtree.jpg" class="align-center" src="esame%202010-03-11.quadtree.jpg" style="width: 90%;" /></div>
+<p>The goal of the exercise is to implement a class <tt class="docutils literal"><span class="pre">quadtree</span></tt> that converts a squared black and white picture from its vectorial representation (a list of zeros and ones respectively representing a white and black pixel) to a quadtree as described above. Moreover the class have to implement a method <tt class="docutils literal"><span class="pre">count</span></tt> which returns the saved space with respect to the vectorial representation. Note that, in the vectorial representation the size is the length of the vector in the quadtree representation only the leaves should be counted, the saved space is the difference of these two quantities.</p>
+</div>
+
+  
+   <!-- COPYRIGHT -->
+    <div id="footer">
+        Last Modified: Tue, 06 Jul 2010 14:36:41
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          ADAPT Lab.&nbsp;
+          <img src="../../logo/logo (svg) 02.png" width="15px" height="15px"></img>
+
+    </div>
+    <!-- FINE COPYRIGHT -->
+</div>
+<!-- FINE CONTENUTO PRINCIPALE -->
+
+
+<!-- INIZIO COLONNA -->
+<div id="colonna">
+
+    <div class="boxSidebar">
+       <p align="center">
+         <center>
+            <img class="nospacetop" src="../../imgs/io-camogli.jpg" hspace="0px" align="middle"></img>
+         </center>
+       </p>
+
+    <h2 class="sectiontitle"><a href="index.html#" onclick="return toggleId('personal');">Walter Cazzola</a></h2>
+    <div id="personal" style="display:block">
+            <a class="on" href="../../index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home Page</a><br/>
+            <a class="on" href="../../adapt-lab.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ADAPT Lab.</a><br/>
+            <a class="on" href="../../cv.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Curriculum Vitae</a><br/>
+            <a class="off" href="../../topics.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Research Topic</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('teaching');">Didactics</a></h2>
+    <div id="teaching" style="display:none">
+            <a class="on" href="../../pa.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PA 2009-10</a><br/>
+            <a class="on" href="../../tsp.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2009-10</a><br/>
+            <a class="on" href="../../phd-apt.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PhD: ADT Curricula</a><br/>
+            <hr>
+            <a class="on" href="../../fap08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAP 2008-09</a><br/>
+            <a class="on" href="../../tsp08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TSP 2008-09</a><br/>
+            <hr>
+            <a class="off" href="../../thesis.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thesis Proposals</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('publications');">Publications</a></h2>
+    <div id="publications" style="display:none">
+            <a class="on" href="../../cazzolawbib-by-year.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Year</a><br/>
+            <a class="on" href="../../cazzolawbib-by-topic.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Topic</a><br/>
+            <a class="on" href="../../cazzolawbib-by-kind.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sorted by Kind</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('funded_projects');">Funded Projects</a></h2>
+    <div id="funded_projects" style="display:none">
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/ramses1.htm" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES</a><br/>
+            <a class="on" href="http://bart.disi.unige.it/EOS2/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOS-DUE</a><br/>
+            <a class="on" href="http://wwwiti.cs.uni-magdeburg.de/iti_db/forschung/ramses/" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSES II</a>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('research');">Research Projects</a></h2>
+    <div id="research" style="display:none">
+            <a class="on" href="../../atjava.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Java</a><br/>
+            <a class="on" href="../../neverlang.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Neverlang</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blueprint</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOP->HiddenMetrics</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mChaRM</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAMSE Library</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reflective Petri Nets</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smart Reflection</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SNA Servants</a><br/>
+            <a class="off" href="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReverseR</a><br/>
+    </div>
+
+    <h2 class="sectiontitle"><a href="adapt-lab.html#" onclick="return toggleId('events');">Related Events</a></h2>
+    <div id="events" style="display:none">
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE10/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'10</a><br/>
+            <a class="on" target="_blank" href="http://www-users.cs.york.ac.uk/~manuel/Events/RAM-SE09/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'09</a><br/>
+            <a class="on" target="_blank" href="http://2009.ecoop.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ECOOP'09</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE08.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'08</a><br/>
+            <a class="on" target="_blank" href="http://www.aspect-modeling.org">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOM'08</a><br/>
+            <a class="on" target="_blank" href="../../RAM-SE07.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM-SE'07</a><br/>
+    </div>
+    <br/><br/><br/><br/><br/><br/>
+<!-- ADDFREESTATS.COM AUTOCODE V4.0 -->
+<center><script type="text/javascript">
+<!--
+var AFS_Account="00210510";
+var AFS_Tracker="auto";
+var AFS_Server="www2";
+var AFS_Page="DetectName";
+var AFS_Url="DetectUrl";
+// -->
+</script>
+<script type="text/javascript" src="http://www2.addfreestats.com/cgi-bin/afstrack.cgi?usr=00210510">
+</script>
+<noscript>
+<a href="http://www.addfreestats.com" >
+<img src="http://www2.addfreestats.com/cgi-bin/connect.cgi?usr=00210510Pauto" border=0 alt="AddFreeStats.com Free Web Stats!">Web Stats</a>
+</noscript>
+<!-- ENDADDFREESTATS.COM AUTOCODE V4.0  -->
+    <br/><a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+</center>
+
+</div>
+<!-- FINE COLONNA -->
+  
+</div>
+
+</body>
+</html>
+
