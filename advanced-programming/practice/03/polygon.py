@@ -1,6 +1,6 @@
 '''
 Exercise 1: Playing around with Geometry.
-To implement the classes representing: equilateral triangles, circles, rectangles, squares and pentagons with the following 
+To implement the classes representing: equilateral triangles, circles, rectangles, squares and pentagons with the following
 characteristics/properties/capabilities.
 
 1. they should understand the calculate_area() and calculate_perimeter() messages with the obvious meaning
@@ -12,7 +12,7 @@ characteristics/properties/capabilities.
 
 import math
 
-def create_polygon(p_type, p_number, p_number2):
+def create_polygon(p_type, p_number, p_number2=None):
     class _polygon:
         def __init__(self, length):
             self.length = length
